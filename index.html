@@ -661,31 +661,31 @@ color: #fff;
     }
 
     function shareOnTwitter() {
-      const url = encodeURIComponent("https://yourwebsite.com");
+      const url = encodeURIComponent("https://www.ladderloop.com");
       const text = encodeURIComponent("Check out this game! Ladder Loop - Levels coming soon.");
       window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
     }
 
     function shareOnFacebook() {
-      const url = encodeURIComponent("https://yourwebsite.com");
+      const url = encodeURIComponent("https://www.ladderloop.com");
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
     }
 
     function shareOnWhatsApp() {
-      const url = encodeURIComponent("https://yourwebsite.com");
+      const url = encodeURIComponent("https://www.ladderloop.com");
       const text = encodeURIComponent("Check out this game! Ladder Loop - Levels coming soon.");
       window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
     }
 
     function shareOnLinkedIn() {
-      const url = encodeURIComponent("https://yourwebsite.com");
+      const url = encodeURIComponent("https://www.ladderloop.com");
       window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
     }
 
     function copyLink() {
       const tempInput = document.createElement('input');
       document.body.appendChild(tempInput);
-      tempInput.value = "https://yourwebsite.com";
+      tempInput.value = "https://www.ladderloop.com";
       tempInput.select();
       document.execCommand('copy');
       document.body.removeChild(tempInput);
@@ -697,14 +697,14 @@ color: #fff;
       audioEnabled = !audioEnabled;
       
       if (audioEnabled) {
-        muteButton.innerHTML = '🔊 Sound On';
+        muteButton.innerHTML = 'Sound On';
         muteButton.style.background = 'linear-gradient(135deg, #ff0066, #00ccff)';
         if (climbing) {
           climbAudio.play();
           backgroundVideo.play();
         }
       } else {
-        muteButton.innerHTML = '🔇 Sound Off';
+        muteButton.innerHTML = 'Sound Off';
         muteButton.style.background = 'linear-gradient(135deg, #666, #999)';
         climbAudio.pause();
         backgroundVideo.pause();
