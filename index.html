@@ -1,0 +1,715 @@
+<!--
+Ladder Loop:  
+Climb. Fall. Repeat.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Ladder Loop Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+ <meta name="description" content="Climb, fall, repeat. Ladder Loop is a one‑button arcade game where gravity always wins.">
+<meta name="keywords" content="ladder loop, climb, fall, repeat, retro web game, one button game">
+<meta name="author" content="James Tobin">
+
+<!-- Open Graph -->
+ <meta property="og:title" content="Ladder Loop – Endless Climb Arcade Game">
+<meta property="og:description" content="Tap to climb, fall back, and repeat. Can you master the loop?">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.ladderloop.com/">
+  <meta property="og:image" content="https://www.ladderloop/images/rise-fall-repeat-thumbnail.jpg">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ladder Loop – Endless Climb Arcade Game">
+<meta name="twitter:description" content="Climb ladders that never end. Fall. Repeat. The loop is life.">
+<meta name="twitter:image" content="https://www.ladderloop.com/images/rise-fall-repeat-twitter.jpg">
+
+<!-- Favicon -->
+<link rel="icon" href="https://www.ladderloop.com/favicon.ico" type="image/x-icon">
+
+  <!-- Google Font for retro vibe -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+  body {
+    margin: 0;
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(135deg, #1c1c1c, #2e2e2e);
+color: #fff;
+    filter: grayscale(0%);
+    text-align: center;
+  }
+
+  section { 
+    padding: 60px 20px; 
+    background: linear-gradient(135deg, #b200ff, #00ffcc); 
+    border-radius: 15px;
+  }
+
+  h1, h2 {
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.8);
+  }
+
+  .hero {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1f1f1f, #3d3d3d);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero h1 {
+    font-size: 6vw;
+    max-width: 90%;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 0, 255, 0.9);
+  }
+
+  .hero button {
+    margin-top: 30px;
+    padding: 15px 30px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #ff0066, #00ccff);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+  }
+
+  .hero button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 1);
+  }
+
+  canvas {
+    width: 90vw;
+    height: 60vh;
+    max-width: 50%;
+    max-height: 100%;
+    background: linear-gradient(135deg, #222222, #444444);
+    border: 3px solid #ff0066;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+  }
+
+  #score {
+    font-size: 18px;
+    margin-top: 10px;
+    font-family: 'Press Start 2P', cursive;
+    color: #ffcc00;
+    text-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
+  }
+
+  #overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: #ffcc00;
+    font-size: 20px;
+    padding: 30px;
+    border: 2px solid #ff0066;
+    max-width: 90%;
+    min-width: 200px;
+    display: none;
+    white-space: pre-line;
+    z-index: 9999;
+    text-shadow: 0 0 10px rgba(255, 255, 0, 1);
+    border-radius: 10px;
+  }
+
+  .about {
+    background: #222222;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+  }
+
+  footer {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    background: #111111;
+    padding: 20px;
+    font-size: 12px;
+    color: #ffcc00;
+    text-align: center;
+    z-index: 1000;
+  }
+
+  footer a {
+    color: #00ccff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  footer a:hover {
+    color: #ff0066;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      min-height: auto;
+      padding: 60px 20px;
+    }
+
+    .hero h1 {
+      font-size: 8vw;
+    }
+
+    .hero button {
+      font-size: 14px;
+    }
+  }
+
+  .hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+  }
+
+  #game {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.5s ease, transform 1.5s ease;
+  }
+
+  #game.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  :root {
+    --merch-bg-color: linear-gradient(135deg, #ff0066, #00ccff);
+    --merch-item-bg-color: #fff;
+    --merch-border-color: #ffcc00;
+    --merch-hover-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    --merch-item-border-radius: 15px;
+    --merch-item-width: 250px;
+    --merch-item-max-height: 200px;
+    --merch-item-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --merch-gap: 20px;
+    --merch-padding: 60px 20px;
+  }
+
+  #merch {
+    padding: var(--merch-padding);
+    background: var(--merch-bg-color);
+    border-radius: var(--merch-item-border-radius);
+    margin-top: 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .merch-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--merch-gap);
+    justify-items: center;
+    padding: 20px;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .merch-item {
+    background-color: var(--merch-item-bg-color);
+    border-radius: var(--merch-item-border-radius);
+    box-shadow: var(--merch-item-shadow);
+    overflow: hidden;
+    width: 100%;
+    max-width: var(--merch-item-width);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
+  }
+
+  .merch-item img {
+    width: 100%;
+    height: auto;
+    max-height: var(--merch-item-max-height);
+    object-fit: contain;
+    border-bottom: 3px solid var(--merch-border-color);
+  }
+
+  .merch-item:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--merch-hover-shadow);
+  }
+
+  @media (max-width: 768px) {
+    .merch-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <video id="backgroundVideo" playsinline class="hero-video">
+      <source src="media/audio/music.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+    <h1>Climb. <br>Fall.<br> Repeat.</h1>
+    <p>A one‑button web game for endless retries.</p>
+    <button onclick="scrollToAboutSection();">Play Now</button>
+  </section>
+
+  <!-- About Section -->
+  <section class="about">
+    <h2>theGame</h2>
+    <p>Ladder Loop is a minimalist arcade climb. Tap to rise, fall back, and repeat. How long can you last?</p>
+  </section>
+
+  <!-- Game Section -->
+  <section id="game">
+    <h2>Ladder Loop</h2>
+    <p>Tap or Spc to climb!</p>
+    <canvas id="gameCanvas" width="300" height="400"></canvas>
+    <div id="scoreContainer" style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+      <div id="score">Score: 0</div>
+      <button id="muteButton" onclick="toggleMute()" 
+  style="position: fixed; top: 20px; right: 20px; 
+         padding: 10px 20px; 
+         background: linear-gradient(135deg, #ff0066, #00ccff); 
+         color: white; border: none; border-radius: 5px; 
+         cursor: pointer; font-family: 'Press Start 2P', cursive; 
+         font-size: 12px; 
+         box-shadow: 0 0 10px rgba(255, 255, 255, 0.6); 
+         transition: transform 0.2s; 
+         z-index: 10000;">
+  🔊 Sound On
+</button>
+    </div>
+    <div id="overlay"></div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials" style="padding: 60px 20px; background: linear-gradient(135deg, #b200ff, #00ffcc); border-radius: 15px; margin-top: 30px;">
+    <h2 style="font-size: 24px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.8);">Reviews</h2>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>"I climbed once. Then I fell."</strong> - The Climber</p>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>"Best. Ladder. Ever." </strong> - Some guy who is still playing</p>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>"I fell off the ladder, and I haven't stopped playing since."</strong> - Time‑rich girl</p>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq" style="padding: 60px 20px; background: linear-gradient(135deg, #b200ff, #00ffcc); border-radius: 15px; margin-top: 30px;">
+    <h2 style="font-size: 24px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.8);">FAQs (or Not)</h2>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>Q:</strong> What's the point? <br><strong>A:</strong> Exactly.</p>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>Q:</strong> How do I win? <br><strong>A:</strong> You don't. But good luck trying.</p>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>Q:</strong> Is this game addictive? <br><strong>A:</strong> Are you still playing? Enough said.</p>
+    
+     <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>Q:</strong> Is this game fun? <br><strong>A:</strong> Fun is a construct.</p>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>Q:</strong> What happens when I reach the top? <br><strong>A:</strong> You fall. That's life.</p>
+  </section>
+
+  <section id="merch">
+  <h2 style="font-size: 24px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.8);">Our Merch</h2>
+  <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6;">Launching Soon (maybe)</p>
+  <div class="merch-grid">
+    <div class="merch-item">
+      <img src="images/merch/merch1.png" alt="hoodie">
+      <p style="font-size: 14px; margin: 10px 0; color: #333;">
+        Ladder Loop Hoodie – keeps you warm while you fall endlessly.
+      </p>
+    </div>
+    <div class="merch-item">
+      <img src="images/merch/merch2.png" alt="cap">
+      <p style="font-size: 14px; margin: 10px 0; color: #333;">
+        Ladder Loop Cap – blocks the sun, not gravity.
+      </p>
+    </div>
+    <div class="merch-item">
+      <img src="images/merch/merch3.png" alt="mousepad">
+      <p style="font-size: 14px; margin: 10px 0; color: #333;">
+        Ladder Loop Mousepad – climb with your cursor, fall with your wrist.
+      </p>
+    </div>
+    <div class="merch-item">
+      <img src="images/merch/merch4.png" alt="mug">
+      <p style="font-size: 14px; margin: 10px 0; color: #333;">
+        Ladder Loop Mug – perfect for coffee, or catching your tears after another fall.
+      </p>
+    </div>
+    <div class="merch-item">
+      <img src="images/merch/merch5.png" alt="Halfway-up Ladder Loop Socks">
+      <p style="font-size: 14px; margin: 10px 0; color: #333;">
+        Ladder Loop Socks – they only go halfway up your leg.
+      </p>
+    </div>
+  </div>
+</section>
+
+  <!-- Share Section -->
+  <section id="share" style="padding: 60px 20px; background: linear-gradient(135deg, #00ccff, #ffcc00); border-radius: 15px; margin-top: 30px;">
+    <h2 style="font-size: 24px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.8);">Share</h2>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6;">Share Ladder Loop with your friends!</p>
+    <div>
+      <button onclick="shareOnTwitter();" style="margin: 10px; padding: 10px; color: white; background: #1DA1F2; border: none; border-radius: 5px;">Twitter</button>
+      <button onclick="shareOnFacebook();" style="margin: 10px; padding: 10px; color: white; background: #1877F2; border: none; border-radius: 5px;">Facebook</button>
+      <button onclick="shareOnWhatsApp();" style="margin: 10px; padding: 10px; color: white; background: #25D366; border: none; border-radius: 5px;">WhatsApp</button>
+      <button onclick="shareOnLinkedIn();" style="margin: 10px; padding: 10px; color: white; background: #0077B5; border: none; border-radius: 5px;">LinkedIn</button>
+      <button onclick="copyLink();" style="margin: 10px; padding: 10px; color: white; background: #FF5733; border: none; border-radius: 5px;">Copy Link</button>
+    </div>
+  </section>
+
+  <!-- Office Section -->
+  <section id="office" style="padding: 60px 20px; background: linear-gradient(135deg, #b200ff, #ffcc00); border-radius: 15px; margin-top: 30px;">
+    <h2 style="font-size: 24px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.8);">Our Office</h2>
+    <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6;">Take a look at where the magic happens!</p><br>
+    <img src="images/office/office_36.png" alt="Our Office" style="max-width: 80%; border: 3px solid #ffcc00; border-radius: 10px;">
+  </section>
+
+  <footer>
+    <p>Made for Fun 🎮</p>
+   <p>
+  <a href="https://x.com/ladderloop" 
+     target="_blank" 
+     >
+    Community Challenge: Name the Ladder Loop character on Twitter!
+  </a>
+</p>
+  </footer>
+
+  <!-- Audio for Climbing -->
+  <audio id="climbAudio"></audio>
+
+  <!-- Game Script -->
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const overlay = document.getElementById("overlay");
+    const climbAudio = document.getElementById("climbAudio");
+    const backgroundVideo = document.getElementById("backgroundVideo");
+
+    let character = { x: 140, y: 350, width: 20, height: 20 };
+    let climbing = false;
+    let score = 0;
+    let speed = 2;
+    let freezeFrame = false;
+    let achievements = [];
+    let gameStarted = false;
+    let audioEnabled = false;
+    let audioPromptShown = false;
+
+    let funnyMessages = [
+      "Why are you still playing? Seriously?",
+      "Climbing ladders... again...",
+      "You've reached a new score... did you expect a reward?",
+      "Congratulations, you're still here. Impressive.",
+      "Are you stuck in a loop? 'Cause I think you are.",
+      "Climbing ladders for fun? Uh... okay.",
+      "This is the longest you've ever stuck with anything, huh?",
+      "The ladder flips. You climb. You fall. You repeat.",
+      "What should we name our character?",
+      "You must be addicted to this. Do you need help?",
+      "Is this game even fun? Are you sure?",
+      "You just like the music.",
+      "You climb because you must. The ladder is endless. The loop is life"
+    ];
+
+    function adjustPlaybackRates() {
+      if (climbing && audioEnabled) {
+        backgroundVideo.playbackRate = Math.max(1, speed / 2);
+        climbAudio.playbackRate = Math.min(3, Math.max(1, speed / 2));
+      } else {
+        backgroundVideo.playbackRate = 1;
+        climbAudio.playbackRate = 1;
+      }
+    }
+
+    function resetVideo() {
+      backgroundVideo.pause();
+      backgroundVideo.currentTime = 0;
+      backgroundVideo.play();
+    }
+
+    window.onload = () => {
+      window.scrollTo(0, 0);
+    };
+
+    function drawLadder() {
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(100, 0); ctx.lineTo(100, 400);
+      ctx.moveTo(200, 0); ctx.lineTo(200, 400);
+      ctx.stroke();
+      for (let i = 0; i < 400; i += 40) {
+        ctx.beginPath();
+        ctx.moveTo(100, i); ctx.lineTo(200, i);
+        ctx.stroke();
+      }
+    }
+
+    function drawCharacter() {
+      ctx.fillStyle = "yellow";
+      ctx.fillRect(character.x, character.y, character.width, character.height);
+    }
+
+    function showOverlay(text) {
+      overlay.innerText = text;
+      overlay.style.display = "block";
+      overlay.style.position = "fixed";
+      overlay.style.top = "50%";
+      overlay.style.left = "50%";
+      overlay.style.transform = "translate(-50%, -50%)";
+      overlay.style.textAlign = "center";
+      overlay.style.background = "rgba(0, 0, 0, 0.8)";
+      overlay.style.color = "#ffcc00";
+      overlay.style.fontSize = "20px";
+      overlay.style.padding = "20px";
+      overlay.style.border = "2px solid #ff0066";
+      overlay.style.whiteSpace = "pre-line";
+      overlay.style.zIndex = "9999";
+      overlay.style.textShadow = "0 0 10px rgba(255, 255, 0, 1)";
+      overlay.style.maxWidth = "80%";
+
+      setTimeout(() => {
+        overlay.style.display = "none";
+        freezeFrame = false;
+      }, 1500);
+    }
+
+    function showAudioPrompt() {
+      if (audioPromptShown) return;
+      audioPromptShown = true;
+      
+      const message = "Sound?";
+      overlay.innerHTML = `
+        ${message}<br><br>
+        <button onclick="enableAudio()" style="margin: 10px; padding: 15px 30px; background: linear-gradient(135deg, #ff0066, #00ccff); color: white; border: none; border-radius: 10px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 14px; box-shadow: 0 0 15px rgba(255, 0, 255, 0.8); transition: transform 0.2s, box-shadow 0.2s;">🔊 Yes</button>
+        <button onclick="disableAudio()" style="margin: 10px; padding: 15px 30px; background: linear-gradient(135deg, #666, #999); color: white; border: none; border-radius: 10px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 14px; box-shadow: 0 0 15px rgba(100, 100, 100, 0.6); transition: transform 0.2s, box-shadow 0.2s;">🔇 No</button>
+      `;
+      overlay.style.display = "block";
+      freezeFrame = true;
+    }
+
+    window.enableAudio = function() {
+      audioEnabled = true;
+      overlay.style.display = "none";
+      freezeFrame = false;
+      document.getElementById('muteButton').innerHTML = '🔊 Sound On';
+      document.getElementById('muteButton').style.background = 'linear-gradient(135deg, #ff0066, #00ccff)';
+      if (!gameStarted) {
+        gameStarted = true;
+        update();
+      }
+    }
+
+    window.disableAudio = function() {
+      audioEnabled = false;
+      overlay.style.display = "none";
+      freezeFrame = false;
+      document.getElementById('muteButton').innerHTML = '🔇 Sound Off';
+      document.getElementById('muteButton').style.background = 'linear-gradient(135deg, #666, #999)';
+      if (!gameStarted) {
+        gameStarted = true;
+        update();
+      }
+    }
+
+    function unlockAchievement(name) {
+      if (!achievements.includes(name)) {
+        achievements.push(name);
+        showOverlay("Achievement Unlocked:\n" + name);
+      }
+    }
+
+    function showFunnyMessage() {
+      const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      showOverlay(randomMessage);
+    }
+
+    function update() {
+      if (!gameStarted) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawLadder();
+      drawCharacter();
+
+      if (!freezeFrame) {
+        if (climbing) {
+          character.y -= speed;
+          if (character.y <= 0) {
+            climbing = false;
+            score++;
+
+            if (score % 5 === 0) showFunnyMessage();
+            if (score === 3 || score === 10 || score === 20) showFunnyMessage();
+          }
+        } else {
+          character.y += speed;
+          if (character.y >= 350) character.y = 350;
+        }
+      }
+
+      document.getElementById("score").innerText = "Score: " + score;
+      requestAnimationFrame(update);
+    }
+
+    climbAudio.loop = true;
+
+    function climb() {
+      if (!climbing && character.y >= 350 && !freezeFrame) {
+        climbing = true;
+        if (audioEnabled) {
+          if (climbAudio.paused) climbAudio.play();
+          resetVideo();
+        }
+      }
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.code === "Space") climb();
+      e.preventDefault(); 
+    });
+    canvas.addEventListener("click", climb);
+
+    const gameSection = document.getElementById('game');
+    const gameObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !gameStarted && !audioPromptShown) {
+          showAudioPrompt();
+        }
+      });
+    }, {
+      threshold: 0.5
+    });
+
+    gameObserver.observe(gameSection);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const gameSection = document.getElementById("game");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            gameSection.classList.add("visible");
+            observer.unobserve(gameSection);
+          }
+        });
+      }, { threshold: 0.1 });
+      observer.observe(gameSection);
+    });
+
+    document.querySelector('.hero button').addEventListener('click', function() {
+      document.body.style.overflow = 'auto';
+      backgroundVideo.pause();
+      backgroundVideo.currentTime = 0;
+      climbAudio.pause();
+      climbAudio.currentTime = 0;
+    });
+
+    window.addEventListener('load', function() {
+      backgroundVideo.pause();
+      backgroundVideo.currentTime = 0;
+    });
+
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          backgroundVideo.pause();
+          backgroundVideo.currentTime = 0;
+          climbAudio.pause();
+          climbAudio.currentTime = 0;
+        }
+      });
+    }, { threshold: 0.5 });
+
+    sections.forEach(section => observer.observe(section));
+
+    const heroSection = document.querySelector('.hero');
+    const heroObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+          backgroundVideo.pause();
+          backgroundVideo.currentTime = 0;
+          climbAudio.pause();
+          climbAudio.currentTime = 0;
+        }
+      });
+    }, { threshold: 0.5 });
+
+    heroObserver.observe(heroSection);
+
+    function scrollToAboutSection() {
+      document.querySelector('.about').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function shareOnTwitter() {
+      const url = encodeURIComponent("https://yourwebsite.com");
+      const text = encodeURIComponent("Check out this game! Ladder Loop - Levels coming soon.");
+      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+    }
+
+    function shareOnFacebook() {
+      const url = encodeURIComponent("https://yourwebsite.com");
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    }
+
+    function shareOnWhatsApp() {
+      const url = encodeURIComponent("https://yourwebsite.com");
+      const text = encodeURIComponent("Check out this game! Ladder Loop - Levels coming soon.");
+      window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent("https://yourwebsite.com");
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+    }
+
+    function copyLink() {
+      const tempInput = document.createElement('input');
+      document.body.appendChild(tempInput);
+      tempInput.value = "https://yourwebsite.com";
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      alert('Link copied to clipboard!');
+    }
+
+    function toggleMute() {
+      const muteButton = document.getElementById('muteButton');
+      audioEnabled = !audioEnabled;
+      
+      if (audioEnabled) {
+        muteButton.innerHTML = '🔊 Sound On';
+        muteButton.style.background = 'linear-gradient(135deg, #ff0066, #00ccff)';
+        if (climbing) {
+          climbAudio.play();
+          backgroundVideo.play();
+        }
+      } else {
+        muteButton.innerHTML = '🔇 Sound Off';
+        muteButton.style.background = 'linear-gradient(135deg, #666, #999)';
+        climbAudio.pause();
+        backgroundVideo.pause();
+      }
+    }
+  </script>
+</body>
+</html>
