@@ -202,6 +202,34 @@ Climb. Fall. Repeat.
     text-decoration: underline;
   }
 
+  #muteButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #ff0066, #00ccff);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    transition: transform 0.2s, opacity 0.3s;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #muteButton.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #muteButton:hover {
+    transform: scale(1.05);
+  }
+
   .hero-video {
     position: absolute;
     top: 0;
@@ -332,6 +360,11 @@ Climb. Fall. Repeat.
       font-size: 10px;
       line-height: 1.4;
     }
+
+    #muteButton {
+      font-size: 10px;
+      padding: 8px 16px;
+    }
   }
 
   @media (max-width: 480px) {
@@ -432,7 +465,7 @@ Climb. Fall. Repeat.
   <!-- Game Section -->
   <section id="game">
     <h2>Ladder Loop</h2><br>
-    <p>Tap or Spc to climb!</p>
+    <p>Tap to climb!</p>
     
     <!-- Resize Controls (only visible on large screens) -->
     <div id="resizeControls" style="display: none; margin-bottom: 20px; gap: 10px; align-items: center; justify-content: center;">
@@ -440,24 +473,14 @@ Climb. Fall. Repeat.
       <button onclick="resizeCanvas('medium')" style="padding: 8px 16px; background: linear-gradient(135deg, #ff0066, #00ccff); color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 10px;">Medium</button>
       <button onclick="resizeCanvas('large')" style="padding: 8px 16px; background: linear-gradient(135deg, #b200ff, #00ffcc); color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 10px;">Large</button>
       <button onclick="resizeCanvas('xlarge')" style="padding: 8px 16px; background: linear-gradient(135deg, #00ccff, #ffcc00); color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 10px;">X-Large</button>
+      <button onclick="resizeCanvas('max')" style="padding: 8px 16px; background: linear-gradient(135deg, #ff0066, #ffcc00); color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 10px;">Max</button>
     </div>
     
     <canvas id="gameCanvas" width="500" height="800"></canvas>
     <div id="scoreContainer" style="display: flex; justify-content: center; gap: 20px; align-items: center;">
       <div id="score">Score: 0</div>
-      <button id="muteButton" onclick="toggleMute()" 
-  style="position: fixed; top: 20px; right: 20px; 
-         padding: 10px 20px; 
-         background: linear-gradient(135deg, #ff0066, #00ccff); 
-         color: white; border: none; border-radius: 5px; 
-         cursor: pointer; font-family: 'Press Start 2P', cursive; 
-         font-size: 12px; 
-         box-shadow: 0 0 10px rgba(255, 255, 255, 0.6); 
-         transition: transform 0.2s; 
-         z-index: 10000;">
-  Sound On
-</button>
     </div>
+    <button id="muteButton" onclick="toggleMute()">Sound On</button>
     <div id="overlay"></div>
   </section>
 
@@ -537,7 +560,7 @@ Climb. Fall. Repeat.
     <img src="images/office/office_38.png" alt="Our Office" style="max-width: 80%; border: 3px solid #ffcc00; border-radius: 10px;">
   </section>
 
-  <footer>
+   <footer>
    <!-- <p>Made for Fun 🎮</p>
    <p>-->
   <a href="https://x.com/ladderloop" target="_blank">Climb with us on X</a> <br><br>
@@ -555,7 +578,7 @@ Climb. Fall. Repeat.
     const climbAudio = document.getElementById("climbAudio");
     const backgroundVideo = document.getElementById("backgroundVideo");
 
-    let character = { x: 237, y: 730, width: 30, height: 30 };
+    let character = { x: 237, y: 770, width: 30, height: 30 };
     let climbing = false;
     let score = 0;
     let speed = 4;
@@ -788,7 +811,7 @@ Climb. Fall. Repeat.
           }
         } else {
           character.y += speed;
-          if (character.y >= 730) character.y = 730;
+          if (character.y >= 770) character.y = 770;
         }
       }
 
@@ -799,7 +822,7 @@ Climb. Fall. Repeat.
     climbAudio.loop = true;
 
     function climb() {
-      if (!climbing && character.y >= 730 && !freezeFrame) {
+      if (!climbing && character.y >= 770 && !freezeFrame) {
         climbing = true;
         if (audioEnabled) {
           if (climbAudio.paused) climbAudio.play();
@@ -942,7 +965,8 @@ Climb. Fall. Repeat.
         'small': '60vh',
         'medium': '70vh',
         'large': '80vh',
-        'xlarge': '90vh'
+        'xlarge': '90vh',
+        'max': '95vh'
       };
       canvas.style.height = sizes[size] || '80vh';
     }
@@ -950,16 +974,23 @@ Climb. Fall. Repeat.
     // Footer auto-hide functionality
     let footerTimeout;
     const footer = document.querySelector('footer');
+    const muteButton = document.getElementById('muteButton');
     let isInGameSection = false;
+    let lastInteractionTime = Date.now();
 
     function showFooter() {
-      footer.classList.remove('hidden');
-      clearTimeout(footerTimeout);
+      // Only show footer if user hasn't interacted with game recently
+      const timeSinceLastInteraction = Date.now() - lastInteractionTime;
       
-      if (isInGameSection) {
-        footerTimeout = setTimeout(() => {
-          footer.classList.add('hidden');
-        }, 3000);
+      if (!isInGameSection || timeSinceLastInteraction > 2000) {
+        footer.classList.remove('hidden');
+        clearTimeout(footerTimeout);
+        
+        if (isInGameSection) {
+          footerTimeout = setTimeout(() => {
+            footer.classList.add('hidden');
+          }, 3000);
+        }
       }
     }
 
@@ -969,15 +1000,26 @@ Climb. Fall. Repeat.
       }
     }
 
+    // Track game interactions (clicking or pressing space)
+    function trackGameInteraction() {
+      lastInteractionTime = Date.now();
+      if (isInGameSection && gameStarted) {
+        footer.classList.add('hidden');
+        clearTimeout(footerTimeout);
+      }
+    }
+
     // Track if user is in game section
     const gameSectionObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         isInGameSection = entry.isIntersecting;
         if (isInGameSection) {
+          muteButton.classList.add('visible');
           footerTimeout = setTimeout(() => {
             footer.classList.add('hidden');
           }, 3000);
         } else {
+          muteButton.classList.remove('visible');
           footer.classList.remove('hidden');
           clearTimeout(footerTimeout);
         }
@@ -986,10 +1028,33 @@ Climb. Fall. Repeat.
 
     gameSectionObserver.observe(document.getElementById('game'));
 
-    // Show footer on mouse move or touch
-    document.addEventListener('mousemove', showFooter);
+    // Show footer on mouse move or touch (but not during active gameplay)
+    let mouseMoveTimeout;
+    document.addEventListener('mousemove', (e) => {
+      clearTimeout(mouseMoveTimeout);
+      mouseMoveTimeout = setTimeout(() => {
+        showFooter();
+      }, 300);
+    });
+    
     document.addEventListener('touchstart', showFooter);
-    document.addEventListener('scroll', showFooter);
+    
+    // Show footer on scroll
+    let scrollTimeout;
+    document.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        showFooter();
+      }, 200);
+    });
+
+    // Track canvas clicks and spacebar presses
+    canvas.addEventListener('click', trackGameInteraction);
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        trackGameInteraction();
+      }
+    });
 
     // Hide footer initially if starting in game section
     window.addEventListener('load', () => {
