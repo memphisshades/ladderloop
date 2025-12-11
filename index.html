@@ -36,17 +36,11 @@ Climb. Fall. Repeat.
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   
   <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
   body {
     margin: 0;
     font-family: 'Press Start 2P', cursive;
     background: linear-gradient(135deg, #1c1c1c, #2e2e2e);
-    color: #fff;
+color: #fff;
     filter: grayscale(0%);
     text-align: center;
   }
@@ -63,11 +57,7 @@ Climb. Fall. Repeat.
   }
 
   .hero {
-    width: 100%;
-    height: 100vh;
     height: 100dvh;
-    min-height: 100vh;
-    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -81,10 +71,6 @@ Climb. Fall. Repeat.
     font-size: 6vw;
     max-width: 90%;
     text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 0, 255, 0.9);
-  }
-
-  .hero p {
-    font-size: 1rem;
   }
 
   .hero button {
@@ -105,23 +91,15 @@ Climb. Fall. Repeat.
     box-shadow: 0 0 20px rgba(255, 0, 255, 1);
   }
 
-  #game h2 {
-    margin-bottom: 10px;
-  }
-
-  #game > p {
-    margin-bottom: 20px;
-  }
-
   canvas {
     width: 90vw;
     height: 60vh;
-    max-width: 400px;
-    max-height: 500px;
+    max-width: 50%;
+    max-height: 100%;
     background: linear-gradient(135deg, #222222, #444444);
     border: 3px solid #ff0066;
     display: block;
-    margin: 0 auto 20px auto;
+    margin: 0 auto;
     border-radius: 10px;
   }
 
@@ -176,14 +154,26 @@ Climb. Fall. Repeat.
     color: #00ccff;
     text-decoration: none;
     font-weight: bold;
-    word-wrap: break-word;
-    display: inline-block;
-    max-width: 100%;
   }
 
   footer a:hover {
     color: #ff0066;
     text-decoration: underline;
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      min-height: auto;
+      padding: 60px 20px;
+    }
+
+    .hero h1 {
+      font-size: 8vw;
+    }
+
+    .hero button {
+      font-size: 14px;
+    }
   }
 
   .hero-video {
@@ -197,14 +187,6 @@ Climb. Fall. Repeat.
   }
 
   #game {
-    width: 100%;
-    min-height: 100vh;
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 1.5s ease, transform 1.5s ease;
@@ -276,102 +258,11 @@ Climb. Fall. Repeat.
     box-shadow: var(--merch-hover-shadow);
   }
 
-  /* Mobile Responsive Styles */
   @media (max-width: 768px) {
-    .hero h1 {
-      font-size: 8vw;
-    }
-
-    .hero p {
-      font-size: 1rem;
-    }
-
-    .hero button {
-      font-size: 14px;
-      padding: 12px 24px;
-    }
-
     .merch-grid {
-      padding-left: 0;
-      padding-right: 0;
+        padding-left: 0;
+    padding-right: 0;
       grid-template-columns: 1fr;
-    }
-
-    canvas {
-      max-width: 90%;
-      max-height: 400px;
-    }
-
-    #game {
-      padding: 30px 20px;
-    }
-
-    footer {
-      font-size: 10px;
-      padding: 15px 10px;
-    }
-
-    footer a {
-      font-size: 10px;
-      line-height: 1.4;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .hero h1 {
-      font-size: 10vw;
-    }
-
-    .hero p {
-      font-size: 0.9rem;
-    }
-
-    canvas {
-      max-height: 350px;
-    }
-  }
-
-  /* Landscape mode on mobile */
-  @media (max-height: 500px) and (orientation: landscape) {
-    .hero {
-      padding: 20px;
-    }
-    
-    .hero h1 {
-      font-size: 8vh;
-      margin-bottom: 10px;
-    }
-
-    .hero p {
-      font-size: 0.8rem;
-      margin-bottom: 5px;
-    }
-
-    .hero button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 12px;
-    }
-
-    #game {
-      min-height: auto;
-      padding: 20px;
-    }
-
-    canvas {
-      height: 50vh;
-      max-height: 300px;
-    }
-  }
-
-  /* Tablet Styles */
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .hero h1 {
-      font-size: 7vw;
-    }
-
-    .hero p {
-      font-size: 1rem;
     }
   }
   </style>
@@ -548,73 +439,73 @@ Climb. Fall. Repeat.
   "Maybe the ladder is trying to tell you something.",
   "You're not climbing, you're just falling upwards.",
   "The ladder wins, always. Deal with it.",
-  "You've been falling for longer than most people can hold a job.",
+  "You’ve been falling for longer than most people can hold a job.",
   "Every time you fall, an angel loses its wings. Sorry, angel.",
   "Well, that was a spectacular failure.",
   "Is the ladder just a metaphor for life? Discuss.",
   "You fell again? Well, what else is new?",
   "Why does falling feel like the only option?",
-  "You're climbing... but where are you really going?",
+  "You’re climbing... but where are you really going?",
   "The only thing you're getting out of this is a sore thumb.",
-  "Don't worry, the loop's endless... just like your frustration.",
+  "Don't worry, the loop’s endless... just like your frustration.",
   "When does this cycle end? Not anytime soon, my friend.",
   "A ladder without a top... how poetic.",
   "You're halfway up, and still, no reward in sight.",
-  "The ladder's patience is infinite... but yours might not be.",
-  "You've reached a new score, and somehow, I'm less impressed each time.",
-  "What's at the top? Just more falling.",
-  "Let me guess... you're gonna fall right now.",
-  "One day you'll reach the top... but that day is not today.",
-  "The ladder just doesn't care, does it?",
+  "The ladder’s patience is infinite... but yours might not be.",
+  "You've reached a new score, and somehow, I’m less impressed each time.",
+  "What’s at the top? Just more falling.",
+  "Let me guess... you’re gonna fall right now.",
+  "One day you’ll reach the top... but that day is not today.",
+  "The ladder just doesn’t care, does it?",
   "You should be getting paid for all this climbing... or falling.",
   "You fell. Again. It's almost like you're playing for that purpose.",
-  "I believe in you... just kidding, I don't.",
+  "I believe in you... just kidding, I don’t.",
   "You're still trying? You must have a death wish.",
   "Falling with style... or just falling.",
-  "You've climbed for hours. It feels like days, right?",
+  "You’ve climbed for hours. It feels like days, right?",
   "Each fall is just another lesson. A lesson you keep ignoring.",
-  "Climbing this ladder is your version of therapy, isn't it?",
+  "Climbing this ladder is your version of therapy, isn’t it?",
   "Is there a 'just give up' button somewhere?",
   "Who needs a reset button when you've already reset yourself?",
-  "You fell again? Don't worry, it's the game's fault, not yours.",
-  "Keep climbing... you'll fall again... and again... and again.",
-  "I'm not saying you're bad at this... but you're bad at this.",
+  "You fell again? Don't worry, it’s the game’s fault, not yours.",
+  "Keep climbing... you’ll fall again... and again... and again.",
+  "I’m not saying you’re bad at this... but you’re bad at this.",
   "Does anyone ever reach the top? Or do we just keep falling forever?",
   "Does your thumb hurt yet? Because mine does.",
   "You're just a tiny pixel on a never-ending ladder, huh?",
-  "When will you learn? Just kidding, don't.",
+  "When will you learn? Just kidding, don’t.",
   "Have you tried... not falling?",
-  "You think you're close to winning... but you're not.",
+  "You think you’re close to winning... but you're not.",
   "The ladder has one rule: 'No winners allowed.'",
-  "This is probably the most pointless thing you've done today.",
-  "I bet you can't make it 10 more seconds without falling.",
-  "You're still climbing? There's no top, you know.",
+  "This is probably the most pointless thing you’ve done today.",
+  "I bet you can’t make it 10 more seconds without falling.",
+  "You’re still climbing? There’s no top, you know.",
   "This game was supposed to be fun, right?",
   "Climbing a ladder is the easy part... it's the falling that gets you.",
   "Why climb when you can just fall?",
   "You're not falling... you're just 'adjusting your position.'",
   "Every time you climb, the ladder laughs at you.",
   "You fell again? But you had such high hopes!",
-  "I hope you're getting something out of this, because I'm not.",
+  "I hope you're getting something out of this, because I’m not.",
   "Each fall is like a little death. Embrace it.",
   "The game is rigged. The ladder will always win.",
   "You know what's more fun than climbing? Falling.",
-  "If falling was a sport, you'd be a champion.",
+  "If falling was a sport, you’d be a champion.",
   "Who needs goals when you have a never-ending ladder?",
-  "You've got a high score. Too bad it doesn't matter.",
-  "I've seen people climb ladders faster than you.",
+  "You’ve got a high score. Too bad it doesn’t matter.",
+  "I’ve seen people climb ladders faster than you.",
   "You climbed one step. You fell several.",
-  "No matter how high you climb, gravity's always waiting.",
+  "No matter how high you climb, gravity’s always waiting.",
   "If you get to the top, let me know. I'll be waiting for your inevitable fall.",
   "Are you winning yet? No? Well, keep trying.",
   "I think you just like the sound of the music, don't you?",
-  "Just fall already, it's inevitable.",
+  "Just fall already, it’s inevitable.",
   "You're climbing a ladder... in a game. Is that life?",
   "Fall down, get up, repeat. Sound familiar?",
-  "There's no escape from the loop... except maybe the game.",
-  "The ladder is your enemy... and it's winning.",
+  "There’s no escape from the loop... except maybe the game.",
+  "The ladder is your enemy... and it’s winning.",
   "Congratulations on making it to... the middle of the ladder.",
-  "You just climbed... and then fell. That's impressive, in a way."
+  "You just climbed... and then fell. That’s impressive, in a way."
 ];
 
     function adjustPlaybackRates() {
