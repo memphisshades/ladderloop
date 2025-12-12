@@ -56,7 +56,7 @@
     text-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.8);
   }
 
-  .hero {
+   .hero {
     width: 100%;
     height: 100vh;
     height: 100dvh;
@@ -74,13 +74,16 @@
   .hero h1 {
     font-size: 6vw;
     max-width: 90%;
+    text-align: left;
     text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 0, 255, 0.9);
   }
 
   .hero p {
     font-size: 1rem;
+    text-align: left;
   }
-
+  
+  
   .hero button {
     margin-top: 30px;
     padding: 15px 30px;
@@ -178,8 +181,8 @@
   }
 
   footer {
-    position: fixed;
-    bottom: 0;
+  position: relative;
+    bottom: auto;
     width: 100%;
     left: 0;
     background: #111111;
@@ -426,7 +429,7 @@
       Your browser does not support the video tag.
     </video>
 
-    <h1>Climb. <br>Fall.<br> Repeat.</h1>
+    <h1>Climb.<br> Fall.<br>Repeat.</h1>
    <!-- <p>A one‑button web game for endless retries.</p>-->
     <button onclick="scrollToAboutSection();">Play Now</button>
   </section>
