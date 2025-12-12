@@ -990,7 +990,7 @@
       }
     }
 
-    // Adjust mute button size based on canvas size
+   // Adjust mute button size based on canvas size
     function adjustMuteButtonSize() {
       const canvas = document.getElementById('gameCanvas');
       const muteButton = document.getElementById('muteButton');
@@ -998,10 +998,22 @@
       const canvasWrapper = document.getElementById('canvasWrapper');
       const wrapperRect = canvasWrapper.getBoundingClientRect();
       
+      // Detect if mobile device
+      const isMobile = window.innerWidth <= 768;
+      
       // Calculate button size as percentage of canvas width
-      const buttonWidth = Math.max(30, canvasRect.width * 0.12); // 12% of canvas width, min 30px
-      const fontSize = Math.max(7, Math.floor(buttonWidth / 5));
-      const padding = Math.max(3, Math.floor(buttonWidth / 10));
+      // Make it larger on mobile for better touch targets
+      const buttonWidth = isMobile 
+        ? Math.max(50, canvasRect.width * 0.18) // 18% on mobile, min 50px
+        : Math.max(30, canvasRect.width * 0.12); // 12% on desktop, min 30px
+      
+      const fontSize = isMobile
+        ? Math.max(14, Math.floor(buttonWidth / 3.5)) // Larger font on mobile
+        : Math.max(7, Math.floor(buttonWidth / 5));
+      
+      const padding = isMobile
+        ? Math.max(8, Math.floor(buttonWidth / 6)) // More padding on mobile
+        : Math.max(3, Math.floor(buttonWidth / 10));
       
       // Calculate offset based on wrapper position relative to canvas
       const canvasLeft = canvasRect.left;
@@ -1010,7 +1022,10 @@
       const wrapperRight = wrapperRect.right;
       
       // Position button relative to actual canvas, not wrapper
-      const offset = Math.max(5, Math.floor(canvasRect.width * 0.025)); // 2.5% of canvas width
+      const offset = isMobile
+        ? Math.max(8, Math.floor(canvasRect.width * 0.035)) // Larger offset on mobile
+        : Math.max(5, Math.floor(canvasRect.width * 0.025));
+      
       const rightPosition = (wrapperRight - canvasRight) + offset;
       
       muteButton.style.fontSize = fontSize + 'px';
@@ -1018,6 +1033,12 @@
       muteButton.style.top = offset + 'px';
       muteButton.style.right = rightPosition + 'px';
       muteButton.style.maxWidth = (canvasRect.width - (offset * 3)) + 'px';
+      
+      // Ensure minimum touch target size on mobile (44x44px recommended)
+      if (isMobile) {
+        muteButton.style.minWidth = '44px';
+        muteButton.style.minHeight = '44px';
+      }
     }
 
     // Call on load and resize
