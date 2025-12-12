@@ -1,36 +1,30 @@
-<!--
-Ladder Loop:  
-Climb. Fall. Repeat.
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="UTF-8">
   <title>Ladder Loop Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- SEO -->
- <meta name="description" content="Climb, fall, repeat. Ladder Loop is a one‑button arcade game where gravity always wins.">
-<meta name="keywords" content="ladder loop, climb, fall, repeat, retro web game, one button game">
-<meta name="author" content="James Tobin">
+  <meta name="description" content="Climb, fall, repeat. Ladder Loop is a one‑button arcade game where gravity always wins.">
+  <meta name="keywords" content="ladder loop, climb, fall, repeat, retro web game, one button game">
+  <meta name="author" content="James Tobin">
 
-<!-- Open Graph -->
- <meta property="og:title" content="Ladder Loop – Endless Climb Arcade Game">
-<meta property="og:description" content="Tap to climb, fall back, and repeat. Can you master the loop?">
+  <!-- Open Graph -->
+  <meta property="og:title" content="Ladder Loop – Endless Climb Arcade Game">
+  <meta property="og:description" content="Tap to climb, fall back, and repeat. Can you master the loop?">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.ladderloop.com/">
   <meta property="og:image" content="https://www.ladderloop.com/images/rise-fall-repeat-thumbnail.jpg">
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ladder Loop – Endless Climb Arcade Game">
-<meta name="twitter:description" content="Climb ladders that never end. Fall. Repeat. The loop is life.">
-<meta name="twitter:image" content="https://www.ladderloop.com/images/rise-fall-repeat-twitter.jpg">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ladder Loop – Endless Climb Arcade Game">
+  <meta name="twitter:description" content="Climb ladders that never end. Fall. Repeat. The loop is life.">
+  <meta name="twitter:image" content="https://www.ladderloop.com/images/rise-fall-repeat-twitter.jpg">
 
-<!-- Favicon -->
-<link rel="icon" href="https://www.ladderloop.com/favicon.ico" type="image/x-icon">
+  <!-- Favicon -->
+  <link rel="icon" href="https://www.ladderloop.com/favicon.ico" type="image/x-icon">
 
   <!-- Google Font for retro vibe -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -106,17 +100,21 @@ Climb. Fall. Repeat.
   }
 
   #game h2 {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.8);
   }
 
   #game > p {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    font-size: 18px;
+    line-height: 1.6;
   }
 
   canvas {
     width: auto;
     height: 80vh;
-    max-width: none;
+    max-width: 90vw;
     max-height: none;
     background: linear-gradient(135deg, #222222, #444444);
     border: 3px solid #ff0066;
@@ -126,6 +124,24 @@ Climb. Fall. Repeat.
     transition: height 0.3s ease;
   }
 
+  #canvasWrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+
+  #muteButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  #muteButton:hover {
+    transform: scale(1.1);
+  }
+
   #resizeControls {
     display: none;
   }
@@ -133,14 +149,6 @@ Climb. Fall. Repeat.
   #resizeControls button:hover {
     transform: scale(1.05);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-  }
-
-  #score {
-    font-size: 18px;
-    margin-top: 10px;
-    font-family: 'Press Start 2P', cursive;
-    color: #ffcc00;
-    text-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
   }
 
   #overlay {
@@ -200,34 +208,6 @@ Climb. Fall. Repeat.
   footer a:hover {
     color: #ff0066;
     text-decoration: underline;
-  }
-
-  #muteButton {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #ff0066, #00ccff);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 12px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
-    transition: transform 0.2s, opacity 0.3s;
-    z-index: 10000;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  #muteButton.visible {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  #muteButton:hover {
-    transform: scale(1.05);
   }
 
   .hero-video {
@@ -360,11 +340,6 @@ Climb. Fall. Repeat.
       font-size: 10px;
       line-height: 1.4;
     }
-
-    #muteButton {
-      font-size: 10px;
-      padding: 8px 16px;
-    }
   }
 
   @media (max-width: 480px) {
@@ -442,7 +417,7 @@ Climb. Fall. Repeat.
   }
   </style>
 </head>
-<body>
+<body id="artifacts-component-root-html">
 
   <!-- Hero Section -->
   <section class="hero">
@@ -452,7 +427,7 @@ Climb. Fall. Repeat.
     </video>
 
     <h1>Climb. <br>Fall.<br> Repeat.</h1>
-    <p>A one‑button web game for endless retries.</p>
+   <!-- <p>A one‑button web game for endless retries.</p>-->
     <button onclick="scrollToAboutSection();">Play Now</button>
   </section>
 
@@ -464,7 +439,7 @@ Climb. Fall. Repeat.
 
   <!-- Game Section -->
   <section id="game">
-    <h2>Ladder Loop</h2><br>
+    <h2>Ladder Loop</h2>
     <p>Tap to climb!</p>
     
     <!-- Resize Controls (only visible on large screens) -->
@@ -476,11 +451,24 @@ Climb. Fall. Repeat.
       <button onclick="resizeCanvas('max')" style="padding: 8px 16px; background: linear-gradient(135deg, #ff0066, #ffcc00); color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Press Start 2P', cursive; font-size: 10px;">Max</button>
     </div>
     
-    <canvas id="gameCanvas" width="500" height="800"></canvas>
-    <div id="scoreContainer" style="display: flex; justify-content: center; gap: 20px; align-items: center;">
-      <div id="score">Score: 0</div>
+    <div id="canvasWrapper" style="position: relative; display: inline-block; max-width: 100%; overflow: hidden; border-radius: 10px;">
+      <canvas id="gameCanvas" width="400" height="450" style="display: block;"></canvas>
+      <button id="muteButton" onclick="toggleMute()" 
+        style="position: absolute; top: 10px; right: 10px; 
+               padding: 5px 10px; 
+               background: linear-gradient(135deg, #ff0066, #00ccff); 
+               color: white; border: none; border-radius: 4px; 
+               cursor: pointer; font-family: 'Press Start 2P', cursive; 
+               font-size: 8px; 
+               box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); 
+               transition: transform 0.2s; 
+               z-index: 10;
+               white-space: nowrap;
+               pointer-events: auto;">
+        🔊
+      </button>
     </div>
-    <button id="muteButton" onclick="toggleMute()">Sound On</button>
+    
     <div id="overlay"></div>
   </section>
 
@@ -560,7 +548,7 @@ Climb. Fall. Repeat.
     <img src="images/office/office_38.png" alt="Our Office" style="max-width: 80%; border: 3px solid #ffcc00; border-radius: 10px;">
   </section>
 
-   <footer>
+    <footer>
    <!-- <p>Made for Fun 🎮</p>
    <p>-->
   <a href="https://x.com/ladderloop" target="_blank">Climb with us on X</a> <br><br>
@@ -578,7 +566,7 @@ Climb. Fall. Repeat.
     const climbAudio = document.getElementById("climbAudio");
     const backgroundVideo = document.getElementById("backgroundVideo");
 
-    let character = { x: 237, y: 770, width: 30, height: 30 };
+    let character = { x: 187, y: 420, width: 30, height: 30 };
     let climbing = false;
     let score = 0;
     let speed = 4;
@@ -703,12 +691,12 @@ Climb. Fall. Repeat.
       ctx.strokeStyle = "#fff";
       ctx.lineWidth = 6;
       ctx.beginPath();
-      ctx.moveTo(200, 0); ctx.lineTo(200, 800);
-      ctx.moveTo(300, 0); ctx.lineTo(300, 800);
+      ctx.moveTo(150, 0); ctx.lineTo(150, 450);
+      ctx.moveTo(250, 0); ctx.lineTo(250, 450);
       ctx.stroke();
-      for (let i = 0; i < 800; i += 60) {
+      for (let i = 0; i < 450; i += 40) {
         ctx.beginPath();
-        ctx.moveTo(200, i); ctx.lineTo(300, i);
+        ctx.moveTo(150, i); ctx.lineTo(250, i);
         ctx.stroke();
       }
     }
@@ -716,6 +704,32 @@ Climb. Fall. Repeat.
     function drawCharacter() {
       ctx.fillStyle = "yellow";
       ctx.fillRect(character.x, character.y, character.width, character.height);
+    }
+
+    function drawScore() {
+      // Adjust font size based on screen resolution
+      const screenWidth = window.screen.width;
+      const screenHeight = window.screen.height;
+      let fontSize;
+      
+      if (screenWidth >= 3840 || screenHeight >= 2160) {
+        // 4K/5K screens - much smaller
+        fontSize = 10;
+      } else if (screenWidth >= 1920) {
+        // Large screens (1080p+) - slightly smaller
+        fontSize = 12;
+      } else {
+        // Regular screens - small
+        fontSize = 14;
+      }
+      
+      ctx.fillStyle = "#ffcc00";
+      ctx.font = `${fontSize}px 'Press Start 2P', cursive`;
+      ctx.textAlign = "left";
+      ctx.shadowColor = "rgba(255, 255, 0, 0.8)";
+      ctx.shadowBlur = 10;
+      ctx.fillText("Score: " + score, 10, 25);
+      ctx.shadowBlur = 0;
     }
 
     function showOverlay(text) {
@@ -798,6 +812,7 @@ Climb. Fall. Repeat.
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawLadder();
       drawCharacter();
+      drawScore();
 
       if (!freezeFrame) {
         if (climbing) {
@@ -811,18 +826,17 @@ Climb. Fall. Repeat.
           }
         } else {
           character.y += speed;
-          if (character.y >= 770) character.y = 770;
+          if (character.y >= 420) character.y = 420;
         }
       }
 
-      document.getElementById("score").innerText = "Score: " + score;
       requestAnimationFrame(update);
     }
 
     climbAudio.loop = true;
 
     function climb() {
-      if (!climbing && character.y >= 770 && !freezeFrame) {
+      if (!climbing && character.y >= 420 && !freezeFrame) {
         climbing = true;
         if (audioEnabled) {
           if (climbAudio.paused) climbAudio.play();
@@ -840,8 +854,13 @@ Climb. Fall. Repeat.
     const gameSection = document.getElementById('game');
     const gameObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && !gameStarted && !audioPromptShown) {
-          showAudioPrompt();
+        if (entry.isIntersecting && !gameStarted) {
+          // Start game automatically with audio disabled
+          audioEnabled = false;
+          document.getElementById('muteButton').innerHTML = '🔇';
+          document.getElementById('muteButton').style.background = 'linear-gradient(135deg, #666, #999)';
+          gameStarted = true;
+          update();
         }
       });
     }, {
@@ -945,19 +964,68 @@ Climb. Fall. Repeat.
       audioEnabled = !audioEnabled;
       
       if (audioEnabled) {
-        muteButton.innerHTML = 'Sound On';
+        muteButton.innerHTML = '🔊';
         muteButton.style.background = 'linear-gradient(135deg, #ff0066, #00ccff)';
         if (climbing) {
           climbAudio.play();
           backgroundVideo.play();
         }
       } else {
-        muteButton.innerHTML = 'Sound Off';
+        muteButton.innerHTML = '🔇';
         muteButton.style.background = 'linear-gradient(135deg, #666, #999)';
         climbAudio.pause();
         backgroundVideo.pause();
       }
     }
+
+    // Adjust mute button size based on canvas size
+    function adjustMuteButtonSize() {
+      const canvas = document.getElementById('gameCanvas');
+      const muteButton = document.getElementById('muteButton');
+      const canvasRect = canvas.getBoundingClientRect();
+      const canvasWrapper = document.getElementById('canvasWrapper');
+      const wrapperRect = canvasWrapper.getBoundingClientRect();
+      
+      // Calculate button size as percentage of canvas width
+      const buttonWidth = Math.max(30, canvasRect.width * 0.12); // 12% of canvas width, min 30px
+      const fontSize = Math.max(7, Math.floor(buttonWidth / 5));
+      const padding = Math.max(3, Math.floor(buttonWidth / 10));
+      
+      // Calculate offset based on wrapper position relative to canvas
+      const canvasLeft = canvasRect.left;
+      const wrapperLeft = wrapperRect.left;
+      const canvasRight = canvasRect.right;
+      const wrapperRight = wrapperRect.right;
+      
+      // Position button relative to actual canvas, not wrapper
+      const offset = Math.max(5, Math.floor(canvasRect.width * 0.025)); // 2.5% of canvas width
+      const rightPosition = (wrapperRight - canvasRight) + offset;
+      
+      muteButton.style.fontSize = fontSize + 'px';
+      muteButton.style.padding = padding + 'px ' + (padding * 2) + 'px';
+      muteButton.style.top = offset + 'px';
+      muteButton.style.right = rightPosition + 'px';
+      muteButton.style.maxWidth = (canvasRect.width - (offset * 3)) + 'px';
+    }
+
+    // Call on load and resize
+    window.addEventListener('load', adjustMuteButtonSize);
+    window.addEventListener('resize', adjustMuteButtonSize);
+    
+    // Also adjust when canvas size changes
+    const resizeObserver = new ResizeObserver(adjustMuteButtonSize);
+    resizeObserver.observe(document.getElementById('gameCanvas'));
+
+    // Set default canvas size based on screen resolution
+    window.addEventListener('load', () => {
+      const screenWidth = window.screen.width;
+      const screenHeight = window.screen.height;
+      
+      // If 4K or higher resolution (3840x2160 or greater), default to small
+      if (screenWidth >= 3840 || screenHeight >= 2160) {
+        resizeCanvas('small');
+      }
+    });
 
     function resizeCanvas(size) {
       const canvas = document.getElementById('gameCanvas');
@@ -974,7 +1042,6 @@ Climb. Fall. Repeat.
     // Footer auto-hide functionality
     let footerTimeout;
     const footer = document.querySelector('footer');
-    const muteButton = document.getElementById('muteButton');
     let isInGameSection = false;
     let lastInteractionTime = Date.now();
 
@@ -1014,12 +1081,10 @@ Climb. Fall. Repeat.
       entries.forEach(entry => {
         isInGameSection = entry.isIntersecting;
         if (isInGameSection) {
-          muteButton.classList.add('visible');
           footerTimeout = setTimeout(() => {
             footer.classList.add('hidden');
           }, 3000);
         } else {
-          muteButton.classList.remove('visible');
           footer.classList.remove('hidden');
           clearTimeout(footerTimeout);
         }
