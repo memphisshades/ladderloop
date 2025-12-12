@@ -471,12 +471,28 @@
 
 </button> </section>
 
-  <!-- About Section -->
-  <section class="about">
+ <!-- About Section -->
+<section class="about" 
+  style="display:flex; flex-direction:column; justify-content:space-between; min-height:250px;"
+>
+  <div>
     <h2>theGame</h2>
     <p>Ladder Loop is a minimalist arcade climb. How long can you last?</p>
-  </section>
+  </div>
 
+  <!-- Footer ONLY for the theGame section -->
+  <footer 
+    style="margin-top:20px; padding-top:10px; border-top:0px solid #ccc; background-color:inherit; text-align:center;"
+  >
+    <ul style="list-style:none; padding:0; margin:0; display:inline-flex; gap:20px;">
+    <li><a href="#reviews" style="text-decoration:none; color:inherit;">Reviews</a></li>
+      <li><a href="#faq" style="text-decoration:none; color:inherit;">FAQ</a></li>
+      <li><a href="#merch" style="text-decoration:none; color:inherit;">Merch</a></li>
+      <li><a href="#share" style="text-decoration:none; color:inherit;">Share</a></li>
+      <li><a href="#office" style="text-decoration:none; color:inherit;">Our Office</a></li>
+    </ul>
+  </footer>
+</section>
   <!-- Game Section -->
   <section id="game">
     <h2>Ladder Loop</h2>
@@ -513,7 +529,7 @@
   </section>
 
   <!-- Testimonials Section -->
-  <section class="testimonials" style="padding: 60px 20px; background: linear-gradient(135deg, #b200ff, #00ffcc); border-radius: 15px; margin-top: 30px;">
+  <section id="reviews" style="padding: 60px 20px; background: linear-gradient(135deg, #b200ff, #00ffcc); border-radius: 15px; margin-top: 30px;">
     <h2 style="font-size: 24px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.8);">Reviews</h2>
     <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>"I climbed once. Then I fell."</strong> - The Climber</p>
     <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>"Best. Ladder. Ever." </strong> - Some guy who is still playing</p>
@@ -521,7 +537,7 @@
   </section>
 
   <!-- FAQ Section -->
-  <section class="faq" style="padding: 60px 20px; background: linear-gradient(135deg, #b200ff, #00ffcc); border-radius: 15px; margin-top: 30px;">
+  <section id="faq" style="padding: 60px 20px; background: linear-gradient(135deg, #b200ff, #00ffcc); border-radius: 15px; margin-top: 30px;">
     <h2 style="font-size: 24px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 0, 255, 0.8), 0 0 20px rgba(255, 0, 255, 0.8);">FAQs</h2>
     <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>Q:</strong> What's the point? <br><strong>A:</strong> Exactly.</p>
     <p style="font-size: 18px; margin-bottom: 12px; line-height: 1.6; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);"><strong>Q:</strong> How do I win? <br><strong>A:</strong> You don't. But good luck trying.</p>
