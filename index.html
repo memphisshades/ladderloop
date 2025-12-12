@@ -1001,18 +1001,18 @@
       // Detect if mobile device
       const isMobile = window.innerWidth <= 768;
       
-      // Calculate button size as percentage of canvas width
+     // Calculate button size as percentage of canvas width
       // Make it larger on mobile for better touch targets
       const buttonWidth = isMobile 
-        ? Math.max(50, canvasRect.width * 0.18) // 18% on mobile, min 50px
+        ? Math.max(40, canvasRect.width * 0.13) // 13% on mobile, min 40px
         : Math.max(30, canvasRect.width * 0.12); // 12% on desktop, min 30px
       
       const fontSize = isMobile
-        ? Math.max(14, Math.floor(buttonWidth / 3.5)) // Larger font on mobile
+        ? Math.max(11, Math.floor(buttonWidth / 4)) // Moderate font on mobile
         : Math.max(7, Math.floor(buttonWidth / 5));
       
       const padding = isMobile
-        ? Math.max(8, Math.floor(buttonWidth / 6)) // More padding on mobile
+        ? Math.max(6, Math.floor(buttonWidth / 7)) // Moderate padding on mobile
         : Math.max(3, Math.floor(buttonWidth / 10));
       
       // Calculate offset based on wrapper position relative to canvas
