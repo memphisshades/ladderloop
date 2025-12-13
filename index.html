@@ -1434,6 +1434,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </script>
 
+  <script>
+let wheelDeltaX = 0;
+let wheelTimeout = null;
+
+document.addEventListener('wheel', (e) => {
+  // Only consider horizontal scroll
+  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+    wheelDeltaX += e.deltaX;
+
+    // Reset timeout each time a wheel event fires
+    clearTimeout(wheelTimeout);
+    wheelTimeout = setTimeout(() => {
+      if (wheelDeltaX > 50) {
+        scrollToScreen(1);   // swipe left → next screen
+      } else if (wheelDeltaX < -50) {
+        scrollToScreen(-1);  // swipe right → previous screen
+      }
+      wheelDeltaX = 0; // reset after handling
+    }, 150); // wait until gesture ends
+  }
+}, { passive: true });
+
+</script>
 
 </body>
 </html>
