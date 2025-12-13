@@ -1247,15 +1247,37 @@
       ctx.fillRect(character.x, character.y, character.width, character.height);
     }
 
+   /*
+function drawScore() {
+  ctx.fillStyle = "#ffcc00";
+  ctx.font = "14px 'Press Start 2P', cursive";
+  ctx.textAlign = "left";
+  ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
+  ctx.shadowBlur = 10;
+  ctx.fillText("Score: " + score, 10, 25);
+  ctx.shadowBlur = 0;
+}
+*/
+
     function drawScore() {
-      ctx.fillStyle = "#ffcc00";
-      ctx.font = "14px 'Press Start 2P', cursive";
-      ctx.textAlign = "left";
-      ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
-      ctx.shadowBlur = 10;
-      ctx.fillText("Score: " + score, 10, 25);
-      ctx.shadowBlur = 0;
-    }
+  ctx.fillStyle = "#ffcc00";
+  ctx.font = "14px 'Press Start 2P', cursive";
+  ctx.textAlign = "left";
+  ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
+  ctx.shadowBlur = 10;
+
+  const scoreStr = "Pts: " + score;
+  let startX = 10;       // left margin
+  let startY = 25;       // top margin
+  let lineHeight = 18;   // spacing between characters
+
+  // Draw each character one below the other
+  for (let i = 0; i < scoreStr.length; i++) {
+    ctx.fillText(scoreStr[i], startX, startY + i * lineHeight);
+  }
+
+  ctx.shadowBlur = 0;
+}
 
     function showOverlay(text) {
       overlay.innerText = text;
