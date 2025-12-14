@@ -692,6 +692,34 @@
       }
     }
   </style>
+  
+  <style>
+  
+   /* Fix for iOS Safari landscape overflow */
+  .fullscreen-menu,
+  .modal-content {
+    height: 100dvh;       /* dynamic viewport height */
+    max-height: 90dvh;    /* safer cap */
+  }
+
+  .modal-content img,
+  .carousel-image {
+    max-height: 40dvh;    /* shrink images in landscape */
+    object-fit: contain;
+  }
+
+  @media (max-height: 500px) and (orientation: landscape) {
+    .modal-content {
+      padding: 15px;
+      max-height: 80dvh;  /* tighter clamp for small landscape screens */
+    }
+    .carousel-image {
+      max-height: 35dvh;
+    }
+  }
+</style>
+
+
 </head>
 <body>
 
