@@ -442,7 +442,11 @@
       margin-top: 10px;
     }
 
-    @media (max-width: 768px) {
+   css    @media (max-width: 768px) {
+      .lightbox-image {
+        max-height: 35vh;
+      }
+      
       .lightbox-nav.prev {
         left: 5px;
       }
@@ -452,6 +456,11 @@
       }
     }
     
+    @media (max-height: 600px) and (orientation: landscape) {
+      .lightbox-image {
+        max-height: 50vh;
+      }
+    }    
 
 
     .modal-content img {
