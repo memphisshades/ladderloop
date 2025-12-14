@@ -1,4 +1,4 @@
-<!-- Last updated: 2025-14-12 -->
+<!-- Last updated: 2025-14-12 @ 1715 GMT -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -34,1232 +34,647 @@
 <link rel="shortcut icon" href="/favicon/favicon.ico">
 <link rel="manifest" href="/favicon/site.webmanifest">
 
-  
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    html {
+      scroll-behavior: smooth;
+    }
 
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+      width: 100%;
+    }
 
-  body {
-    margin: 0;
-    font-family: 'Press Start 2P', cursive;
-    background: #0a0a0a;
-    color: #fff;
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
-    position: relative;
-  }
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #ff0066;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+    }
 
-  .tv-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  }
+    .nav-logo {
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
 
-  .tv-container::-webkit-scrollbar {
-    display: none;
-  }
-  .tv-container {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+    .nav-links {
+      display: flex;
+      gap: clamp(1rem, 2vw, 2rem);
+      list-style: none;
+    }
 
-  .tv-bezel {
-  position: relative;
-  width: 90vw;
-  height: 85vh;
-  max-width: 1400px;
-  background: transparent;
+    .nav-links a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-size: clamp(0.5rem, 1.2vw, 0.8rem);
+      transition: all 0.3s;
+      padding: 0.5rem 1rem;
+      border: 2px solid transparent;
+    }
+
+    .nav-links a:hover {
+      border: 2px solid #ff0066;
+      background: rgba(255, 0, 102, 0.1);
+      text-shadow: 0 0 10px #ff0066;
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .burger-line {
+      width: 25px;
+      height: 3px;
+      background: #00ffcc;
+      transition: all 0.3s;
+      box-shadow: 0 0 5px #00ffcc;
+    }
+
+  section {
+  /* modern viewport height unit */
+  min-height: 100svh;
+
+  padding: clamp(4rem, 8vh, 8rem) clamp(1rem, 5vw, 4rem);
   display: flex;
   flex-direction: column;
-  padding: 0;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
-/* Tron-style neon edges */
-.tv-bezel::before {
+/* fallback for browsers that don’t support svh */
+@supports not (height: 100svh) {
+  section {
+    min-height: 100vh;
+  }
+}
+
+/* orientation-specific tweak */
+@media (max-width: 768px) and (orientation: landscape) {
+  #hero {
+    justify-content: flex-start;   /* stop centering too high */
+    padding-top: 3rem;             /* push content down */
+  }
+}
+
+section::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 10;
-  
-  box-shadow: 
-    inset 0 0 0 2px rgba(0, 255, 204, 0.6),
-    inset 0 0 20px rgba(0, 255, 204, 0.2),
-    0 0 20px rgba(0, 255, 204, 0.4);
-  
-  animation: edgePulse 3s ease-in-out infinite;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff0066, #00ffcc, #ff0066, transparent);
+  animation: borderPulse 3s ease-in-out infinite;
 }
 
-@keyframes edgePulse {
-  0%, 100% {
-    box-shadow: 
-      inset 0 0 0 2px rgba(0, 255, 204, 0.6),
-      inset 0 0 20px rgba(0, 255, 204, 0.2),
-      0 0 20px rgba(0, 255, 204, 0.4);
-  }
-  50% {
-    box-shadow: 
-      inset 0 0 0 2px rgba(255, 0, 102, 0.8),
-      inset 0 0 30px rgba(255, 0, 102, 0.3),
-      0 0 30px rgba(255, 0, 102, 0.6);
-  }
+@keyframes borderPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
-.tv-bezel::after {
-  content: '';
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  right: 20px;
-  bottom: 20px;
-  pointer-events: none;
-  z-index: 10;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}  
+    .container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
 
-@media (max-height: 500px) and (orientation: landscape) {
-  body {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-  }
+    #hero {
+      text-align: center;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 100%);
+    }
 
-  .tv-container {
-   min-height: 100dvh !important;
-   
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-  }
+    #hero h1 {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      margin-bottom: clamp(1rem, 3vh, 2rem);
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+      animation: pulseGlow 2s infinite alternate;
+    }
 
-  .nav-arrow {
-    top: 50dvh;
-    transform: translateY(-50%);
-  }
-
-      .tv-bezel {
-        max-height: 80vh;
-        width: 90vw;
+    @keyframes pulseGlow {
+      from { 
+        text-shadow: 0 0 10px #ff0066, 0 0 20px #ff0066;
+        color: #ff0066;
+      }
+      to { 
+        text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+        color: #00ffcc;
       }
     }
 
-  @keyframes borderPulse {
-    0%, 100% {
-      box-shadow: 
-        0 0 40px rgba(255, 0, 102, 0.6),
-        0 0 80px rgba(0, 255, 204, 0.4),
-        inset 0 0 60px rgba(0, 0, 0, 0.8);
+    #hero p {
+      font-size: clamp(1rem, 3vw, 2rem);
+      margin-bottom: clamp(0.5rem, 2vh, 1rem);
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
     }
-    50% {
-      box-shadow: 
-        0 0 60px rgba(0, 255, 204, 0.8),
-        0 0 100px rgba(255, 0, 102, 0.6),
-        inset 0 0 60px rgba(0, 0, 0, 0.8);
+
+    #hero .subtitle {
+      font-size: clamp(0.6rem, 2vw, 1rem);
+      opacity: 0.8;
+      margin-bottom: clamp(2rem, 5vh, 4rem);
+      color: #fff;
     }
-  }
 
-  .tv-bezel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    z-index: 5;
-    border-radius: 0;
-  }
+    .btn-primary {
+      padding: clamp(0.8rem, 2vh, 1.2rem) clamp(2rem, 5vw, 3rem);
+      font-size: clamp(0.7rem, 1.5vw, 1rem);
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(135deg, #ff0066, #00ccff);
+      color: #fff;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+      text-decoration: none;
+      display: inline-block;
+    }
 
-  .tv-bezel::after {
-    content: '';
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border: 1px solid rgba(0, 255, 204, 0.3);
-    pointer-events: none;
-    z-index: 5;
-  }
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.8);
+    }
 
-  .tv-glass {
-    flex: 1;
-    background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
-    border-radius: 8px;
-    border: 2px solid #0a0a0a;
-    box-shadow: 
-      inset 0 0 30px rgba(0,0,0,0.9),
-      inset 0 0 100px rgba(0,100,200,0.1);
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-  }
+    #game {
+      background: #0a0a0a;
+    }
 
-  .tv-glass::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(1rem, 3vh, 2rem);
+      width: 100%;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      display: inline-block;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9);
+      padding: 10px;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
+    }
+
+    .resize-handle {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 0, 102, 0.3);
+      border: 2px solid #ff0066;
+      cursor: nwse-resize;
+      z-index: 30;
+      transition: all 0.2s;
+    }
+
+    .resize-handle:hover {
+      background: rgba(255, 0, 102, 0.6);
+      box-shadow: 0 0 15px rgba(255, 0, 102, 0.8);
+    }
+
+    .resize-handle.bottom-right { bottom: 2px; right: 2px; }
+    .resize-handle.top-left { top: 2px; left: 2px; cursor: nwse-resize; }
+    .resize-handle.top-right { top: 2px; right: 2px; cursor: nesw-resize; }
+    .resize-handle.bottom-left { bottom: 2px; left: 2px; cursor: nesw-resize; }
+
+    canvas {
     width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.15) 0px,
-      transparent 1px,
-      transparent 2px,
-      rgba(0, 0, 0, 0.15) 3px
-    );
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  .tv-glass::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-      135deg,
-      rgba(255,255,255,0.1) 0%,
-      transparent 40%,
-      transparent 60%,
-      rgba(255,255,255,0.05) 100%
-    );
-    pointer-events: none;
-    z-index: 11;
-  }
-
-  .power-on-flash {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    z-index: 100;
-    pointer-events: none;
-    animation: tvPowerOn 1s ease-out forwards;
-  }
-
-  @keyframes tvPowerOn {
-    0% {
-      opacity: 1;
-      transform: scaleY(1);
-    }
-    15% {
-      opacity: 1;
-      transform: scaleY(0.02);
-    }
-    30% {
-      opacity: 0.6;
-      transform: scaleY(0.01);
-    }
-    50% {
-      opacity: 0;
-      transform: scaleY(0);
-    }
-    100% {
-      opacity: 0;
-      transform: scaleY(0);
-    }
-  }
-
-  .crt-warmup {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(ellipse at center, rgba(0, 255, 255, 0.4) 0%, transparent 60%);
-    z-index: 99;
-    pointer-events: none;
-    animation: tvWarmUp 1.5s ease-out forwards;
-    opacity: 0;
-  }
-
-  @keyframes tvWarmUp {
-    0% {
-      opacity: 0;
-    }
-    30% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.7;
-    }
-    70% {
-      opacity: 0.3;
-    }
-    100% {
-      opacity: 0;
-    }
-  }
-
-  .screen-content {
-    position: relative;
-    z-index: 5;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    opacity: 0;
-    animation: fadeInScreen 0.5s ease-in 0.8s forwards;
-  }
-
-  @keyframes fadeInScreen {
-    to {
-      opacity: 1;
-    }
-  }
-
-  .screen-content.slide-out-left {
-    animation: slideOutLeft 0.4s ease-in forwards;
-  }
-
-  .screen-content.slide-out-right {
-    animation: slideOutRight 0.4s ease-in forwards;
-  }
-
-  .screen-content.slide-in-left {
-    animation: slideInLeft 0.4s ease-out forwards;
-  }
-
-  .screen-content.slide-in-right {
-    animation: slideInRight 0.4s ease-out forwards;
-  }
-
-  @keyframes slideOutLeft {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(-100%);
-    }
-  }
-
-  @keyframes slideOutRight {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(100%);
-    }
-  }
-
-  @keyframes slideInLeft {
-    from {
-      opacity: 0;
-      transform: translateX(-100%);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes slideInRight {
-    from {
-      opacity: 0;
-      transform: translateX(100%);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  .tv-controls {
-    position: absolute;
-    bottom: 10px;
-    right: 20px;
-    display: flex;
-    gap: 12px;
-  }
-
-  .tv-knob {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #ff0066;
-    border: none;
-    box-shadow: 
-      0 0 10px #ff0066,
-      0 0 20px #ff0066,
-      0 0 30px rgba(255, 0, 102, 0.5);
-    animation: knobPulse 2s ease-in-out infinite;
-  }
-
-  .tv-knob:nth-child(2) {
-    background: #00ffcc;
-    box-shadow: 
-      0 0 10px #00ffcc,
-      0 0 20px #00ffcc,
-      0 0 30px rgba(0, 255, 204, 0.5);
-    animation-delay: 1s;
-  }
-
-  @keyframes knobPulse {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.6;
-      transform: scale(1.2);
-    }
-  }
-
-  .tv-power {
-    position: absolute;
-    bottom: 10px;
-    left: 20px;
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-    border: 2px solid #ff0066;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    color: #ff0066;
-    box-shadow: 
-      0 0 15px rgba(255, 0, 102, 0.4),
-      inset 0 0 10px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
-    z-index: 100;
-  }
-
-  .tv-power:hover {
-    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-    box-shadow: 
-      0 0 25px rgba(255, 0, 102, 0.6),
-      inset 0 0 15px rgba(255, 0, 102, 0.2);
-    transform: scale(1.1);
-  }
-
-  .tv-power.off {
-    border-color: #666;
-    color: #666;
-    box-shadow: 
-      0 0 5px rgba(102, 102, 102, 0.2),
-      inset 0 0 10px rgba(0, 0, 0, 0.5);
-  }
-
-  .tv-power.off:hover {
-    border-color: #00ffcc;
-    color: #00ffcc;
-    box-shadow: 
-      0 0 15px rgba(0, 255, 204, 0.4),
-      inset 0 0 10px rgba(0, 255, 204, 0.1);
-  }
-
-  .tv-glass.tv-off {
-    background: #000;
-  }
-
-  .tv-glass.tv-off .screen-content {
-    display: none !important;
-  }
-
-  .tv-glass.tv-off::before,
-  .tv-glass.tv-off::after {
-    display: none;
-  }
-
-  .tv-brand {
-    position: absolute;
-    bottom: 15px;
-    left: 70px;
-    font-size: 9px;
-    color: #00ffcc;
-    letter-spacing: 3px;
-    text-shadow: 
-      0 0 10px #00ffcc,
-      0 0 20px rgba(0, 255, 204, 0.5);
-    text-transform: uppercase;
-  }
-
-  .hero-content h1 {
-    font-size: clamp(2rem, 5vw, 4rem);
-    margin-bottom: 30px;
-    animation: pulseGlow 1.5s infinite alternate;
-  }
-
-  @keyframes pulseGlow {
-    from { text-shadow: 0 0 10px #ff0066, 0 0 20px #ff0066; }
-    to { text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc; }
-  }
-
-  .hero-content p {
-    font-size: clamp(0.8rem, 2vw, 1.2rem);
-    margin-bottom: 30px;
-    color: #00ffcc;
-  }
-
-  .game-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.canvas-wrapper {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.resize-handle {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background: rgba(255, 0, 102, 0.3);
-  border: 2px solid #ff0066;
-  cursor: nwse-resize;
-  z-index: 30;
-  transition: all 0.2s;
-}
-
-.resize-handle:hover {
-  background: rgba(255, 0, 102, 0.6);
-  box-shadow: 0 0 15px rgba(255, 0, 102, 0.8);
-}
-
-.resize-handle.bottom-right {
-  bottom: 2px;
-  right: 2px;
-}
-
-.resize-handle.top-left {
-  top: 2px;
-  left: 2px;
-  cursor: nwse-resize;
-}
-
-.resize-handle.top-right {
-  top: 2px;
-  right: 2px;
-  cursor: nesw-resize;
-}
-
-.resize-handle.bottom-left {
-  bottom: 2px;
-  left: 2px;
-  cursor: nesw-resize;
-}
-
-  canvas {
+  height: auto;
       background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-  border: 2px solid #ff0066;
-  border-radius: 5px;
-  box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
-  display: block;
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  }
+      border: 2px solid #00ffcc;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+      display: block;
+    }
 
-   #overlay {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.95);
-    color: #ffcc00;
-    font-size: clamp(0.8rem, 2vw, 1.2rem);
-    padding: 30px;
-    border: 3px solid #ff0066;
-    max-width: 80%;
-    display: none;
-    white-space: pre-line;
-    z-index: 9999;
-    text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
-    border-radius: 10px;
-  }
+    .game-controls {
+      display: flex;
+      gap: clamp(0.8rem, 2vw, 1.5rem);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-  .lightbox {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.98);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  cursor: pointer;
-  animation: fadeIn 0.3s ease-in;
+    .game-btn {
+      padding: clamp(0.6rem, 1.5vh, 1rem) clamp(1.2rem, 3vw, 2rem);
+      font-size: clamp(0.6rem, 1.2vw, 0.9rem);
+      font-family: 'Press Start 2P', cursive;
+      background: rgba(255, 0, 102, 0.1);
+      color: #00ffcc;
+      border: 2px solid #ff0066;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 10px rgba(255, 0, 102, 0.3);
+    }
+
+    .game-btn:hover {
+      background: rgba(255, 0, 102, 0.3);
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .game-btn.active {
+      background: rgba(0, 255, 204, 0.3);
+      border-color: #00ffcc;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
+    }
+
+    #about, #reviews, #faq, #office, #merch {
+      background: #0a0a0a;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: clamp(2rem, 5vh, 4rem);
+      text-align: center;
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px rgba(0, 255, 204, 0.5);
+    }
+
+    .content-box {
+      background: rgba(26, 26, 26, 0.8);
+      border: 2px solid #ff0066;
+      border-radius: 10px;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      margin-bottom: clamp(1rem, 3vh, 2rem);
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+      max-width: 800px;
+      width: 100%;
+      transition: all 0.3s;
+       margin-left: auto;
+         margin-right: auto;
+    }
+
+    .content-box:hover {
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+      transform: translateY(-5px);
+    }
+
+    .content-box p {
+      font-size: clamp(0.65rem, 1.5vw, 0.9rem);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .content-box strong {
+      color: #00ffcc;
+      text-shadow: 0 0 5px #00ffcc;
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding: clamp(1rem, 3vw, 2rem);
+      background: rgba(0, 255, 204, 0.05);
+      border: 2px solid #00ffcc;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+    }
+
+    .social-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: clamp(0.6rem, 1.3vw, 0.8rem);
+      transition: all 0.3s;
+      padding: 0.5rem;
+    }
+
+    .social-links a:hover {
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    .gallery {
+  display: grid;
+  justify-content: center;   /* centers the grid itself */
+  grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+  gap: clamp(2rem, 4vw, 4rem);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
 
-.lightbox img {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
-  border: 3px solid #ff0066;
-  border-radius: 10px;
-  box-shadow: 0 0 40px rgba(255, 0, 102, 0.6);
-  animation: zoomIn 0.3s ease-out;
-}
+    .gallery-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+              justify-items: center;   /* centers each item horizontally */
+ width: auto;             /* don’t force full width */
+  margin: 0 auto;          /* center horizontally */
+      gap: 1rem;
+      background: rgba(26, 26, 26, 0.5);
+      border: 2px solid #ff0066;
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+      box-shadow: 0 0 15px rgba(255, 0, 102, 0.2);
+        margin-left: auto;
+  margin-right: auto;
+    }
 
-@keyframes zoomIn {
-  from {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
+    .gallery-item:hover {
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+      transform: translateY(-10px);
+    }
 
-.lightbox-close {
-  position: absolute;
-  top: 30px;
-  right: 40px;
-  font-size: 1.5rem;
-  color: #ff0066;
-  cursor: pointer;
-  z-index: 1001;
-  text-shadow: 0 0 20px rgba(255, 0, 102, 0.8);
-  transition: all 0.3s;
-  font-family: 'Press Start 2P', cursive;
-  background: rgba(0, 0, 0, 0.9);
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 0px solid #ff0066;
-  border-radius: 5px;
-}
+    .gallery-item img {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      border: 2px solid #00ffcc;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+      transition: transform 0.3s;
+    }
 
-.lightbox-close:hover {
-  color: #00ffcc;
-  border-color: #00ffcc;
-  text-shadow: 0 0 30px rgba(0, 255, 204, 0.8);
-  background: rgba(0, 0, 0, 0.95);
-  transform: scale(1.1);
-}
+    .gallery-item img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 255, 204, 0.6);
+    }
 
-/* Responsive close button positioning */
-@media (max-width: 768px) {
-  .lightbox-close {
-    top: 15px;
-    right: 15px;
-    font-size: 1.2rem;
-    width: 30px;
-    height: 30px;
-  }
-}
+    .gallery-caption {
+      font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+      text-align: center;
+      line-height: 1.6;
+      max-width: 500px;
+      color: #00ffcc;
+    }
 
-@media (max-width: 480px) {
-  .lightbox-close {
-    top: 10px;
-    right: 10px;
-    font-size: 1rem;
-    width: 28px;
-    height: 28px;
-  }
-}
+    .game-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 10, 10, 0.98);
+      color: #ffcc00;
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      padding: clamp(1.5rem, 4vw, 3rem);
+      border: 3px solid #ff0066;
+      display: none;
+      z-index: 2000;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 0, 102, 0.8);
+      max-width: 90vw;
+      white-space: pre-line;
+      border-radius: 10px;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    }
 
-  .info-content {
-    overflow-y: auto;
-    max-height: 100%;
-    padding: 20px;
-    color: #fff;
-  }
+    @media (max-width: 768px) {
+      .burger {
+        display: flex;
+      }
 
-  .info-content h2 {
-    font-size: clamp(1.2rem, 3vw, 2rem);
-    margin-bottom: 20px;
-    text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
-  }
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 70%;
+        max-width: 300px;
+        background: rgba(10, 10, 10, 0.98);
+        flex-direction: column;
+        padding: 5rem 2rem;
+        border-left: 2px solid #ff0066;
+        transition: right 0.3s;
+        gap: 2rem;
+        box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+      }
 
-  .info-content p {
-    font-size: clamp(0.6rem, 1.5vw, 0.9rem);
-    line-height: 1.8;
-    margin-bottom: 15px;
-  }
+      .nav-links.active {
+        right: 0;
+      }
 
-  .info-content::-webkit-scrollbar {
-    width: 8px;
-  }
+      .resize-handle {
+        display: none;
+      }
+    }
 
-  .info-content::-webkit-scrollbar-track {
-    background: #0a0a0a;
-  }
-
-  .info-content::-webkit-scrollbar-thumb {
-    background: #ff0066;
-    border-radius: 4px;
-  }
-
-  .nav-arrow {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 3rem;
-    color: #ff0066;
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 100;
-    cursor: pointer;
-    user-select: none;
-    text-shadow: 0 0 20px rgba(255, 0, 102, 0.8);
-    animation: fadeInNav 0.5s ease-in 1.2s forwards;
-  }
-
-  @keyframes fadeInNav {
-    to {
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
       opacity: 0.3;
     }
-  }
-
-  .nav-arrow:hover {
-    opacity: 0.8 !important;
-  }
-
-  .nav-arrow.left {
-    left: 20px;
-  }
-
-  .nav-arrow.right {
-    right: 20px;
-  }
-
-  .screen-indicator {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    z-index: 100;
-    opacity: 0;
-    animation: fadeInNav 0.5s ease-in 1.2s forwards;
-  }
-
-  .indicator-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(255, 0, 102, 0.3);
-    border: 2px solid #ff0066;
-    transition: all 0.3s;
-    cursor: pointer;
-  }
-
-  .indicator-dot.active {
-    background: #ff0066;
-    box-shadow: 0 0 15px rgba(255, 0, 102, 0.8);
-  }
-
-  .share-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 20px;
-  }
-
-  .share-btn {
-  padding: 12px 24px;
-  border: 2px solid #ff0066;
-  background: rgba(255, 0, 102, 0.1);
-  color: #fff;
-  font-family: 'Press Start 2P', cursive;
-  font-size: clamp(0.5rem, 1.2vw, 0.7rem);
-  cursor: pointer;
-  border-radius: 5px;
-  transition: all 0.3s;
-  flex: 1 1 auto;
-  min-width: 120px;
-  text-align: center;
-}
-  .share-btn:hover {
-    background: rgba(255, 0, 102, 0.3);
-    box-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
-  }
-
-  .merch-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 250px));
-  gap: 20px;
-  margin-top: 20px;
-  max-width: 100%;
-  overflow-y: auto;
-  justify-content: center;
-  -webkit-overflow-scrolling: touch;
-  flex: 1;
-  max-height: calc(100% - 100px);
-}
-
-.merch-item {
-  background: rgba(255, 0, 102, 0.1);
-  border: 2px solid #ff0066;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  transition: all 0.3s;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.merch-item:hover {
-  background: rgba(255, 0, 102, 0.2);
-  box-shadow: 0 0 20px rgba(255, 0, 102, 0.4);
-  transform: translateY(-5px);
-}
-
-.merch-item img {
-  width: 100%;
-  height: auto;
-  max-height: 120px;
-  object-fit: contain;
-  margin: 0 auto 10px auto;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: block;
-}
-
-.merch-item p {
-  font-size: clamp(0.5rem, 1vw, 0.7rem);
-  color: #00ffcc;
-  margin: 0 auto;
-  max-width: 90%;
-}
-
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .merch-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* 4K/5K display optimization */
-@media (min-width: 2560px) {
-  #screen-5 h2 {
-    margin-top: 60px;   /* push heading further down */
-    margin-bottom: 30px; /* keep spacing consistent */
-  }
-  
-  
-
-  .merch-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 280px));
-    gap: 25px;
-    padding: 20px;
-  }
-  
-  .merch-item {
-    padding: 20px;
-    min-height: 240px;   /* reduced height */
-  }
-  
-  .merch-item img {
-    max-height: 150px;   /* slightly smaller images */
-    margin-bottom: 15px;
-  }
-  
-  .merch-item p {
-    font-size: 0.75rem;  /* scale text down a touch */
-    line-height: 1.5;
-  }
-}
-
-  #muteButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #ff0066, #00ccff);
-  color: #fff;
-  border: 2px solid #ff0066;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 10px;
-  box-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
-  transition: all 0.2s;
-  z-index: 20;
-}
-  #muteButton:hover {
-    background: linear-gradient(135deg, #00ccff, #ff0066);
-    transform: scale(1.05);
-  }
-
-@media (max-width: 600px) and (orientation: portrait) {
-  .tv-container {
-    height: 100dvh;
-    min-height: -webkit-fill-available;
-  }
-
-  .tv-bezel {
-    width: 95vw;
-    max-width: 95vw;
-    height: 85vh;
-    max-height: 70vh;
-    padding: 15px;
-  }
-
-  .tv-glass {
-    border-width: 1px;
-      padding: 15px;
-  }
-  
-  .hero-content h1 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-  }
-  
-  .hero-content p {
-    font-size: 0.85rem;
-    margin-bottom: 15px;
-  }
-  
-  /* Rotate controls to right side in portrait */
-  .tv-power {
-    bottom: 20px;
-    left: auto;
-    right: 0px;
-    top: auto;
-     transform: rotate(275deg);
-  }
-  
-   .tv-controls {
-    bottom: 70px;
-    right: 10px;
-    left: auto;
-    top: 10px;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  
-  
-  .tv-power:hover {
-    transform: rotate(275deg);
-  }
-  
-  
-  
- 
-  
-  
-
-  .tv-brand {
-    bottom: 10px;
-    left: 70px;
-    right: auto;
-    top: auto;
-    writing-mode: normal;
-    text-orientation: mixed;
-    letter-spacing: 3px;
-  }
-  
-  #muteButton {
-    top: 10px;
-    right:  10px;
-    padding: 6px 12px;
-    font-size: 9px;
-    
-  }
-}
-
-
-  @media (max-width: 768px) {
-    .tv-bezel {
-      width: 95vw;
-      height: 90vh;
-      padding: 20px;
-    }
-
-    .tv-controls {
-      bottom: 10px;
-      right: 15px;
-      gap: 10px;
-    }
-
-    .tv-knob {
-      width: 25px;
-      height: 25px;
-    }
-
-    .nav-arrow {
-      font-size: 2rem;
-    }
-
-    .merch-grid {
-      display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
-  overflow-y: auto; /* enables vertical scroll if needed */
-  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
-    }
-  }
-
-  html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-     overflow-y: auto;
-  }
-
-  @keyframes crtCollapse {
-    0%   { opacity: 1; transform: scaleY(1) scaleX(1); }
-    50%  { opacity: 1; transform: scaleY(0.05) scaleX(1); }
-    80%  { opacity: 1; transform: scaleY(0.05) scaleX(0.2); }
-    100% { opacity: 0; transform: scaleY(0) scaleX(0); }
-  }
-  .crt-collapse {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: #fff;
-    z-index: 200;
-    pointer-events: none;
-    animation: crtCollapse 0.8s ease-out forwards;
-  }
   </style>
 </head>
 <body>
 
-  <div class="nav-arrow left" onclick="scrollToScreen(-1)">◀</div>
-  <div class="nav-arrow right" onclick="scrollToScreen(1)">▶</div>
-
-  <div class="screen-indicator">
-    <div class="indicator-dot active" onclick="goToScreen(0)"></div>
-    <div class="indicator-dot" onclick="goToScreen(1)"></div>
-    <div class="indicator-dot" onclick="goToScreen(2)"></div>
-    <div class="indicator-dot" onclick="goToScreen(3)"></div>
-    <div class="indicator-dot" onclick="goToScreen(4)"></div>
-    <div class="indicator-dot" onclick="goToScreen(5)"></div>
-    <div class="indicator-dot" onclick="goToScreen(6)"></div>
-    <div class="indicator-dot" onclick="goToScreen(7)"></div>
-  </div>
-
-   <!-- Horizontal scrolling container -->
-  <div class="tv-container" id="tvContainer">
-   
-        <!-- Single TV that stays centered -->
-        <div class="tv-wrapper">
-          <div class="tv-bezel">
-            <div class="tv-glass" id="tvGlass">
-              <div class="power-on-flash"></div>
-              <div class="crt-warmup"></div>
-  
-  <!-- Lightbox for full-screen images -->
-  <div class="lightbox" id="lightbox">
-    <span class="lightbox-close">×</span>
-    <img id="lightboxImg" src="" alt="Full view">
-  </div>
-  
-  
-          <!-- All screen contents -->
-          <div id="screen-0" class="screen-content hero-content" style="display: flex;">
-            <h1>LADDER LOOP</h1>
-            <p>Climb. Fall. Repeat.</p>
-            <p style="font-size: 0.7em; opacity: 0.8;">Swipe right to play →</p>
-          </div>
-
-        
-
-          <div id="screen-1" class="screen-content info-content" style="display: none;">
-            <h2>THE GAME</h2>
-            <p>Ladder Loop is a minimalist arcade climb.</p>
-            <p>How long can you last?</p>
-           <p style="margin-top: 20px; opacity: 0.7;">
-  Unlock new ladder 
-  <span style="
-    background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); 
-    -webkit-background-clip: text; 
-    -webkit-text-fill-color: transparent; 
-    font-weight: bold;
-  ">colors</span> 
-  as you score!
-</p>
-
-          </div>
-          
-           <div id="screen-2" class="screen-content game-content" style="display: none;">
-  <div class="canvas-wrapper" id="canvasWrapper">
-  
-    <canvas id="gameCanvas" width="400" height="450"></canvas>
-    <button id="muteButton" onclick="toggleMute()">🔊</button>
-    <div class="resize-handle bottom-right" id="resizeBottomRight"></div>
-<div class="resize-handle top-left" id="resizeTopLeft"></div>
-<div class="resize-handle top-right" id="resizeTopRight"></div>
-<div class="resize-handle bottom-left" id="resizeBottomLeft"></div>
-  </div>
-</div>          
-
-          <div id="screen-3" class="screen-content info-content" style="display: none;">
-            <h2>REVIEWS</h2>
-            <p><strong>"I climbed once. Then I fell."</strong><br>- The Climber</p>
-            <p><strong>"Best. Ladder. Ever."</strong><br>- Some guy who is still playing</p>
-            <p><strong>"I fell off the ladder, and I haven't stopped playing since."</strong><br>- Time‑rich girl</p>
-          </div>
-
-          <div id="screen-4" class="screen-content info-content" style="display: none;">
-            <h2>FAQs</h2>
-            <p><strong>Q:</strong> What's the point?<br><strong>A:</strong> Exactly.</p>
-            <p><strong>Q:</strong> How do I win?<br><strong>A:</strong> You don't. But good luck trying.</p>
-            <p><strong>Q:</strong> Is this game addictive?<br><strong>A:</strong> Are you still playing? Enough said.</p>
-            <p><strong>Q:</strong> What happens when I reach the top?<br><strong>A:</strong> You fall. That's life.</p>
-          </div>
-
-        <div id="screen-5" class="screen-content info-content" style="display: none; overflow-y: auto; -webkit-overflow-scrolling: touch;">
-  <h2>MERCH</h2>
-  <p style="margin-bottom: 20px;">Launching Soon (maybe)</p>
-  <div class="merch-grid">
-    <div class="merch-item">
-      <img src="https://www.ladderloop.com/images/merch/merch_xmas.png" alt="xmas jumper" class="lightbox-trigger">
-      <p>Ladder Loop Xmas Jumper – santa drops gifts, you just drop.</p>
+  <nav class="nav">
+    <div class="nav-logo">LADDER LOOP</div>
+    <div class="burger" onclick="toggleNav()">
+      <div class="burger-line"></div>
+      <div class="burger-line"></div>
+      <div class="burger-line"></div>
     </div>
-    <div class="merch-item">
-      <img src="https://www.ladderloop.com/images/merch/merch7.png" alt="hoodie" class="lightbox-trigger">
-      <p>Ladder Loop Hoodie – keeps you warm while you fall endlessly.</p>
-    </div>
-    <div class="merch-item">
-      <img src="https://www.ladderloop.com/images/merch/merch6.png" alt="cap" class="lightbox-trigger">
-      <p>Ladder Loop Cap – shields your eyes. Not your score.</p>
-    </div>
-    <div class="merch-item">
-      <img src="https://www.ladderloop.com/images/merch/merch4.png" alt="mug" class="lightbox-trigger">
-      <p> Ladder Loop Mug – holds hot drinks. Not your dignity.</p>
-    </div>
-    <div class="merch-item">
-      <img src="https://www.ladderloop.com/images/merch/merch3.png" alt="mousemat" class="lightbox-trigger">
-      <p>Ladder Loop Mousemat - Every click brings another fall.</p>
-    </div>
-    <div class="merch-item">
-      <img src="https://www.ladderloop.com/images/merch/merch5.png" alt="socks" class="lightbox-trigger">
-      <p>Ladder Loop Socks – fall faster in style.</p>
-    </div>
-  </div>
-</div>
-          <div id="screen-7" class="screen-content info-content" style="display: none;">
-            <h2>SHARE</h2>
-            <p style="margin-bottom: 20px;">Spread Loop Love</p>
-            <div class="share-buttons">
-              <button class="share-btn" onclick="shareOnTwitter()">Twitter</button>
-              <button class="share-btn" onclick="shareOnFacebook()">Facebook</button>
-              <button class="share-btn" onclick="shareOnWhatsApp()">WhatsApp</button>
-              <button class="share-btn" onclick="shareOnLinkedIn()">LinkedIn</button>
-              <button class="share-btn" onclick="copyLink()">Copy Link</button>
-            </div>
-            <p style="margin-top: 30px; font-size: 0.6em;">
-              <a href="https://x.com/ladderloop" target="_blank" style="color: #00ffcc;">@ladderloop</a><br>
-              <a href="https://instagram.com/ladderloopgame" target="_blank" style="color: #00ffcc;">@ladderloopgame</a>
-            </p>
-          </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero" onclick="closeNav()">Home</a></li>
+      <li><a href="#game" onclick="closeNav()">Play</a></li>
+      <li><a href="#about" onclick="closeNav()">About</a></li>
+      <li><a href="#reviews" onclick="closeNav()">Reviews</a></li>
+      <li><a href="#faq" onclick="closeNav()">FAQ</a></li>
+      <li><a href="#office" onclick="closeNav()">Office</a></li>
+      <li><a href="#merch" onclick="closeNav()">Merch</a></li>
+    </ul>
+  </nav>
 
-          <div id="screen-6" class="screen-content info-content" style="display: none;">
-            <h2>OUR OFFICE</h2>
-            <p style="margin-bottom: 20px;">Where the magic happens!</p>
-          <img 
-  src="https://www.ladderloop.com/images/office/office_38.png" 
-  alt="Our Office" 
-  class="lightbox-trigger"
-  style="max-width: 90%; max-height: 60%; border: 3px solid #ff0066; border-radius: 10px; box-shadow: 0 0 20px rgba(255, 0, 102, 0.3); cursor: pointer; transition: all 0.3s ease;"
-/>
-</div>
+  <section id="hero">
+    <h1>LADDER LOOP</h1>
+    <p>Climb. Fall. Repeat.</p>
+    <p class="subtitle">One button. Endless climb.</p>
+    <a href="#game" class="btn-primary">START GAME</a>
+  </section>
 
+  <section id="game">
+    <div class="container">
+      <h2 class="section-title">PLAY</h2>
+      <div class="game-container">
+        <div class="canvas-wrapper" id="canvasWrapper">
+          <canvas id="gameCanvas" width="400" height="450"></canvas>
+          <div class="resize-handle bottom-right" id="resizeBottomRight"></div>
+          <div class="resize-handle top-left" id="resizeTopLeft"></div>
+          <div class="resize-handle top-right" id="resizeTopRight"></div>
+          <div class="resize-handle bottom-left" id="resizeBottomLeft"></div>
         </div>
-       <!-- <button class="tv-power" onclick="togglePower()" title="Power">⏻</button>-->
-       <!-- <div class="tv-brand">LDR TV</div>-->
-        <!--<div class="tv-controls">-->
-        <!--  <div class="tv-knob"></div>-->
-         <!-- <div class="tv-knob"></div>-->
+        <div class="game-controls">
+          <button class="game-btn" id="muteBtn" onclick="toggleMute()">🔊 Sound</button>
+          <button class="game-btn" onclick="resetGame()">↻ Reset</button>
         </div>
       </div>
     </div>
+  </section>
 
-  </div>
+  <section id="about">
+    <div class="container">
+      <h2 class="section-title">THE GAME</h2>
+      <div class="content-box">
+        <p>Ladder Loop is a minimalist arcade climb.</p>
+        <p>How long can you last?</p>
+        <p>Unlock new ladder <strong style="background: linear-gradient(to right, #ff0066, #ff9900, #ffcc00, #00ff66, #00ccff, #b200ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">colors</strong> as you score!</p>
+        <p style="margin-top: 1.5rem;">Click or tap to climb. Fall. Repeat. That's it.</p>
+        <div class="social-links">
+          <strong style="color: #00ffcc; text-shadow: 0 0 10px #00ffcc;">Follow us:</strong>
+          <a href="https://x.com/ladderloop" target="_blank">🐦 Twitter: @ladderloop</a>
+          <a href="https://instagram.com/ladderloopgame" target="_blank">📷 Instagram: @ladderloopgame</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div id="overlay"></div>
-  
-    
-  
+  <section id="reviews">
+    <div class="container">
+      <h2 class="section-title">REVIEWS</h2>
+      <div class="content-box">
+        <p><strong>"I climbed once. Then I fell."</strong><br>- The Climber</p>
+      </div>
+      <div class="content-box">
+        <p><strong>"Best. Ladder. Ever."</strong><br>- Some guy who is still playing</p>
+      </div>
+      <div class="content-box">
+        <p><strong>"I fell off the ladder, and I haven't stopped playing since."</strong><br>- Time‑rich girl</p>
+      </div>
+      <div class="content-box">
+        <p><strong>"It's just a ladder but I can't stop."</strong><br>- Confused Player</p>
+      </div>
+      <div class="content-box">
+        <p><strong>"Simple. Addictive. Pointless. Perfect."</strong><br>- Game Critic</p>
+      </div>
+    </div>
+  </section>
 
+  <section id="faq">
+    <div class="container">
+      <h2 class="section-title">FAQs</h2>
+      <div class="content-box">
+        <p><strong>Q:</strong> What's the point?<br><strong>A:</strong> Exactly.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> How do I win?<br><strong>A:</strong> You don't. But good luck trying.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> Is this game addictive?<br><strong>A:</strong> Are you still playing? Enough said.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> What happens when I reach the top?<br><strong>A:</strong> You fall. That's life.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> Can I play on mobile?<br><strong>A:</strong> Yes. Fall anywhere, anytime.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> Why is it called Ladder Loop?<br><strong>A:</strong> Because "Endless Falling Simulator" was taken.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="office">
+    <div class="container">
+      <h2 class="section-title">OUR OFFICE</h2>
+      <p style="text-align: center; margin-bottom: 3rem; font-size: clamp(0.7rem, 1.5vw, 1rem); color: #00ffcc;">Where the magic happens!</p>
+      <div class="gallery">
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/office/office_38.png" alt="Office">
+          <p class="gallery-caption">Our state-of-the-art development station where all the falling happens.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="merch">
+    <div class="container">
+      <h2 class="section-title">MERCH</h2>
+      <p style="text-align: center; margin-bottom: 3rem; font-size: clamp(0.7rem, 1.5vw, 1rem); color: #00ffcc;">Launching Soon (maybe)</p>
+      <div class="gallery">
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/merch/merch_xmas.png" alt="Xmas Jumper">
+          <p class="gallery-caption">Ladder Loop Xmas Jumper – santa drops gifts, you just drop.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/merch/merch7.png" alt="Hoodie">
+          <p class="gallery-caption">Ladder Loop Hoodie – keeps you warm while you fall endlessly.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/merch/merch6.png" alt="Cap">
+          <p class="gallery-caption">Ladder Loop Cap – shields your eyes. Not your score.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/merch/merch4.png" alt="Mug">
+          <p class="gallery-caption">Ladder Loop Mug – holds hot drinks. Not your dignity.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="images/merch/merch3.png" alt="Mousemat">
+          <p class="gallery-caption">Ladder Loop Mousemat - Every click brings another fall.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="images/merch/merch5.png" alt="Socks">
+          <p class="gallery-caption">Ladder Loop Socks – fall faster in style.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="game-message" id="gameMessage"></div>
   <audio id="climbAudio" src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
-
-
 
   <script>
     const canvas = document.getElementById("gameCanvas");
-    const canvasWrapper = document.getElementById("canvasWrapper"); 
     const ctx = canvas.getContext("2d");
-    const overlay = document.getElementById("overlay");
+    const gameMessage = document.getElementById("gameMessage");
     const climbAudio = document.getElementById("climbAudio");
-    const tvContainer = document.getElementById("tvContainer");
+    const canvasWrapper = document.getElementById("canvasWrapper");
 
     let character = { x: 187, y: 420, width: 30, height: 30 };
     let climbing = false;
     let score = 0;
     let speed = 4;
     let freezeFrame = false;
-    let achievements = [];
     let gameStarted = false;
     let audioEnabled = false;
     
-    // Canvas resize variables
-let isResizing = false;
-let resizeHandle = null;
-let startX = 0;
-let startY = 0;
-let startWidth = 0;
-let startHeight = 0;
-let canvasScale = 1;
-
-    // TV power state
-    let tvOn = true;
+    let isResizing = false;
+    let resizeHandle = null;
+    let startX = 0, startY = 0, startWidth = 0, startHeight = 0;
     
-    // Ladder color system
     let currentLadderColorIndex = 0;
     let unlockedColors = [0];
     const ladderColors = [
@@ -1280,7 +695,7 @@ let canvasScale = 1;
       { name: "Rainbow Prism", color: "#fff", unlockScore: 100, isRainbow: true }
     ];
 
-    let funnyMessages = [
+    const funnyMessages = [
       "Why are you still playing?",
       "Climbing ladders... again...",
       "The loop is endless",
@@ -1293,107 +708,24 @@ let canvasScale = 1;
       "Still climbing? Impressive."
     ];
 
-    // Navigation
-    let currentScreen = 0;
-    const totalScreens = 8;
+    function toggleNav() {
+      document.getElementById('navLinks').classList.toggle('active');
+    }
 
-    function scrollToScreen(direction) {
-      const nextScreen = currentScreen + direction;
-      if (nextScreen < 0 || nextScreen >= totalScreens) return;
-      
-      const currentContent = document.getElementById(`screen-${currentScreen}`);
-      const nextContent = document.getElementById(`screen-${nextScreen}`);
-      
-      // Slide out current
-      if (direction > 0) {
-        currentContent.classList.add('slide-out-left');
-      } else {
-        currentContent.classList.add('slide-out-right');
-      }
-      
-      // Show and slide in next
-      setTimeout(() => {
-        currentContent.style.display = 'none';
-        currentContent.style.opacity = '0';
-        currentContent.classList.remove('slide-out-left', 'slide-out-right');
-        
-        nextContent.style.display = 'flex';
-        if (direction > 0) {
-          nextContent.classList.add('slide-in-right');
-        } else {
-          nextContent.classList.add('slide-in-left');
+    function closeNav() {
+      document.getElementById('navLinks').classList.remove('active');
+    }
+
+    const gameSection = document.getElementById('game');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !gameStarted) {
+          gameStarted = true;
+          update();
         }
-        
-        setTimeout(() => {
-          nextContent.style.opacity = '1';
-          nextContent.classList.remove('slide-in-left', 'slide-in-right');
-        }, 400);
-      }, 400);
-      
-      currentScreen = nextScreen;
-      updateIndicators();
-      
-      // Start game when reaching game screen
-      if (currentScreen === 2 && !gameStarted) {
-        gameStarted = true;
-        audioEnabled = false;
-        update();
-      }
-    }
-
-    function goToScreen(index) {
-      if (index === currentScreen) return;
-      const direction = index > currentScreen ? 1 : -1;
-      const steps = Math.abs(index - currentScreen);
-      
-      for (let i = 0; i < steps; i++) {
-        setTimeout(() => scrollToScreen(direction), i * 400);
-      }
-    }
-
-    function updateIndicators() {
-      const dots = document.querySelectorAll('.indicator-dot');
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === currentScreen);
       });
-    }
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
-        scrollToScreen(-1);
-      } else if (e.key === 'ArrowRight') {
-        scrollToScreen(1);
-      } else if (e.code === 'Space' && currentScreen === 1) {
-        climb();
-        e.preventDefault();
-      }
-    });
-
-    // Touch swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    document.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-    
-    document.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      handleSwipe();
-    });
-    
-    function handleSwipe() {
-      const swipeThreshold = 50;
-      if (touchEndX < touchStartX - swipeThreshold) {
-        // Swipe left - go to next screen
-        scrollToScreen(1);
-      }
-      if (touchEndX > touchStartX + swipeThreshold) {
-        // Swipe right - go to previous screen
-        scrollToScreen(-1);
-      }
-    }
+    }, { threshold: 0.5 });
+    observer.observe(gameSection);
 
     function drawLadder() {
       const currentColor = ladderColors[currentLadderColorIndex];
@@ -1413,12 +745,16 @@ let canvasScale = 1;
       
       ctx.lineWidth = 6;
       ctx.beginPath();
-      ctx.moveTo(150, 0); ctx.lineTo(150, 450);
-      ctx.moveTo(250, 0); ctx.lineTo(250, 450);
+      ctx.moveTo(150, 0);
+      ctx.lineTo(150, 450);
+      ctx.moveTo(250, 0);
+      ctx.lineTo(250, 450);
       ctx.stroke();
+      
       for (let i = 0; i < 450; i += 40) {
         ctx.beginPath();
-        ctx.moveTo(150, i); ctx.lineTo(250, i);
+        ctx.moveTo(150, i);
+        ctx.lineTo(250, i);
         ctx.stroke();
       }
     }
@@ -1428,45 +764,27 @@ let canvasScale = 1;
       ctx.fillRect(character.x, character.y, character.width, character.height);
     }
 
-   /*
-function drawScore() {
-  ctx.fillStyle = "#ffcc00";
-  ctx.font = "14px 'Press Start 2P', cursive";
-  ctx.textAlign = "left";
-  ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
-  ctx.shadowBlur = 10;
-  ctx.fillText("Score: " + score, 10, 25);
-  ctx.shadowBlur = 0;
-}
-*/
-
     function drawScore() {
-  ctx.fillStyle = "#ffcc00";
-  ctx.font = "14px 'Press Start 2P', cursive";
-  ctx.textAlign = "left";
-  ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
-  ctx.shadowBlur = 10;
+      ctx.fillStyle = "#ffcc00";
+      ctx.font = "14px 'Press Start 2P', cursive";
+      ctx.textAlign = "left";
+      ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
+      ctx.shadowBlur = 10;
 
-  const scoreStr = "Pts: " + score;
-  let startX = 10;       // left margin
-  let startY = 25;       // top margin
-  let lineHeight = 18;   // spacing between characters
+      const scoreStr = "Pts: " + score;
+      let startX = 10, startY = 25, lineHeight = 18;
+      for (let i = 0; i < scoreStr.length; i++) {
+        ctx.fillText(scoreStr[i], startX, startY + i * lineHeight);
+      }
+      ctx.shadowBlur = 0;
+    }
 
-  // Draw each character one below the other
-  for (let i = 0; i < scoreStr.length; i++) {
-    ctx.fillText(scoreStr[i], startX, startY + i * lineHeight);
-  }
-
-  ctx.shadowBlur = 0;
-}
-
-    function showOverlay(text) {
-      overlay.innerText = text;
-      overlay.style.display = "block";
+    function showMessage(text) {
+      gameMessage.innerText = text;
+      gameMessage.style.display = "block";
       freezeFrame = true;
-
       setTimeout(() => {
-        overlay.style.display = "none";
+        gameMessage.style.display = "none";
         freezeFrame = false;
       }, 2500);
     }
@@ -1476,7 +794,7 @@ function drawScore() {
         if (score >= ladderColors[i].unlockScore && !unlockedColors.includes(i)) {
           unlockedColors.push(i);
           currentLadderColorIndex = i;
-          showOverlay(`🎨 Color Unlocked!\n${ladderColors[i].name}`);
+          showMessage(`🎨 Color Unlocked!\n${ladderColors[i].name}`);
           return true;
         }
       }
@@ -1485,12 +803,11 @@ function drawScore() {
 
     function showFunnyMessage() {
       const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-      showOverlay(randomMessage);
+      showMessage(randomMessage);
     }
 
     function update() {
       if (!gameStarted) return;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawLadder();
       drawCharacter();
@@ -1502,34 +819,19 @@ function drawScore() {
           if (character.y <= 0) {
             climbing = false;
             score++;
-            
-            // Stop audio when climbing ends
-            if (audioEnabled) {
-               // don’t pause here
-  // climbAudio.pause();
-  // climbAudio.currentTime = 0;
-            }
-            
             const colorUnlocked = checkColorUnlock(score);
-            
-            if (!colorUnlocked) {
-              if (score % 5 === 0) showFunnyMessage();
-              if (score === 3 || score === 10 || score === 20) showFunnyMessage();
-            }
+            if (!colorUnlocked && score % 5 === 0) showFunnyMessage();
           }
         } else {
           character.y += speed;
           if (character.y >= 420) character.y = 420;
         }
       }
-
       requestAnimationFrame(update);
     }
 
-    climbAudio.loop = false;
-
     function climb() {
-      if (!climbing && character.y >= 420 && !freezeFrame && currentScreen === 2) {
+      if (!climbing && character.y >= 420 && !freezeFrame && gameStarted) {
         climbing = true;
         if (audioEnabled) {
           climbAudio.currentTime = 0;
@@ -1539,579 +841,124 @@ function drawScore() {
     }
 
     canvas.addEventListener("click", climb);
+    document.addEventListener("keydown", (e) => {
+      if ((e.code === "Space" || e.key === " ") && gameStarted) {
+        climb();
+        e.preventDefault();
+      }
+    });
 
     function toggleMute() {
-      const muteButton = document.getElementById('muteButton');
+      const muteBtn = document.getElementById('muteBtn');
       audioEnabled = !audioEnabled;
-      
       if (audioEnabled) {
-        muteButton.innerHTML = '🔊';
-        muteButton.style.background = 'rgba(0, 255, 0, 0.3)';
-        if (climbing) {
-          climbAudio.play();
-        }
+        muteBtn.innerHTML = '🔊 Sound';
+        muteBtn.classList.add('active');
+        if (climbing) climbAudio.play();
       } else {
-        muteButton.innerHTML = '🔇';
-        muteButton.style.background = 'rgba(0, 255, 0, 0.2)';
+        muteBtn.innerHTML = '🔇 Muted';
+        muteBtn.classList.remove('active');
         climbAudio.pause();
       }
     }
 
-    function shareOnTwitter() {
-      const url = encodeURIComponent("https://www.ladderloop.com");
-      const text = encodeURIComponent("Check out Ladder Loop - Endless arcade climbing!");
-      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
-    }
-
-    function shareOnFacebook() {
-      const url = encodeURIComponent("https://www.ladderloop.com");
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-    }
-
-    function shareOnWhatsApp() {
-      const url = encodeURIComponent("https://www.ladderloop.com");
-      const text = encodeURIComponent("Check out Ladder Loop!");
-      window.open(`https://api.whatsapp.com/send?text=${text}%20${url}`, '_blank');
-    }
-
-    function shareOnLinkedIn() {
-      const url = encodeURIComponent("https://www.ladderloop.com");
-      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
-    }
-
-    function copyLink() {
-      const tempInput = document.createElement('input');
-      document.body.appendChild(tempInput);
-      tempInput.value = "https://www.ladderloop.com";
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
-      alert('Link copied!');
-    }
-
-function initCanvasResize() {
-  const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
-  const isSmallScreen = window.innerWidth < 768 || window.innerHeight < 600;
-  
-  // ✅ AUTO-SCALE CANVAS FIRST
-  autoScaleCanvas();
-  
-  // Only hide resize handles on small phones, not tablets
-  if (isSmallScreen && window.innerWidth < 768) {
-    document.querySelectorAll('.resize-handle').forEach(handle => {
-      handle.style.display = 'none';
-    });
-    return;
-  }
-  
-  const handles = document.querySelectorAll('.resize-handle');
-  
-  handles.forEach(handle => {
-    // Mouse events
-    handle.addEventListener('mousedown', startResize);
-    
-    // Touch events for iPad/tablets
-    handle.addEventListener('touchstart', startResizeTouch, { passive: false });
-  });
-  
-  // Mouse events
-  document.addEventListener('mousemove', doResize);
-  document.addEventListener('mouseup', stopResize);
-  
-  // Touch events
-  document.addEventListener('touchmove', doResizeTouch, { passive: false });
-  document.addEventListener('touchend', stopResize);
-}
-
-// ✅ NEW FUNCTION: Add this right after initCanvasResize()
-function autoScaleCanvas() {
-  const canvasWrapper = document.getElementById('canvasWrapper');
-  const canvas = document.getElementById('gameCanvas');
-  
-  if (!canvasWrapper || !canvas) return;
-  
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-  const isPortrait = viewportHeight > viewportWidth;
-  const tvGlass = document.querySelector('.tv-glass');
-  
-  // Get available space inside TV glass
-  const availableWidth = tvGlass ? tvGlass.clientWidth * 0.8 : viewportWidth * 0.8;
-  const availableHeight = tvGlass ? tvGlass.clientHeight * 0.8 : viewportHeight * 0.8;
-  
-  // Original canvas aspect ratio
-  const canvasAspectRatio = 400 / 450; // width / height
-  
-  let targetWidth, targetHeight;
-  
-  // Calculate optimal size based on screen with orientation awareness
-  if (viewportWidth < 600) {
-    // 📱 Mobile phones
-    targetWidth = isPortrait 
-      ? Math.min(availableWidth, 300)   // Smaller in portrait
-      : Math.min(availableWidth, 400);  // Larger in landscape
-    targetHeight = targetWidth / canvasAspectRatio;
-  } else if (viewportWidth < 1024) {
-    // 📱 Tablets
-    targetWidth = Math.min(availableWidth, 450);
-    targetHeight = targetWidth / canvasAspectRatio;
-  } else if (viewportWidth < 2560) {
-    // 💻 Desktop
-    targetWidth = Math.min(availableWidth, 600);
-    targetHeight = targetWidth / canvasAspectRatio;
-  } else {
-    // 🖥️ 4K/5K
-    targetWidth = Math.min(availableWidth, 800);
-    targetHeight = targetWidth / canvasAspectRatio;
-  }
-  
-  // Ensure canvas doesn't overflow vertically
-  if (targetHeight > availableHeight) {
-    targetHeight = availableHeight;
-    targetWidth = targetHeight * canvasAspectRatio;
-  }
-  
-  // Apply dimensions
-  canvasWrapper.style.width = targetWidth + 'px';
-  canvasWrapper.style.height = targetHeight + 'px';
-  
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-  
-  console.log(`Canvas auto-scaled to: ${Math.round(targetWidth)}x${Math.round(targetHeight)}px`);
-}
-
-
-function startResize(e) {
-  isResizing = true;
-  resizeHandle = e.target.id;
-  startX = e.clientX;
-  startY = e.clientY;
-  startWidth = canvasWrapper.offsetWidth;
-  startHeight = canvasWrapper.offsetHeight;
-  e.preventDefault();
-}
-
-function startResizeTouch(e) {
-  isResizing = true;
-  resizeHandle = e.target.id;
-  const touch = e.touches[0];
-  startX = touch.clientX;
-  startY = touch.clientY;
-  startWidth = canvasWrapper.offsetWidth;
-  startHeight = canvasWrapper.offsetHeight;
-  e.preventDefault();
-}
-
-function doResize(e) {
-  if (!isResizing) return;
-
-  const deltaX = e.clientX - startX;
-  const deltaY = e.clientY - startY;
-  
-  applyResize(deltaX, deltaY);
-}
-
-function doResizeTouch(e) {
-  if (!isResizing) return;
-  
-  const touch = e.touches[0];
-  const deltaX = touch.clientX - startX;
-  const deltaY = touch.clientY - startY;
-  
-  applyResize(deltaX, deltaY);
-  e.preventDefault();
-}
-
-function applyResize(deltaX, deltaY) {
-  let newWidth = startWidth;
-  let newHeight = startHeight;
-
-  switch(resizeHandle) {
-    case 'resizeBottomRight':
-      newWidth = startWidth + deltaX;
-      newHeight = startHeight + deltaY;
-      break;
-    case 'resizeTopLeft':
-      newWidth = startWidth - deltaX;
-      newHeight = startHeight - deltaY;
-      break;
-    case 'resizeTopRight':
-      newWidth = startWidth + deltaX;
-      newHeight = startHeight - deltaY;
-      break;
-    case 'resizeBottomLeft':
-      newWidth = startWidth - deltaX;
-      newHeight = startHeight + deltaY;
-      break;
-  }
-
-  const minWidth = 200;
-  const maxWidth = 1200;
-  const minHeight = 225;
-  const maxHeight = 1200;
-
-  newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
-  newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
-
-  canvasWrapper.style.width = newWidth + 'px';
-  canvasWrapper.style.height = newHeight + 'px';
-  
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
-}
-
-function stopResize() {
-  isResizing = false;
-  resizeHandle = null;
-}
-
-window.addEventListener('load', () => {
-  initCanvasResize();
-  autoScaleCanvas();
-});
-
-window.addEventListener('resize', () => {
-  autoScaleCanvas();
-});
-
-function togglePower() {
-  tvOn = !tvOn;
-  const tvGlass = document.getElementById('tvGlass');
-  const powerBtn = document.querySelector('.tv-power');
-
-  if (!tvOn) {
-    // Turn OFF
-    tvGlass.classList.add('tv-off');
-    powerBtn.classList.add('off');
-    if (audioEnabled) {
-      climbAudio.pause();
-    }
-
-  } else {
-    // Turn ON
-    tvGlass.classList.remove('tv-off');
-    powerBtn.classList.remove('off');
-
-    // Show current screen
-    const currentContent = document.getElementById(`screen-${currentScreen}`);
-    if (currentContent) {
-      currentContent.style.display = 'flex';
-    }
-
-    // Restart game audio if needed
-    if (currentScreen === 1 && gameStarted && climbing && audioEnabled) {
-      climbAudio.play();
-    }
-
-    // 🔥 Add flash overlay
-    const flash = document.createElement('div');
-    flash.className = 'power-on-flash';
-    tvGlass.appendChild(flash);
-
-    // Remove after animation completes
-    flash.addEventListener('animationend', () => {
-      flash.remove();
-    });
-
-    // Optional: CRT warm-up glow
-    const warmup = document.createElement('div');
-    warmup.className = 'crt-warmup';
-    tvGlass.appendChild(warmup);
-    warmup.addEventListener('animationend', () => {
-      warmup.remove();
-    });
-  }
-} 
-
-
-
-    // Lightbox functions
-function openLightbox(src) {
-  console.log('openLightbox called with:', src);
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightboxImg');
-  
-  if (!lightbox || !lightboxImg) {
-    console.error('Lightbox elements not found!');
-    return;
-  }
-  
-  lightboxImg.src = src;
-  lightbox.style.display = 'flex';
-  console.log('Lightbox should now be visible');
-}
-
-function closeLightbox() {
-  console.log('closeLightbox called');
-  const lightbox = document.getElementById('lightbox');
-  if (lightbox) {
-    lightbox.style.display = 'none';
-  }
-}
-
-// Setup lightbox event listeners
-function setupLightbox() {
-  console.log('Setting up lightbox...');
-  
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightboxImg');
-  const closeBtn = document.querySelector('.lightbox-close');
-  
-  // Add click handlers to all images with lightbox-trigger class
-  const triggerImages = document.querySelectorAll('.lightbox-trigger');
-  console.log('Found', triggerImages.length, 'lightbox trigger images');
-  
-  triggerImages.forEach((img, index) => {
-    console.log('Adding listener to image', index, img.src);
-    img.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      console.log('Image clicked:', this.src);
-      openLightbox(this.src);
-    });
-  });
-  
-  // Close when clicking background
-  if (lightbox) {
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        closeLightbox();
+    function resetGame() {
+      score = 0;
+      character.y = 420;
+      climbing = false;
+      currentLadderColorIndex = 0;
+      unlockedColors = [0];
+      freezeFrame = false;
+      if (audioEnabled) {
+        climbAudio.pause();
+        climbAudio.currentTime = 0;
       }
-    });
-  }
-  
-  // Prevent image clicks from closing lightbox
-  if (lightboxImg) {
-    lightboxImg.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-  }
-  
-  // Close button
-  if (closeBtn) {
-    closeBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeLightbox();
-    });
-  }
-  
-  console.log('Lightbox setup complete');
-}
+    }
 
-// Call setup after a short delay to ensure all screens are loaded
-setTimeout(setupLightbox, 1000);
-
-// Close lightbox on Escape key
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeLightbox();
-  }
-});
-
-</script>
-  
-  <script>
-function centerTV() {
-  const tv = document.querySelector('.tv-wrapper');
-
-  // Get viewport center (x, y)
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-
-  // Get TV size
-  const rect = tv.getBoundingClientRect();
-
-  // Calculate offsets
-  const left = centerX - rect.width / 2;
-  const top  = centerY - rect.height / 2;
-
-  // Apply position
-  tv.style.position = "absolute";
-  tv.style.left = left + "px";
-  tv.style.top  = top + "px";
-}
-
-// Run on load + resize
-window.addEventListener("load", centerTV);
-window.addEventListener("resize", centerTV);
-</script>
-
-<script>
-function scaleAndCenterTV() {
-  const tvWrapper = document.querySelector('.tv-wrapper');
-  const tvBezel = document.querySelector('.tv-bezel');
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-
-  // Only apply special scaling for very large displays (4K and above)
-  if (viewportWidth >= 3840 && viewportHeight >= 2160) {
-    // For 4K/5K displays, increase the TV size instead of scaling
-    tvBezel.style.width = '70vw';
-    tvBezel.style.height = '80vh';
-    tvBezel.style.maxWidth = '2400px';
-    
-    tvWrapper.style.position = 'relative';
-    tvWrapper.style.top = '0';
-    tvWrapper.style.left = '0';
-    tvWrapper.style.transform = 'none';
-  } else {
-    // Reset to default for normal displays
-    tvBezel.style.width = '';
-    tvBezel.style.height = '';
-    tvBezel.style.maxWidth = '';
-    
-    tvWrapper.style.position = 'relative';
-    tvWrapper.style.top = '0';
-    tvWrapper.style.left = '0';
-    tvWrapper.style.transform = 'none';
-  }
-}
-
-window.addEventListener('load', scaleAndCenterTV);
-window.addEventListener('resize', scaleAndCenterTV);
-</script>
-<script>
-  // Hide arrows on mobile devices only
-  document.addEventListener("DOMContentLoaded", () => {
-    const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      document.querySelectorAll(".nav-arrow").forEach(arrow => {
-        arrow.style.display = "none";
+    function initCanvasResize() {
+      const handles = document.querySelectorAll('.resize-handle');
+      handles.forEach(handle => {
+        handle.addEventListener('mousedown', startResize);
+        handle.addEventListener('touchstart', startResizeTouch, { passive: false });
       });
+      document.addEventListener('mousemove', doResize);
+      document.addEventListener('mouseup', stopResize);
+      document.addEventListener('touchmove', doResizeTouch, { passive: false });
+      document.addEventListener('touchend', stopResize);
     }
-  });
-</script>
 
-<script>
-// Inject CSS keyframes + class from JS
-const style = document.createElement('style');
-style.textContent = `
-@keyframes crtCollapse {
-  0%   { opacity: 1; transform: scaleY(1) scaleX(1); }
-  50%  { opacity: 1; transform: scaleY(0.05) scaleX(1); }
-  80%  { opacity: 1; transform: scaleY(0.05) scaleX(0.2); }
-  100% { opacity: 0; transform: scaleY(0) scaleX(0); }
-}
-.crt-collapse {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: #fff;
-  z-index: 200;
-  pointer-events: none;
-  animation: crtCollapse 0.8s ease-out forwards;
-}
-`;
-document.head.appendChild(style);
-
-// Collapse effect function
-function playCrtCollapse() {
-  const tvGlass = document.getElementById('tvGlass');
-  const collapse = document.createElement('div');
-  collapse.className = 'crt-collapse';
-  tvGlass.appendChild(collapse);
-
-  collapse.addEventListener('animationend', () => {
-    collapse.remove();
-  });
-}
-
-// Hook into your existing togglePower OFF branch
-document.querySelector('.tv-power').addEventListener('click', () => {
-  if (!tvOn) {
-    playCrtCollapse();
-  }
-});
-</script>
-<script>
-// Hide navigation arrows on all screens
-document.addEventListener("DOMContentLoaded", () => {
-  const leftArrow = document.querySelector('.nav-arrow.left');
-  const rightArrow = document.querySelector('.nav-arrow.right');
-
-  if (leftArrow) leftArrow.style.display = "none";
-  if (rightArrow) rightArrow.style.display = "none";
-});
-
-</script>
-
-  <script>
-let wheelDeltaX = 0;
-let wheelTimeout = null;
-
-document.addEventListener('wheel', (e) => {
-  // Only consider horizontal scroll
-  if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-    wheelDeltaX += e.deltaX;
-
-    // Reset timeout each time a wheel event fires
-    clearTimeout(wheelTimeout);
-    wheelTimeout = setTimeout(() => {
-      if (wheelDeltaX > 50) {
-        scrollToScreen(1);   // swipe left → next screen
-      } else if (wheelDeltaX < -50) {
-        scrollToScreen(-1);  // swipe right → previous screen
-      }
-      wheelDeltaX = 0; // reset after handling
-    }, 150); // wait until gesture ends
-  }
-}, { passive: true });
-
-</script>
-
-<script>
-// Complete layout reset on orientation change
-window.addEventListener('orientationchange', function() {
-  setTimeout(function() {
-    console.log('Orientation changed - forcing complete reset');
-    
-    if (currentScreen === 2) {
-      const canvasWrapper = document.getElementById('canvasWrapper');
-      const canvas = document.getElementById('gameCanvas');
-      const muteButton = document.getElementById('muteButton');
-      
-      // Clear ALL inline styles
-      canvasWrapper.removeAttribute('style');
-      canvas.removeAttribute('style');
-      if (muteButton) muteButton.removeAttribute('style');
-      
-      // Force reflow
-      void canvasWrapper.offsetHeight;
-      
-      // Re-apply only essential styles
-      canvasWrapper.style.cssText = 'position: relative; display: inline-block;';
-      canvas.style.cssText = 'display: block;';
-      
-      // Force CSS recalculation
-      window.getComputedStyle(canvasWrapper).getPropertyValue('width');
-      window.getComputedStyle(canvas).getPropertyValue('width');
-      
-      // Redraw canvas
-      if (gameStarted) {
-        requestAnimationFrame(() => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drawLadder();
-          drawCharacter();
-          drawScore();
-        });
-      }
+    function startResize(e) {
+      isResizing = true;
+      resizeHandle = e.target.id;
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = canvasWrapper.offsetWidth;
+      startHeight = canvasWrapper.offsetHeight;
+      e.preventDefault();
     }
-    
-    // ✅ FIXED: Force layout recalculation (reduced from 15 to 2)
-    window.dispatchEvent(new Event('resize'));
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-      if (typeof centerTV === 'function') centerTV();
-      if (typeof scaleAndCenterTV === 'function') scaleAndCenterTV();
-    }, 300);
-  }, 500);
-});
-</script>
 
+    function startResizeTouch(e) {
+      isResizing = true;
+      resizeHandle = e.target.id;
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      startWidth = canvasWrapper.offsetWidth;
+      startHeight = canvasWrapper.offsetHeight;
+      e.preventDefault();
+    }
 
+    function doResize(e) {
+      if (!isResizing) return;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      applyResize(deltaX, deltaY);
+    }
 
+    function doResizeTouch(e) {
+      if (!isResizing) return;
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      applyResize(deltaX, deltaY);
+      e.preventDefault();
+    }
 
+    function applyResize(deltaX, deltaY) {
+      let newWidth = startWidth, newHeight = startHeight;
+      switch(resizeHandle) {
+        case 'resizeBottomRight':
+          newWidth = startWidth + deltaX;
+          newHeight = startHeight + deltaY;
+          break;
+        case 'resizeTopLeft':
+          newWidth = startWidth - deltaX;
+          newHeight = startHeight - deltaY;
+          break;
+        case 'resizeTopRight':
+          newWidth = startWidth + deltaX;
+          newHeight = startHeight - deltaY;
+          break;
+        case 'resizeBottomLeft':
+          newWidth = startWidth - deltaX;
+          newHeight = startHeight + deltaY;
+          break;
+      }
+
+      newWidth = Math.max(200, Math.min(1200, newWidth));
+      newHeight = Math.max(225, Math.min(1200, newHeight));
+      canvasWrapper.style.width = newWidth + 'px';
+      canvasWrapper.style.height = newHeight + 'px';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+    }
+
+    function stopResize() {
+      isResizing = false;
+      resizeHandle = null;
+    }
+
+    window.addEventListener('load', initCanvasResize);
+  </script>
 </body>
 </html>
