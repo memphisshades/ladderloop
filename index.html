@@ -35,7 +35,9 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   
-  <style>
+
+
+<style>
   * {
     margin: 0;
     padding: 0;
@@ -124,23 +126,6 @@
   z-index: 10;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }  
-@media (max-width: 600px) and (orientation: portrait) {
-  .tv-container {
-    height: 100dvh;
-    min-height: -webkit-fill-available;
-  }
-
-  .tv-bezel {
-    width: 95vw;
-    height: auto;
-    max-height: auto;
-    padding: 10px;
-  }
-
-  .tv-glass {
-    border-width: 1px;
-  }
-}
 
 @media (max-height: 500px) and (orientation: landscape) {
   body {
@@ -149,8 +134,8 @@
   }
 
   .tv-container {
-    height: auto !important;
-    min-height: 100dvh !important;
+   min-height: 100dvh !important;
+   
     overflow-y: auto !important;
     overflow-x: hidden !important;
   }
@@ -160,11 +145,11 @@
     transform: translateY(-50%);
   }
 
-  .tv-bezel {
-    max-height: 80vh;
-    width: 90vw;
-  }
-}
+      .tv-bezel {
+        max-height: 80vh;
+        width: 90vw;
+      }
+    }
 
   @keyframes borderPulse {
     0%, 100% {
@@ -552,6 +537,45 @@
   max-height: 100%;
 }
 
+.resize-handle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 0, 102, 0.3);
+  border: 2px solid #ff0066;
+  cursor: nwse-resize;
+  z-index: 30;
+  transition: all 0.2s;
+}
+
+.resize-handle:hover {
+  background: rgba(255, 0, 102, 0.6);
+  box-shadow: 0 0 15px rgba(255, 0, 102, 0.8);
+}
+
+.resize-handle.bottom-right {
+  bottom: 2px;
+  right: 2px;
+}
+
+.resize-handle.top-left {
+  top: 2px;
+  left: 2px;
+  cursor: nwse-resize;
+}
+
+.resize-handle.top-right {
+  top: 2px;
+  right: 2px;
+  cursor: nesw-resize;
+}
+
+.resize-handle.bottom-left {
+  bottom: 2px;
+  left: 2px;
+  cursor: nesw-resize;
+}
+
   canvas {
       background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
   border: 2px solid #ff0066;
@@ -564,7 +588,7 @@
   height: auto;
   }
 
-  #overlay {
+   #overlay {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -581,6 +605,97 @@
     text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
     border-radius: 10px;
   }
+
+  .lightbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.98);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border: 3px solid #ff0066;
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(255, 0, 102, 0.6);
+  animation: zoomIn 0.3s ease-out;
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  font-size: 1.5rem;
+  color: #ff0066;
+  cursor: pointer;
+  z-index: 1001;
+  text-shadow: 0 0 20px rgba(255, 0, 102, 0.8);
+  transition: all 0.3s;
+  font-family: 'Press Start 2P', cursive;
+  background: rgba(0, 0, 0, 0.9);
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0px solid #ff0066;
+  border-radius: 5px;
+}
+
+.lightbox-close:hover {
+  color: #00ffcc;
+  border-color: #00ffcc;
+  text-shadow: 0 0 30px rgba(0, 255, 204, 0.8);
+  background: rgba(0, 0, 0, 0.95);
+  transform: scale(1.1);
+}
+
+/* Responsive close button positioning */
+@media (max-width: 768px) {
+  .lightbox-close {
+    top: 15px;
+    right: 15px;
+    font-size: 1.2rem;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lightbox-close {
+    top: 10px;
+    right: 10px;
+    font-size: 1rem;
+    width: 28px;
+    height: 28px;
+  }
+}
 
   .info-content {
     overflow-y: auto;
@@ -708,40 +823,47 @@
   margin-top: 20px;
   max-width: 100%;
   overflow-y: auto;
-  justify-content: center -
+  justify-content: center;
   -webkit-overflow-scrolling: touch;
   flex: 1;
   max-height: calc(100% - 100px);
 }
 
-  .merch-item {
+.merch-item {
   background: rgba(255, 0, 102, 0.1);
   border: 2px solid #ff0066;
   border-radius: 8px;
   padding: 15px;
   text-align: center;
   transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
- .merch-item:hover {
+.merch-item:hover {
   background: rgba(255, 0, 102, 0.2);
   box-shadow: 0 0 20px rgba(255, 0, 102, 0.4);
   transform: translateY(-5px);
 }
 
-  .merch-item img {
+.merch-item img {
   width: 100%;
   height: auto;
   max-height: 120px;
   object-fit: contain;
-  margin-bottom: 10px;
+  margin: 0 auto 10px auto;
   cursor: pointer;
   transition: all 0.3s ease;
+  display: block;
 }
 
-  .merch-item p {
+.merch-item p {
   font-size: clamp(0.5rem, 1vw, 0.7rem);
   color: #00ffcc;
+  margin: 0 auto;
+  max-width: 90%;
 }
 
 /* Mobile responsive */
@@ -755,7 +877,36 @@
   }
 }
 
+/* 4K/5K display optimization */
+@media (min-width: 2560px) {
+  #screen-5 h2 {
+    margin-top: 60px;   /* push heading further down */
+    margin-bottom: 30px; /* keep spacing consistent */
+  }
+  
+  
 
+  .merch-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 280px));
+    gap: 25px;
+    padding: 20px;
+  }
+  
+  .merch-item {
+    padding: 20px;
+    min-height: 240px;   /* reduced height */
+  }
+  
+  .merch-item img {
+    max-height: 150px;   /* slightly smaller images */
+    margin-bottom: 15px;
+  }
+  
+  .merch-item p {
+    font-size: 0.75rem;  /* scale text down a touch */
+    line-height: 1.5;
+  }
+}
 
   #muteButton {
   position: absolute;
@@ -786,8 +937,8 @@
 
   .tv-bezel {
     width: 95vw;
-    max-width: 95vw
-      height: 85vh;
+    max-width: 95vw;
+    height: 85vh;
     max-height: 70vh;
     padding: 15px;
   }
@@ -939,7 +1090,12 @@
               <div class="power-on-flash"></div>
               <div class="crt-warmup"></div>
   
- 
+  <!-- Lightbox for full-screen images -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close">×</span>
+    <img id="lightboxImg" src="" alt="Full view">
+  </div>
+  
   
           <!-- All screen contents -->
           <div id="screen-0" class="screen-content hero-content" style="display: flex;">
@@ -968,9 +1124,14 @@
           </div>
           
            <div id="screen-2" class="screen-content game-content" style="display: none;">
-  <div class="canvas-wrapper">
+  <div class="canvas-wrapper" id="canvasWrapper">
+  
     <canvas id="gameCanvas" width="400" height="450"></canvas>
     <button id="muteButton" onclick="toggleMute()">🔊</button>
+    <div class="resize-handle bottom-right" id="resizeBottomRight"></div>
+<div class="resize-handle top-left" id="resizeTopLeft"></div>
+<div class="resize-handle top-right" id="resizeTopRight"></div>
+<div class="resize-handle bottom-left" id="resizeBottomLeft"></div>
   </div>
 </div>          
 
@@ -989,42 +1150,36 @@
             <p><strong>Q:</strong> What happens when I reach the top?<br><strong>A:</strong> You fall. That's life.</p>
           </div>
 
-          <div id="screen-5" class="screen-content info-content" style="display: none;"overflow-y: auto; /* allows vertical scrolling */
-  -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */>
-            <h2>MERCH</h2>
-            <p style="margin-bottom: 20px;">Launching Soon (maybe)</p>
-            <div class="merch-grid">
-              <div class="merch-item">
-<img src="https://www.ladderloop.com/images/merch/merch_xmas.png" alt="xmas jumper"
-  onclick="this.style.maxHeight = this.style.maxHeight === '120px' ? '400px' : '120px';">                <p>Ladder Loop Xmas Jumper – santa drops gifts, you just drop.</p>
-              </div>
-               <div class="merch-item">
-                <img src="https://www.ladderloop.com/images/merch/merch7.png" alt="hoodie" onclick="this.style.maxHeight = this.style.maxHeight === '120px' ? '400px' : '120px';">
-                <p>Ladder Loop Hoodie – keeps you warm while you fall endlessly.</p>
-              </div>
-              
-              
-              <div class="merch-item">
-                <img src="https://www.ladderloop.com/images/merch/merch6.png" alt="cap" onclick="this.style.maxHeight = this.style.maxHeight === '120px' ? '400px' : '120px';">
-                <p>Ladder Loop Cap – shields your eyes. Not your score.</p>
-              </div>
-              <div class="merch-item">
-                <img src="https://www.ladderloop.com/images/merch/merch4.png" alt="mug" onclick="this.style.maxHeight = this.style.maxHeight === '120px' ? '400px' : '120px';">
-                <p> Ladder Loop Mug – holds hot drinks. Not your dignity.</p>
-              </div>
-              
-               <div class="merch-item">
-                <img src="https://www.ladderloop.com/images/merch/merch3.png" alt="mousemat" onclick="this.style.maxHeight = this.style.maxHeight === '120px' ? '400px' : '120px';">
-                <p>Ladder Loop Mousemat - Every click brings another fall.</p>
-              </div>
-              
-              <div class="merch-item">
-                <img src="https://www.ladderloop.com/images/merch/merch5.png" alt="socks" onclick="this.style.maxHeight = this.style.maxHeight === '120px' ? '400px' : '120px';">
-                <p>Ladder Loop Socks – fall faster in style.</p>
-              </div>
-            </div>
-          </div>
-
+        <div id="screen-5" class="screen-content info-content" style="display: none; overflow-y: auto; -webkit-overflow-scrolling: touch;">
+  <h2>MERCH</h2>
+  <p style="margin-bottom: 20px;">Launching Soon (maybe)</p>
+  <div class="merch-grid">
+    <div class="merch-item">
+      <img src="https://www.ladderloop.com/images/merch/merch_xmas.png" alt="xmas jumper" class="lightbox-trigger">
+      <p>Ladder Loop Xmas Jumper – santa drops gifts, you just drop.</p>
+    </div>
+    <div class="merch-item">
+      <img src="https://www.ladderloop.com/images/merch/merch7.png" alt="hoodie" class="lightbox-trigger">
+      <p>Ladder Loop Hoodie – keeps you warm while you fall endlessly.</p>
+    </div>
+    <div class="merch-item">
+      <img src="https://www.ladderloop.com/images/merch/merch6.png" alt="cap" class="lightbox-trigger">
+      <p>Ladder Loop Cap – shields your eyes. Not your score.</p>
+    </div>
+    <div class="merch-item">
+      <img src="https://www.ladderloop.com/images/merch/merch4.png" alt="mug" class="lightbox-trigger">
+      <p> Ladder Loop Mug – holds hot drinks. Not your dignity.</p>
+    </div>
+    <div class="merch-item">
+      <img src="https://www.ladderloop.com/images/merch/merch3.png" alt="mousemat" class="lightbox-trigger">
+      <p>Ladder Loop Mousemat - Every click brings another fall.</p>
+    </div>
+    <div class="merch-item">
+      <img src="https://www.ladderloop.com/images/merch/merch5.png" alt="socks" class="lightbox-trigger">
+      <p>Ladder Loop Socks – fall faster in style.</p>
+    </div>
+  </div>
+</div>
           <div id="screen-7" class="screen-content info-content" style="display: none;">
             <h2>SHARE</h2>
             <p style="margin-bottom: 20px;">Spread Loop Love</p>
@@ -1044,14 +1199,13 @@
           <div id="screen-6" class="screen-content info-content" style="display: none;">
             <h2>OUR OFFICE</h2>
             <p style="margin-bottom: 20px;">Where the magic happens!</p>
-           <img 
+          <img 
   src="https://www.ladderloop.com/images/office/office_38.png" 
   alt="Our Office" 
+  class="lightbox-trigger"
   style="max-width: 90%; max-height: 60%; border: 3px solid #ff0066; border-radius: 10px; box-shadow: 0 0 20px rgba(255, 0, 102, 0.3); cursor: pointer; transition: all 0.3s ease;"
-  onclick="this.style.maxWidth = this.style.maxWidth === '90%' ? '100%' : '90%'; 
-           this.style.maxHeight = this.style.maxHeight === '60%' ? '100%' : '60%';"
 />
-          </div>
+</div>
 
         </div>
        <!-- <button class="tv-power" onclick="togglePower()" title="Power">⏻</button>-->
@@ -1066,11 +1220,17 @@
   </div>
 
   <div id="overlay"></div>
+  
+    
+  
 
   <audio id="climbAudio" src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
 
+
+
   <script>
     const canvas = document.getElementById("gameCanvas");
+    const canvasWrapper = document.getElementById("canvasWrapper"); 
     const ctx = canvas.getContext("2d");
     const overlay = document.getElementById("overlay");
     const climbAudio = document.getElementById("climbAudio");
@@ -1085,6 +1245,15 @@
     let gameStarted = false;
     let audioEnabled = false;
     
+    // Canvas resize variables
+let isResizing = false;
+let resizeHandle = null;
+let startX = 0;
+let startY = 0;
+let startWidth = 0;
+let startHeight = 0;
+let canvasScale = 1;
+
     // TV power state
     let tvOn = true;
     
@@ -1418,7 +1587,193 @@ function drawScore() {
       alert('Link copied!');
     }
 
-    function togglePower() {
+function initCanvasResize() {
+  const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
+  const isSmallScreen = window.innerWidth < 768 || window.innerHeight < 600;
+  
+  // ✅ AUTO-SCALE CANVAS FIRST
+  autoScaleCanvas();
+  
+  // Only hide resize handles on small phones, not tablets
+  if (isSmallScreen && window.innerWidth < 768) {
+    document.querySelectorAll('.resize-handle').forEach(handle => {
+      handle.style.display = 'none';
+    });
+    return;
+  }
+  
+  const handles = document.querySelectorAll('.resize-handle');
+  
+  handles.forEach(handle => {
+    // Mouse events
+    handle.addEventListener('mousedown', startResize);
+    
+    // Touch events for iPad/tablets
+    handle.addEventListener('touchstart', startResizeTouch, { passive: false });
+  });
+  
+  // Mouse events
+  document.addEventListener('mousemove', doResize);
+  document.addEventListener('mouseup', stopResize);
+  
+  // Touch events
+  document.addEventListener('touchmove', doResizeTouch, { passive: false });
+  document.addEventListener('touchend', stopResize);
+}
+
+// ✅ NEW FUNCTION: Add this right after initCanvasResize()
+function autoScaleCanvas() {
+  const canvasWrapper = document.getElementById('canvasWrapper');
+  const canvas = document.getElementById('gameCanvas');
+  
+  if (!canvasWrapper || !canvas) return;
+  
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const isPortrait = viewportHeight > viewportWidth;
+  const tvGlass = document.querySelector('.tv-glass');
+  
+  // Get available space inside TV glass
+  const availableWidth = tvGlass ? tvGlass.clientWidth * 0.8 : viewportWidth * 0.8;
+  const availableHeight = tvGlass ? tvGlass.clientHeight * 0.8 : viewportHeight * 0.8;
+  
+  // Original canvas aspect ratio
+  const canvasAspectRatio = 400 / 450; // width / height
+  
+  let targetWidth, targetHeight;
+  
+  // Calculate optimal size based on screen with orientation awareness
+  if (viewportWidth < 600) {
+    // 📱 Mobile phones
+    targetWidth = isPortrait 
+      ? Math.min(availableWidth, 300)   // Smaller in portrait
+      : Math.min(availableWidth, 400);  // Larger in landscape
+    targetHeight = targetWidth / canvasAspectRatio;
+  } else if (viewportWidth < 1024) {
+    // 📱 Tablets
+    targetWidth = Math.min(availableWidth, 450);
+    targetHeight = targetWidth / canvasAspectRatio;
+  } else if (viewportWidth < 2560) {
+    // 💻 Desktop
+    targetWidth = Math.min(availableWidth, 600);
+    targetHeight = targetWidth / canvasAspectRatio;
+  } else {
+    // 🖥️ 4K/5K
+    targetWidth = Math.min(availableWidth, 800);
+    targetHeight = targetWidth / canvasAspectRatio;
+  }
+  
+  // Ensure canvas doesn't overflow vertically
+  if (targetHeight > availableHeight) {
+    targetHeight = availableHeight;
+    targetWidth = targetHeight * canvasAspectRatio;
+  }
+  
+  // Apply dimensions
+  canvasWrapper.style.width = targetWidth + 'px';
+  canvasWrapper.style.height = targetHeight + 'px';
+  
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  
+  console.log(`Canvas auto-scaled to: ${Math.round(targetWidth)}x${Math.round(targetHeight)}px`);
+}
+
+
+function startResize(e) {
+  isResizing = true;
+  resizeHandle = e.target.id;
+  startX = e.clientX;
+  startY = e.clientY;
+  startWidth = canvasWrapper.offsetWidth;
+  startHeight = canvasWrapper.offsetHeight;
+  e.preventDefault();
+}
+
+function startResizeTouch(e) {
+  isResizing = true;
+  resizeHandle = e.target.id;
+  const touch = e.touches[0];
+  startX = touch.clientX;
+  startY = touch.clientY;
+  startWidth = canvasWrapper.offsetWidth;
+  startHeight = canvasWrapper.offsetHeight;
+  e.preventDefault();
+}
+
+function doResize(e) {
+  if (!isResizing) return;
+
+  const deltaX = e.clientX - startX;
+  const deltaY = e.clientY - startY;
+  
+  applyResize(deltaX, deltaY);
+}
+
+function doResizeTouch(e) {
+  if (!isResizing) return;
+  
+  const touch = e.touches[0];
+  const deltaX = touch.clientX - startX;
+  const deltaY = touch.clientY - startY;
+  
+  applyResize(deltaX, deltaY);
+  e.preventDefault();
+}
+
+function applyResize(deltaX, deltaY) {
+  let newWidth = startWidth;
+  let newHeight = startHeight;
+
+  switch(resizeHandle) {
+    case 'resizeBottomRight':
+      newWidth = startWidth + deltaX;
+      newHeight = startHeight + deltaY;
+      break;
+    case 'resizeTopLeft':
+      newWidth = startWidth - deltaX;
+      newHeight = startHeight - deltaY;
+      break;
+    case 'resizeTopRight':
+      newWidth = startWidth + deltaX;
+      newHeight = startHeight - deltaY;
+      break;
+    case 'resizeBottomLeft':
+      newWidth = startWidth - deltaX;
+      newHeight = startHeight + deltaY;
+      break;
+  }
+
+  const minWidth = 200;
+  const maxWidth = 1200;
+  const minHeight = 225;
+  const maxHeight = 1200;
+
+  newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+  newHeight = Math.max(minHeight, Math.min(maxHeight, newHeight));
+
+  canvasWrapper.style.width = newWidth + 'px';
+  canvasWrapper.style.height = newHeight + 'px';
+  
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+}
+
+function stopResize() {
+  isResizing = false;
+  resizeHandle = null;
+}
+
+window.addEventListener('load', () => {
+  initCanvasResize();
+  autoScaleCanvas();
+});
+
+window.addEventListener('resize', () => {
+  autoScaleCanvas();
+});
+
+function togglePower() {
   tvOn = !tvOn;
   const tvGlass = document.getElementById('tvGlass');
   const powerBtn = document.querySelector('.tv-power');
@@ -1465,7 +1820,94 @@ function drawScore() {
       warmup.remove();
     });
   }
-}  </script>
+} 
+
+
+
+    // Lightbox functions
+function openLightbox(src) {
+  console.log('openLightbox called with:', src);
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  
+  if (!lightbox || !lightboxImg) {
+    console.error('Lightbox elements not found!');
+    return;
+  }
+  
+  lightboxImg.src = src;
+  lightbox.style.display = 'flex';
+  console.log('Lightbox should now be visible');
+}
+
+function closeLightbox() {
+  console.log('closeLightbox called');
+  const lightbox = document.getElementById('lightbox');
+  if (lightbox) {
+    lightbox.style.display = 'none';
+  }
+}
+
+// Setup lightbox event listeners
+function setupLightbox() {
+  console.log('Setting up lightbox...');
+  
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const closeBtn = document.querySelector('.lightbox-close');
+  
+  // Add click handlers to all images with lightbox-trigger class
+  const triggerImages = document.querySelectorAll('.lightbox-trigger');
+  console.log('Found', triggerImages.length, 'lightbox trigger images');
+  
+  triggerImages.forEach((img, index) => {
+    console.log('Adding listener to image', index, img.src);
+    img.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Image clicked:', this.src);
+      openLightbox(this.src);
+    });
+  });
+  
+  // Close when clicking background
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+  }
+  
+  // Prevent image clicks from closing lightbox
+  if (lightboxImg) {
+    lightboxImg.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  }
+  
+  // Close button
+  if (closeBtn) {
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeLightbox();
+    });
+  }
+  
+  console.log('Lightbox setup complete');
+}
+
+// Call setup after a short delay to ensure all screens are loaded
+setTimeout(setupLightbox, 1000);
+
+// Close lightbox on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeLightbox();
+  }
+});
+
+</script>
   
   <script>
 function centerTV() {
@@ -1496,33 +1938,37 @@ window.addEventListener("resize", centerTV);
 <script>
 function scaleAndCenterTV() {
   const tvWrapper = document.querySelector('.tv-wrapper');
+  const tvBezel = document.querySelector('.tv-bezel');
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
 
-  if (viewportWidth >= 3840 || viewportHeight >= 2160) {
-    const scaleX = viewportWidth / 1920;
-    const scaleY = viewportHeight / 1080;
-    const scale = Math.min(scaleX, scaleY);
-
-    // Translate to center, then scale
-    tvWrapper.style.position = 'absolute';
-    tvWrapper.style.top = '50%';
-    tvWrapper.style.left = '50%';
-    tvWrapper.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    tvWrapper.style.transformOrigin = 'center center';
-  } else {
-    // Reset
+  // Only apply special scaling for very large displays (4K and above)
+  if (viewportWidth >= 3840 && viewportHeight >= 2160) {
+    // For 4K/5K displays, increase the TV size instead of scaling
+    tvBezel.style.width = '70vw';
+    tvBezel.style.height = '80vh';
+    tvBezel.style.maxWidth = '2400px';
+    
     tvWrapper.style.position = 'relative';
     tvWrapper.style.top = '0';
     tvWrapper.style.left = '0';
-    tvWrapper.style.transform = 'scale(1)';
+    tvWrapper.style.transform = 'none';
+  } else {
+    // Reset to default for normal displays
+    tvBezel.style.width = '';
+    tvBezel.style.height = '';
+    tvBezel.style.maxWidth = '';
+    
+    tvWrapper.style.position = 'relative';
+    tvWrapper.style.top = '0';
+    tvWrapper.style.left = '0';
+    tvWrapper.style.transform = 'none';
   }
 }
 
 window.addEventListener('load', scaleAndCenterTV);
 window.addEventListener('resize', scaleAndCenterTV);
 </script>
-
 <script>
   // Hide arrows on mobile devices only
   document.addEventListener("DOMContentLoaded", () => {
@@ -1613,6 +2059,57 @@ document.addEventListener('wheel', (e) => {
 
 </script>
 
+<script>
+// Complete layout reset on orientation change
+window.addEventListener('orientationchange', function() {
+  setTimeout(function() {
+    console.log('Orientation changed - forcing complete reset');
+    
+    if (currentScreen === 2) {
+      const canvasWrapper = document.getElementById('canvasWrapper');
+      const canvas = document.getElementById('gameCanvas');
+      const muteButton = document.getElementById('muteButton');
+      
+      // Clear ALL inline styles
+      canvasWrapper.removeAttribute('style');
+      canvas.removeAttribute('style');
+      if (muteButton) muteButton.removeAttribute('style');
+      
+      // Force reflow
+      void canvasWrapper.offsetHeight;
+      
+      // Re-apply only essential styles
+      canvasWrapper.style.cssText = 'position: relative; display: inline-block;';
+      canvas.style.cssText = 'display: block;';
+      
+      // Force CSS recalculation
+      window.getComputedStyle(canvasWrapper).getPropertyValue('width');
+      window.getComputedStyle(canvas).getPropertyValue('width');
+      
+      // Redraw canvas
+      if (gameStarted) {
+        requestAnimationFrame(() => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawLadder();
+          drawCharacter();
+          drawScore();
+        });
+      }
+    }
+    
+    // ✅ FIXED: Force layout recalculation (reduced from 15 to 2)
+    window.dispatchEvent(new Event('resize'));
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+      if (typeof centerTV === 'function') centerTV();
+      if (typeof scaleAndCenterTV === 'function') scaleAndCenterTV();
+    }, 300);
+  }, 500);
+});
+</script>
+
+
+
+
 </body>
 </html>
-
