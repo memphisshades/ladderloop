@@ -1,0 +1,964 @@
+<!-- Last updated: 2025-14-12 @ 1715 GMT -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ladder Loop Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO -->
+  <meta name="description" content="Climb, fall, repeat. Ladder Loop is a one‑button arcade game where gravity always wins.">
+  <meta name="keywords" content="ladder loop, climb, fall, repeat, retro web game, one button game">
+  <meta name="author" content="James Tobin">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Ladder Loop – Endless Climb Arcade Game">
+  <meta property="og:description" content="Tap to climb, fall back, and repeat. Can you master the loop?">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.ladderloop.com/">
+  <meta property="og:image" content="https://www.ladderloop.com/images/ladder-loop-icon.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ladder Loop – Endless Climb Arcade Game">
+  <meta name="twitter:description" content="Climb ladders that never end. Fall. Repeat. The loop is life.">
+  <meta name="twitter:image" content="https://www.ladderloop.com/images/ladder-loop-icon.jpg">
+
+  <!-- Favicon -->
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/favicon/android-chrome-512x512.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
+<link rel="shortcut icon" href="/favicon/favicon.ico">
+<link rel="manifest" href="/favicon/site.webmanifest">
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+      width: 100%;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #ff0066;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+    }
+
+    .nav-logo {
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: clamp(1rem, 2vw, 2rem);
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-size: clamp(0.5rem, 1.2vw, 0.8rem);
+      transition: all 0.3s;
+      padding: 0.5rem 1rem;
+      border: 2px solid transparent;
+    }
+
+    .nav-links a:hover {
+      border: 2px solid #ff0066;
+      background: rgba(255, 0, 102, 0.1);
+      text-shadow: 0 0 10px #ff0066;
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .burger-line {
+      width: 25px;
+      height: 3px;
+      background: #00ffcc;
+      transition: all 0.3s;
+      box-shadow: 0 0 5px #00ffcc;
+    }
+
+  section {
+  /* modern viewport height unit */
+  min-height: 100svh;
+
+  padding: clamp(4rem, 8vh, 8rem) clamp(1rem, 5vw, 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* fallback for browsers that don’t support svh */
+@supports not (height: 100svh) {
+  section {
+    min-height: 100vh;
+  }
+}
+
+/* orientation-specific tweak */
+@media (max-width: 768px) and (orientation: landscape) {
+  #hero {
+    justify-content: flex-start;   /* stop centering too high */
+    padding-top: 3rem;             /* push content down */
+  }
+}
+
+section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff0066, #00ffcc, #ff0066, transparent);
+  animation: borderPulse 3s ease-in-out infinite;
+}
+
+@keyframes borderPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+    .container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    #hero {
+      text-align: center;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 100%);
+    }
+
+    #hero h1 {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      margin-bottom: clamp(1rem, 3vh, 2rem);
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+      animation: pulseGlow 2s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      from { 
+        text-shadow: 0 0 10px #ff0066, 0 0 20px #ff0066;
+        color: #ff0066;
+      }
+      to { 
+        text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+        color: #00ffcc;
+      }
+    }
+
+    #hero p {
+      font-size: clamp(1rem, 3vw, 2rem);
+      margin-bottom: clamp(0.5rem, 2vh, 1rem);
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    #hero .subtitle {
+      font-size: clamp(0.6rem, 2vw, 1rem);
+      opacity: 0.8;
+      margin-bottom: clamp(2rem, 5vh, 4rem);
+      color: #fff;
+    }
+
+    .btn-primary {
+      padding: clamp(0.8rem, 2vh, 1.2rem) clamp(2rem, 5vw, 3rem);
+      font-size: clamp(0.7rem, 1.5vw, 1rem);
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(135deg, #ff0066, #00ccff);
+      color: #fff;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.8);
+    }
+
+    #game {
+      background: #0a0a0a;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(1rem, 3vh, 2rem);
+      width: 100%;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      display: inline-block;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9);
+      padding: 10px;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
+    }
+
+    .resize-handle {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 0, 102, 0.3);
+      border: 2px solid #ff0066;
+      cursor: nwse-resize;
+      z-index: 30;
+      transition: all 0.2s;
+    }
+
+    .resize-handle:hover {
+      background: rgba(255, 0, 102, 0.6);
+      box-shadow: 0 0 15px rgba(255, 0, 102, 0.8);
+    }
+
+    .resize-handle.bottom-right { bottom: 2px; right: 2px; }
+    .resize-handle.top-left { top: 2px; left: 2px; cursor: nwse-resize; }
+    .resize-handle.top-right { top: 2px; right: 2px; cursor: nesw-resize; }
+    .resize-handle.bottom-left { bottom: 2px; left: 2px; cursor: nesw-resize; }
+
+    canvas {
+    width: 100%;
+  height: auto;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      border: 2px solid #00ffcc;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+      display: block;
+    }
+
+    .game-controls {
+      display: flex;
+      gap: clamp(0.8rem, 2vw, 1.5rem);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .game-btn {
+      padding: clamp(0.6rem, 1.5vh, 1rem) clamp(1.2rem, 3vw, 2rem);
+      font-size: clamp(0.6rem, 1.2vw, 0.9rem);
+      font-family: 'Press Start 2P', cursive;
+      background: rgba(255, 0, 102, 0.1);
+      color: #00ffcc;
+      border: 2px solid #ff0066;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 10px rgba(255, 0, 102, 0.3);
+    }
+
+    .game-btn:hover {
+      background: rgba(255, 0, 102, 0.3);
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .game-btn.active {
+      background: rgba(0, 255, 204, 0.3);
+      border-color: #00ffcc;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
+    }
+
+    #about, #reviews, #faq, #office, #merch {
+      background: #0a0a0a;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: clamp(2rem, 5vh, 4rem);
+      text-align: center;
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px rgba(0, 255, 204, 0.5);
+    }
+
+    .content-box {
+      background: rgba(26, 26, 26, 0.8);
+      border: 2px solid #ff0066;
+      border-radius: 10px;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      margin-bottom: clamp(1rem, 3vh, 2rem);
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+      max-width: 800px;
+      width: 100%;
+      transition: all 0.3s;
+       margin-left: auto;
+         margin-right: auto;
+    }
+
+    .content-box:hover {
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+      transform: translateY(-5px);
+    }
+
+    .content-box p {
+      font-size: clamp(0.65rem, 1.5vw, 0.9rem);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .content-box strong {
+      color: #00ffcc;
+      text-shadow: 0 0 5px #00ffcc;
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding: clamp(1rem, 3vw, 2rem);
+      background: rgba(0, 255, 204, 0.05);
+      border: 2px solid #00ffcc;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+    }
+
+    .social-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: clamp(0.6rem, 1.3vw, 0.8rem);
+      transition: all 0.3s;
+      padding: 0.5rem;
+    }
+
+    .social-links a:hover {
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    .gallery {
+  display: grid;
+  justify-content: center;   /* centers the grid itself */
+  grid-template-columns: repeat(auto-fit, minmax(300px, auto));
+  gap: clamp(2rem, 4vw, 4rem);
+}
+
+
+    .gallery-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+              justify-items: center;   /* centers each item horizontally */
+ width: auto;             /* don’t force full width */
+  margin: 0 auto;          /* center horizontally */
+      gap: 1rem;
+      background: rgba(26, 26, 26, 0.5);
+      border: 2px solid #ff0066;
+      border-radius: 10px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+      box-shadow: 0 0 15px rgba(255, 0, 102, 0.2);
+        margin-left: auto;
+  margin-right: auto;
+    }
+
+    .gallery-item:hover {
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+      transform: translateY(-10px);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      border: 2px solid #00ffcc;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+      transition: transform 0.3s;
+    }
+
+    .gallery-item img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 255, 204, 0.6);
+    }
+
+    .gallery-caption {
+      font-size: clamp(0.6rem, 1.2vw, 0.8rem);
+      text-align: center;
+      line-height: 1.6;
+      max-width: 500px;
+      color: #00ffcc;
+    }
+
+    .game-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 10, 10, 0.98);
+      color: #ffcc00;
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      padding: clamp(1.5rem, 4vw, 3rem);
+      border: 3px solid #ff0066;
+      display: none;
+      z-index: 2000;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 0, 102, 0.8);
+      max-width: 90vw;
+      white-space: pre-line;
+      border-radius: 10px;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    }
+
+    @media (max-width: 768px) {
+      .burger {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 70%;
+        max-width: 300px;
+        background: rgba(10, 10, 10, 0.98);
+        flex-direction: column;
+        padding: 5rem 2rem;
+        border-left: 2px solid #ff0066;
+        transition: right 0.3s;
+        gap: 2rem;
+        box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+      }
+
+      .nav-links.active {
+        right: 0;
+      }
+
+      .resize-handle {
+        display: none;
+      }
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.3;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-logo">LADDER LOOP</div>
+    <div class="burger" onclick="toggleNav()">
+      <div class="burger-line"></div>
+      <div class="burger-line"></div>
+      <div class="burger-line"></div>
+    </div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#hero" onclick="closeNav()">Home</a></li>
+      <li><a href="#game" onclick="closeNav()">Play</a></li>
+      <li><a href="#about" onclick="closeNav()">About</a></li>
+      <li><a href="#reviews" onclick="closeNav()">Reviews</a></li>
+      <li><a href="#faq" onclick="closeNav()">FAQ</a></li>
+      <li><a href="#office" onclick="closeNav()">Office</a></li>
+      <li><a href="#merch" onclick="closeNav()">Merch</a></li>
+    </ul>
+  </nav>
+
+  <section id="hero">
+    <h1>LADDER LOOP</h1>
+    <p>Climb. Fall. Repeat.</p>
+    <p class="subtitle">One button. Endless climb.</p>
+    <a href="#game" class="btn-primary">START GAME</a>
+  </section>
+
+  <section id="game">
+    <div class="container">
+      <h2 class="section-title">PLAY</h2>
+      <div class="game-container">
+        <div class="canvas-wrapper" id="canvasWrapper">
+          <canvas id="gameCanvas" width="400" height="450"></canvas>
+          <div class="resize-handle bottom-right" id="resizeBottomRight"></div>
+          <div class="resize-handle top-left" id="resizeTopLeft"></div>
+          <div class="resize-handle top-right" id="resizeTopRight"></div>
+          <div class="resize-handle bottom-left" id="resizeBottomLeft"></div>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn" id="muteBtn" onclick="toggleMute()">🔊 Sound</button>
+          <button class="game-btn" onclick="resetGame()">↻ Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <h2 class="section-title">THE GAME</h2>
+      <div class="content-box">
+        <p>Ladder Loop is a minimalist arcade climb.</p>
+        <p>How long can you last?</p>
+        <p>Unlock new ladder <strong style="background: linear-gradient(to right, #ff0066, #ff9900, #ffcc00, #00ff66, #00ccff, #b200ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">colors</strong> as you score!</p>
+        <p style="margin-top: 1.5rem;">Click or tap to climb. Fall. Repeat. That's it.</p>
+        <div class="social-links">
+          <strong style="color: #00ffcc; text-shadow: 0 0 10px #00ffcc;">Follow us:</strong>
+          <a href="https://x.com/ladderloop" target="_blank">🐦 Twitter: @ladderloop</a>
+          <a href="https://instagram.com/ladderloopgame" target="_blank">📷 Instagram: @ladderloopgame</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="container">
+      <h2 class="section-title">REVIEWS</h2>
+      <div class="content-box">
+        <p><strong>"I climbed once. Then I fell."</strong><br>- The Climber</p>
+      </div>
+      <div class="content-box">
+        <p><strong>"Best. Ladder. Ever."</strong><br>- Some guy who is still playing</p>
+      </div>
+      <div class="content-box">
+        <p><strong>"I fell off the ladder, and I haven't stopped playing since."</strong><br>- Time‑rich girl</p>
+      </div>
+      <div class="content-box">
+        <p><strong>"It's just a ladder but I can't stop."</strong><br>- Confused Player</p>
+      </div>
+      <div class="content-box">
+        <p><strong>"Simple. Addictive. Pointless. Perfect."</strong><br>- Game Critic</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container">
+      <h2 class="section-title">FAQs</h2>
+      <div class="content-box">
+        <p><strong>Q:</strong> What's the point?<br><strong>A:</strong> Exactly.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> How do I win?<br><strong>A:</strong> You don't. But good luck trying.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> Is this game addictive?<br><strong>A:</strong> Are you still playing? Enough said.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> What happens when I reach the top?<br><strong>A:</strong> You fall. That's life.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> Can I play on mobile?<br><strong>A:</strong> Yes. Fall anywhere, anytime.</p>
+      </div>
+      <div class="content-box">
+        <p><strong>Q:</strong> Why is it called Ladder Loop?<br><strong>A:</strong> Because "Endless Falling Simulator" was taken.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="office">
+    <div class="container">
+      <h2 class="section-title">OUR OFFICE</h2>
+      <p style="text-align: center; margin-bottom: 3rem; font-size: clamp(0.7rem, 1.5vw, 1rem); color: #00ffcc;">Where the magic happens!</p>
+      <div class="gallery">
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/office/office_38.png" alt="Office">
+          <p class="gallery-caption">Our state-of-the-art development station where all the falling happens.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="merch">
+    <div class="container">
+      <h2 class="section-title">MERCH</h2>
+      <p style="text-align: center; margin-bottom: 3rem; font-size: clamp(0.7rem, 1.5vw, 1rem); color: #00ffcc;">Launching Soon (maybe)</p>
+      <div class="gallery">
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/merch/merch_xmas.png" alt="Xmas Jumper">
+          <p class="gallery-caption">Ladder Loop Xmas Jumper – santa drops gifts, you just drop.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/merch/merch7.png" alt="Hoodie">
+          <p class="gallery-caption">Ladder Loop Hoodie – keeps you warm while you fall endlessly.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/merch/merch6.png" alt="Cap">
+          <p class="gallery-caption">Ladder Loop Cap – shields your eyes. Not your score.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="https://www.ladderloop.com/images/merch/merch4.png" alt="Mug">
+          <p class="gallery-caption">Ladder Loop Mug – holds hot drinks. Not your dignity.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="images/merch/merch3.png" alt="Mousemat">
+          <p class="gallery-caption">Ladder Loop Mousemat - Every click brings another fall.</p>
+        </div>
+        <div class="gallery-item">
+          <img src="images/merch/merch5.png" alt="Socks">
+          <p class="gallery-caption">Ladder Loop Socks – fall faster in style.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="game-message" id="gameMessage"></div>
+  <audio id="climbAudio" src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const gameMessage = document.getElementById("gameMessage");
+    const climbAudio = document.getElementById("climbAudio");
+    const canvasWrapper = document.getElementById("canvasWrapper");
+
+    let character = { x: 187, y: 420, width: 30, height: 30 };
+    let climbing = false;
+    let score = 0;
+    let speed = 4;
+    let freezeFrame = false;
+    let gameStarted = false;
+    let audioEnabled = false;
+    
+    let isResizing = false;
+    let resizeHandle = null;
+    let startX = 0, startY = 0, startWidth = 0, startHeight = 0;
+    
+    let currentLadderColorIndex = 0;
+    let unlockedColors = [0];
+    const ladderColors = [
+      { name: "Classic White", color: "#fff", unlockScore: 0 },
+      { name: "Electric Blue", color: "#00ccff", unlockScore: 5 },
+      { name: "Neon Pink", color: "#ff0066", unlockScore: 10 },
+      { name: "Toxic Green", color: "#00ff66", unlockScore: 15 },
+      { name: "Purple Haze", color: "#b200ff", unlockScore: 20 },
+      { name: "Golden Glory", color: "#ffcc00", unlockScore: 25 },
+      { name: "Crimson Rage", color: "#ff3333", unlockScore: 30 },
+      { name: "Cyber Orange", color: "#ff9900", unlockScore: 35 },
+      { name: "Mystic Violet", color: "#9933ff", unlockScore: 40 },
+      { name: "Arctic Cyan", color: "#00ffff", unlockScore: 45 },
+      { name: "Sunset Red", color: "#ff6666", unlockScore: 50 },
+      { name: "Lime Blast", color: "#ccff00", unlockScore: 60 },
+      { name: "Hot Magenta", color: "#ff00ff", unlockScore: 70 },
+      { name: "Ocean Teal", color: "#00cc99", unlockScore: 80 },
+      { name: "Rainbow Prism", color: "#fff", unlockScore: 100, isRainbow: true }
+    ];
+
+    const funnyMessages = [
+      "Why are you still playing?",
+      "Climbing ladders... again...",
+      "The loop is endless",
+      "Gravity always wins",
+      "Just one more try...",
+      "You're stuck in the loop",
+      "The ladder never ends",
+      "Fall down, get up, repeat",
+      "This is your life now",
+      "Still climbing? Impressive."
+    ];
+
+    function toggleNav() {
+      document.getElementById('navLinks').classList.toggle('active');
+    }
+
+    function closeNav() {
+      document.getElementById('navLinks').classList.remove('active');
+    }
+
+    const gameSection = document.getElementById('game');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !gameStarted) {
+          gameStarted = true;
+          update();
+        }
+      });
+    }, { threshold: 0.5 });
+    observer.observe(gameSection);
+
+    function drawLadder() {
+      const currentColor = ladderColors[currentLadderColorIndex];
+      
+      if (currentColor.isRainbow) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, "#ff0066");
+        gradient.addColorStop(0.2, "#ff9900");
+        gradient.addColorStop(0.4, "#ffcc00");
+        gradient.addColorStop(0.6, "#00ff66");
+        gradient.addColorStop(0.8, "#00ccff");
+        gradient.addColorStop(1, "#b200ff");
+        ctx.strokeStyle = gradient;
+      } else {
+        ctx.strokeStyle = currentColor.color;
+      }
+      
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(150, 0);
+      ctx.lineTo(150, 450);
+      ctx.moveTo(250, 0);
+      ctx.lineTo(250, 450);
+      ctx.stroke();
+      
+      for (let i = 0; i < 450; i += 40) {
+        ctx.beginPath();
+        ctx.moveTo(150, i);
+        ctx.lineTo(250, i);
+        ctx.stroke();
+      }
+    }
+
+    function drawCharacter() {
+      ctx.fillStyle = "#ffcc00";
+      ctx.fillRect(character.x, character.y, character.width, character.height);
+    }
+
+    function drawScore() {
+      ctx.fillStyle = "#ffcc00";
+      ctx.font = "14px 'Press Start 2P', cursive";
+      ctx.textAlign = "left";
+      ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
+      ctx.shadowBlur = 10;
+
+      const scoreStr = "Pts: " + score;
+      let startX = 10, startY = 25, lineHeight = 18;
+      for (let i = 0; i < scoreStr.length; i++) {
+        ctx.fillText(scoreStr[i], startX, startY + i * lineHeight);
+      }
+      ctx.shadowBlur = 0;
+    }
+
+    function showMessage(text) {
+      gameMessage.innerText = text;
+      gameMessage.style.display = "block";
+      freezeFrame = true;
+      setTimeout(() => {
+        gameMessage.style.display = "none";
+        freezeFrame = false;
+      }, 2500);
+    }
+
+    function checkColorUnlock(score) {
+      for (let i = 0; i < ladderColors.length; i++) {
+        if (score >= ladderColors[i].unlockScore && !unlockedColors.includes(i)) {
+          unlockedColors.push(i);
+          currentLadderColorIndex = i;
+          showMessage(`🎨 Color Unlocked!\n${ladderColors[i].name}`);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function showFunnyMessage() {
+      const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      showMessage(randomMessage);
+    }
+
+    function update() {
+      if (!gameStarted) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawLadder();
+      drawCharacter();
+      drawScore();
+
+      if (!freezeFrame) {
+        if (climbing) {
+          character.y -= speed;
+          if (character.y <= 0) {
+            climbing = false;
+            score++;
+            const colorUnlocked = checkColorUnlock(score);
+            if (!colorUnlocked && score % 5 === 0) showFunnyMessage();
+          }
+        } else {
+          character.y += speed;
+          if (character.y >= 420) character.y = 420;
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    function climb() {
+      if (!climbing && character.y >= 420 && !freezeFrame && gameStarted) {
+        climbing = true;
+        if (audioEnabled) {
+          climbAudio.currentTime = 0;
+          climbAudio.play();
+        }
+      }
+    }
+
+    canvas.addEventListener("click", climb);
+    document.addEventListener("keydown", (e) => {
+      if ((e.code === "Space" || e.key === " ") && gameStarted) {
+        climb();
+        e.preventDefault();
+      }
+    });
+
+    function toggleMute() {
+      const muteBtn = document.getElementById('muteBtn');
+      audioEnabled = !audioEnabled;
+      if (audioEnabled) {
+        muteBtn.innerHTML = '🔊 Sound';
+        muteBtn.classList.add('active');
+        if (climbing) climbAudio.play();
+      } else {
+        muteBtn.innerHTML = '🔇 Muted';
+        muteBtn.classList.remove('active');
+        climbAudio.pause();
+      }
+    }
+
+    function resetGame() {
+      score = 0;
+      character.y = 420;
+      climbing = false;
+      currentLadderColorIndex = 0;
+      unlockedColors = [0];
+      freezeFrame = false;
+      if (audioEnabled) {
+        climbAudio.pause();
+        climbAudio.currentTime = 0;
+      }
+    }
+
+    function initCanvasResize() {
+      const handles = document.querySelectorAll('.resize-handle');
+      handles.forEach(handle => {
+        handle.addEventListener('mousedown', startResize);
+        handle.addEventListener('touchstart', startResizeTouch, { passive: false });
+      });
+      document.addEventListener('mousemove', doResize);
+      document.addEventListener('mouseup', stopResize);
+      document.addEventListener('touchmove', doResizeTouch, { passive: false });
+      document.addEventListener('touchend', stopResize);
+    }
+
+    function startResize(e) {
+      isResizing = true;
+      resizeHandle = e.target.id;
+      startX = e.clientX;
+      startY = e.clientY;
+      startWidth = canvasWrapper.offsetWidth;
+      startHeight = canvasWrapper.offsetHeight;
+      e.preventDefault();
+    }
+
+    function startResizeTouch(e) {
+      isResizing = true;
+      resizeHandle = e.target.id;
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      startWidth = canvasWrapper.offsetWidth;
+      startHeight = canvasWrapper.offsetHeight;
+      e.preventDefault();
+    }
+
+    function doResize(e) {
+      if (!isResizing) return;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      applyResize(deltaX, deltaY);
+    }
+
+    function doResizeTouch(e) {
+      if (!isResizing) return;
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - startX;
+      const deltaY = touch.clientY - startY;
+      applyResize(deltaX, deltaY);
+      e.preventDefault();
+    }
+
+    function applyResize(deltaX, deltaY) {
+      let newWidth = startWidth, newHeight = startHeight;
+      switch(resizeHandle) {
+        case 'resizeBottomRight':
+          newWidth = startWidth + deltaX;
+          newHeight = startHeight + deltaY;
+          break;
+        case 'resizeTopLeft':
+          newWidth = startWidth - deltaX;
+          newHeight = startHeight - deltaY;
+          break;
+        case 'resizeTopRight':
+          newWidth = startWidth + deltaX;
+          newHeight = startHeight - deltaY;
+          break;
+        case 'resizeBottomLeft':
+          newWidth = startWidth - deltaX;
+          newHeight = startHeight + deltaY;
+          break;
+      }
+
+      newWidth = Math.max(200, Math.min(1200, newWidth));
+      newHeight = Math.max(225, Math.min(1200, newHeight));
+      canvasWrapper.style.width = newWidth + 'px';
+      canvasWrapper.style.height = newHeight + 'px';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+    }
+
+    function stopResize() {
+      isResizing = false;
+      resizeHandle = null;
+    }
+
+    window.addEventListener('load', initCanvasResize);
+  </script>
+</body>
+</html>
