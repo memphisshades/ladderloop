@@ -346,7 +346,11 @@
     ];
 
     const funnyMessages = [
-        "Follow us on Instagram: @ladderloop (it won't help your score)",
+        "Follow us on Instagram: @ladderloopgame (it won't help your score)",
+        "Check our Twitter: @ladderloop (we post pictures of ladders)",
+"We have social media. Why? Nobody knows.",
+"Our Instagram is just ladders. That's it. That's the content.",
+"Twitter: @ladderloop - where we tweet about climbing (and falling)",
   "Why are you still playing? Seriously?",
   "Climbing ladders... again...",
   "You've reached a new score... did you expect a reward?",
@@ -809,7 +813,168 @@
 </script>
 
 
+<script>
+// ============================================================
+// SCREEN SIZE SCALING FIX
+// ============================================================
+// Problem: The game canvas has a fixed size (400x450px) which
+// looks tiny on 4K, 5K, and larger monitors when the browser
+// window is maximized.
+// 
+// Why JavaScript instead of CSS:
+// 1. Canvas elements need their width/height ATTRIBUTES changed,
+//    not just CSS styling (CSS scaling blurs the canvas)
+// 2. All game coordinates (ladder position, character position,
+//    speed, etc.) are hardcoded to the 400x450 size and need
+//    to be scaled proportionally
+// 3. We need to override the drawing functions to use scaled
+//    coordinates so everything lines up correctly
+// 4. CSS alone can't handle the mathematical scaling of all
+//    these game variables
+//
+// This script:
+// - Detects screen resolution
+// - Scales canvas dimensions appropriately
+// - Scales all game elements (character, ladder, text) proportionally
+// - Overrides draw functions to use scaled coordinates
+// ============================================================
 
+
+(function() {
+  const screenWidth = window.screen.width;
+  let scale = 1; // default
+  
+  if (screenWidth >= 5120) scale = 4.5;      // 5K
+  else if (screenWidth >= 3840) scale = 3.5; // 4K
+  else if (screenWidth >= 2560) scale = 2.5; // 2.5K
+  else if (screenWidth >= 1920) scale = 1.75; // 1080p
+  
+  // Store scale globally
+  window.gameScale = scale;
+  window.groundLevel = 420 * scale; // Store scaled ground level
+  
+  window.addEventListener('load', () => {
+    // Resize all canvases
+    document.querySelectorAll('canvas').forEach(canvas => {
+      canvas.width = 400 * scale;
+      canvas.height = 450 * scale;
+    });
+    
+    // Scale character position and size
+    character.x = 187 * scale;
+    character.y = 420 * scale; // Bottom of ladder
+    character.width = 30 * scale;
+    character.height = 30 * scale;
+    
+    // Scale speed
+    speed = 4 * scale;
+  });
+  
+  // Override the update function to use scaled ground level
+  const originalCode = window.update.toString();
+  window.update = function() {
+    const groundLevel = window.groundLevel || 420;
+    
+    canvases.forEach(canvas => {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawLadder(ctx, canvas);
+      drawCharacter(ctx);
+      drawScore(ctx);
+    });
+
+    if (!freezeFrame) {
+      if (climbing) {
+        character.y -= speed;
+        if (character.y <= 0) {
+          climbing = false;
+          score++;
+          const unlocked = checkColorUnlock(score);
+          if (!unlocked && score % 5 === 0) showFunnyMessage();
+        }
+      } else {
+        character.y += speed;
+        if (character.y >= groundLevel) character.y = groundLevel; // Use scaled ground
+      }
+    }
+    requestAnimationFrame(update);
+  };
+  
+  // Override climb function to use scaled ground level
+  window.climb = function() {
+    const groundLevel = window.groundLevel || 420;
+    if (!climbing && character.y >= groundLevel && !freezeFrame) {
+      climbing = true;
+      if (audioEnabled) {
+        audioEl.currentTime = 0;
+        audioEl.play().catch(() => {});
+      }
+    }
+  };
+  
+  // Override drawLadder to use scale
+  window.drawLadder = function(ctx, canvas) {
+    const s = window.gameScale || 1;
+    const currentColor = ladderColors[currentLadderColorIndex];
+    
+    if (currentColor.isRainbow) {
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, "#ff0066");
+      gradient.addColorStop(0.2, "#ff9900");
+      gradient.addColorStop(0.4, "#ffcc00");
+      gradient.addColorStop(0.6, "#00ff66");
+      gradient.addColorStop(0.8, "#00ccff");
+      gradient.addColorStop(1, "#b200ff");
+      ctx.strokeStyle = gradient;
+    } else {
+      ctx.strokeStyle = currentColor.color;
+    }
+    
+    ctx.lineWidth = 6 * s;
+    ctx.beginPath();
+    ctx.moveTo(150 * s, 0);
+    ctx.lineTo(150 * s, canvas.height);
+    ctx.moveTo(250 * s, 0);
+    ctx.lineTo(250 * s, canvas.height);
+    ctx.stroke();
+    
+    for (let i = 0; i < canvas.height; i += (40 * s)) {
+      ctx.beginPath();
+      ctx.moveTo(150 * s, i);
+      ctx.lineTo(250 * s, i);
+      ctx.stroke();
+    }
+  };
+  
+  // Override drawScore to use scale
+  window.drawScore = function(ctx) {
+    const s = window.gameScale || 1;
+    ctx.fillStyle = "#ffcc00";
+    ctx.font = (14 * s) + "px 'Press Start 2P', cursive";
+    ctx.textAlign = "left";
+    ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
+    ctx.shadowBlur = 10 * s;
+
+    const scoreStr = "Pts: " + score;
+    let startX = 10 * s, startY = 25 * s, lineHeight = 18 * s;
+    for (let i = 0; i < scoreStr.length; i++) {
+      ctx.fillText(scoreStr[i], startX, startY + i * lineHeight);
+    }
+    ctx.shadowBlur = 0;
+  };
+  
+  // Handle new canvases from infinite scroll
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('canvas').forEach(canvas => {
+      if (canvas.width === 400) {
+        canvas.width = 400 * scale;
+        canvas.height = 450 * scale;
+      }
+    });
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
 
 
 
