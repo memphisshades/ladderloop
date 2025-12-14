@@ -589,15 +589,50 @@
       });
 
       resetBtn.addEventListener("click", () => {
-        score = 0;
-        character.y = 420;
-        climbing = false;
-        currentLadderColorIndex = 0;
-        unlockedColors = [0];
-        freezeFrame = false;
-        audioEl.pause();
-        audioEl.currentTime = 0;
-      });
+  // Get the current ground level (scaled or not)
+  const groundLevel = window.groundLevel || 420;
+  
+  // Only do ANYTHING if they actually have a score or have moved
+  if (score > 0 || character.y < groundLevel) {
+    const resetMessages = [
+      "Giving up already? Classic.",
+      "Reset button pressed. Dreams crushed.",
+      "Starting over won't change anything.",
+      "You think THIS time will be different?",
+      "Ah yes, the definition of insanity.",
+      "The reset button: For quitters only.",
+      "Back to square one. Where you belong.",
+      "Did you try turning it off and on again?",
+      "Fresh start? More like fresh failure.",
+      "The ladder remembers your shame.",
+      "Reset: The ultimate admission of defeat.",
+      "Zero points. Zero dignity.",
+      "Everyone gets a participation trophy except you.",
+      "Maybe take a break? Forever?",
+      "The ladder has seen you hit this button 47 times.",
+      "Your high score is now a distant memory.",
+      "This is what rock bottom looks like.",
+      "Maybe ladders just aren't your thing.",
+      "Resetting won't erase the embarrassment.",
+      "The ladder whispers: 'They always come back.'"
+    ];
+    
+    const msg = resetMessages[Math.floor(Math.random() * resetMessages.length)];
+    showMessage(msg);
+    
+    setTimeout(() => {
+      score = 0;
+      character.y = groundLevel;
+      climbing = false;
+      currentLadderColorIndex = 0;
+      unlockedColors = [0];
+      freezeFrame = false;
+      audioEl.pause();
+      audioEl.currentTime = 0;
+    }, 2500);
+  }
+  // If they haven't played, button does NOTHING (no else block)
+});
     }
 
     /* ===== Section setup ===== */
