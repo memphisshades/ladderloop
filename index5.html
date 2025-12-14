@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ladder Loop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: #0a0a0a;
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Hero Screen */
+    .hero-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      animation: fadeIn 1s ease-in;
+    }
+
+    .hero-screen h1 {
+      font-size: clamp(2rem, 8vw, 5rem);
+      margin-bottom: 30px;
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+
+    .hero-screen p {
+      font-size: clamp(0.8rem, 3vw, 1.5rem);
+      margin-bottom: 20px;
+      color: #00ffcc;
+    }
+
+    .start-btn {
+      margin-top: 30px;
+      padding: 15px 40px;
+      font-size: clamp(0.7rem, 2vw, 1rem);
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(135deg, #ff0066, #00ccff);
+      color: #fff;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+    }
+
+    .start-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.8);
+    }
+
+    .menu-links {
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      max-width: 800px;
+      padding: 0 20px;
+    }
+
+    .menu-link {
+      padding: 10px 20px;
+      font-size: clamp(0.5rem, 1.2vw, 0.8rem);
+      font-family: 'Press Start 2P', cursive;
+      background: rgba(255, 0, 102, 0.1);
+      color: #00ffcc;
+      border: 2px solid #00ffcc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    
+    @media (max-width: 768px) {
+      .menu-links {
+        gap: 8px;
+      }
+      
+      .menu-link {
+        padding: 8px 12px;
+        font-size: 0.5rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .menu-link {
+        padding: 6px 10px;
+        font-size: 0.45rem;
+      }
+    }
+
+    .menu-link:hover {
+      background: rgba(0, 255, 204, 0.2);
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Game Screen */
+    .game-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .canvas-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    canvas {
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.4);
+      display: block;
+      max-width: 90vw;
+      max-height: 70vh;
+    }
+
+    .controls {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .game-btn {
+      padding: 12px 24px;
+      font-size: clamp(0.6rem, 1.5vw, 0.9rem);
+      font-family: 'Press Start 2P', cursive;
+      background: rgba(255, 0, 102, 0.2);
+      color: #fff;
+      border: 2px solid #ff0066;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .game-btn:hover {
+      background: rgba(255, 0, 102, 0.4);
+      box-shadow: 0 0 15px rgba(255, 0, 102, 0.6);
+    }
+
+    .game-btn.active {
+      background: rgba(0, 255, 102, 0.3);
+      border-color: #00ff66;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+      border: 3px solid #ff0066;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 90vw;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 0 40px rgba(255, 0, 102, 0.6);
+      position: relative;
+    }
+
+    .modal-content::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .modal-content::-webkit-scrollbar-track {
+      background: #0a0a0a;
+      border-radius: 5px;
+    }
+
+    .modal-content::-webkit-scrollbar-thumb {
+      background: #ff0066;
+      border-radius: 5px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 1.5rem;
+      color: #ff0066;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.8);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ff0066;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+
+    .close-modal:hover {
+      color: #00ffcc;
+      border-color: #00ffcc;
+      transform: scale(1.1);
+    }
+
+    .modal-content h2 {
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      margin-bottom: 25px;
+      text-align: center;
+      color: #ff0066;
+      text-shadow: 0 0 20px rgba(255, 0, 102, 0.8);
+    }
+
+    .modal-content p {
+      font-size: clamp(0.6rem, 1.8vw, 0.9rem);
+      line-height: 1.8;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    .modal-content strong {
+      color: #00ffcc;
+    }
+
+    /* Image Carousel */
+    .carousel {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+    }
+
+    .carousel-image {
+      width: 100%;
+      height: auto;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+      display: none;
+    }
+
+    .carousel-image.active {
+      display: block;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    .carousel-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .carousel-btn {
+      padding: 10px 20px;
+      font-size: clamp(0.6rem, 1.5vw, 0.8rem);
+      font-family: 'Press Start 2P', cursive;
+      background: rgba(255, 0, 102, 0.2);
+      color: #fff;
+      border: 2px solid #ff0066;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex: 1;
+    }
+
+    .carousel-btn:hover {
+      background: rgba(255, 0, 102, 0.4);
+      box-shadow: 0 0 15px rgba(255, 0, 102, 0.6);
+    }
+
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .carousel-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 0, 102, 0.3);
+      border: 2px solid #ff0066;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .carousel-dot.active {
+      background: #ff0066;
+      box-shadow: 0 0 10px rgba(255, 0, 102, 0.8);
+    }
+
+    .image-caption {
+      text-align: center;
+      margin-top: 15px;
+      font-size: clamp(0.5rem, 1.5vw, 0.75rem);
+      color: #00ffcc;
+      line-height: 1.6;
+    }
+
+    /* Overlay for game messages */
+    .overlay {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      color: #ffcc00;
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      padding: 30px;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      display: none;
+      z-index: 1000;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+      white-space: pre-line;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes pulseGlow {
+      from { text-shadow: 0 0 10px #ff0066, 0 0 20px #ff0066; }
+      to { text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc; }
+    }
+
+    @media (max-width: 768px) {
+      .controls {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .modal-content {
+        padding: 20px;
+      }
+
+      .carousel-nav {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Hero Screen -->
+    <div class="hero-screen" id="heroScreen">
+      <h1>LADDER LOOP</h1>
+      <p>Climb. Fall. Repeat.</p>
+      <p style="font-size: 0.7em; opacity: 0.8;">One button. Endless climb.</p>
+      <button class="start-btn" onclick="startGame()">START</button>
+      
+      <div class="menu-links">
+        <button class="menu-link" onclick="openModal('about')">About</button>
+        <button class="menu-link" onclick="openModal('reviews')">Reviews</button>
+        <button class="menu-link" onclick="openModal('faq')">FAQ</button>
+        <button class="menu-link" onclick="openModal('office')">Our Office</button>
+        <button class="menu-link" onclick="openModal('merch')">Merch</button>
+      </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="game-screen" id="gameScreen">
+      <div class="canvas-container">
+        <canvas id="gameCanvas" width="400" height="450"></canvas>
+      </div>
+      <div class="controls">
+        <button class="game-btn" id="muteBtn" onclick="toggleMute()">🔊 Sound</button>
+        <button class="game-btn" onclick="backToMenu()">← Menu</button>
+      </div>
+    </div>
+
+    <!-- Overlay for game messages -->
+    <div class="overlay" id="overlay"></div>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBackground(event)">
+    <div class="modal-content" id="modalContent" onclick="event.stopPropagation()">
+      <span class="close-modal" onclick="closeModal()">×</span>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <audio id="climbAudio" src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const overlay = document.getElementById("overlay");
+    const climbAudio = document.getElementById("climbAudio");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const modalBody = document.getElementById("modalBody");
+
+    let character = { x: 187, y: 420, width: 30, height: 30 };
+    let climbing = false;
+    let score = 0;
+    let speed = 4;
+    let freezeFrame = false;
+    let gameStarted = false;
+    let audioEnabled = false;
+    
+    // Ladder colors
+    let currentLadderColorIndex = 0;
+    let unlockedColors = [0];
+    const ladderColors = [
+      { name: "Classic White", color: "#fff", unlockScore: 0 },
+      { name: "Electric Blue", color: "#00ccff", unlockScore: 5 },
+      { name: "Neon Pink", color: "#ff0066", unlockScore: 10 },
+      { name: "Toxic Green", color: "#00ff66", unlockScore: 15 },
+      { name: "Purple Haze", color: "#b200ff", unlockScore: 20 },
+      { name: "Golden Glory", color: "#ffcc00", unlockScore: 25 },
+      { name: "Rainbow Prism", color: "#fff", unlockScore: 30, isRainbow: true }
+    ];
+
+    const funnyMessages = [
+      "Why are you still playing?",
+      "Climbing ladders... again...",
+      "The loop is endless",
+      "Gravity always wins",
+      "Just one more try...",
+      "You're stuck in the loop"
+    ];
+
+    // Merch carousel
+    let currentMerchIndex = 0;
+    const merchItems = [
+      { src: "https://www.ladderloop.com/images/merch/merch_xmas.png", caption: "Ladder Loop Xmas Jumper – santa drops gifts, you just drop." },
+      { src: "https://www.ladderloop.com/images/merch/merch7.png", caption: "Ladder Loop Hoodie – keeps you warm while you fall endlessly." },
+      { src: "https://www.ladderloop.com/images/merch/merch6.png", caption: "Ladder Loop Cap – shields your eyes. Not your score." },
+      { src: "https://www.ladderloop.com/images/merch/merch4.png", caption: "Ladder Loop Mug – holds hot drinks. Not your dignity." },
+      { src: "https://www.ladderloop.com/images/merch/merch3.png", caption: "Ladder Loop Mousemat - Every click brings another fall." },
+      { src: "https://www.ladderloop.com/images/merch/merch5.png", caption: "Ladder Loop Socks – fall faster in style." }
+    ];
+
+    function startGame() {
+      document.getElementById("heroScreen").style.display = "none";
+      document.getElementById("gameScreen").style.display = "flex";
+      gameStarted = true;
+      audioEnabled = false;
+      score = 0;
+      character.y = 420;
+      climbing = false;
+      currentLadderColorIndex = 0;
+      unlockedColors = [0];
+      update();
+    }
+
+    function backToMenu() {
+      document.getElementById("gameScreen").style.display = "none";
+      document.getElementById("heroScreen").style.display = "flex";
+      gameStarted = false;
+      if (audioEnabled) {
+        climbAudio.pause();
+        climbAudio.currentTime = 0;
+      }
+    }
+
+    function openModal(type) {
+      let content = '';
+      
+      switch(type) {
+        case 'about':
+          content = `
+            <h2>THE GAME</h2>
+            <p>Ladder Loop is a minimalist arcade climb.</p>
+            <p>How long can you last?</p>
+            <p>Unlock new ladder <strong style="background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">colors</strong> as you score!</p>
+            <p style="margin-top: 20px;">Click or tap to climb. Fall. Repeat. That's it.</p>
+            <div style="margin-top: 40px; padding: 20px; border: 2px solid #00ffcc; border-radius: 10px; background: rgba(0, 255, 204, 0.05);">
+              <p style="font-size: 0.8em; margin-bottom: 15px; color: #00ffcc;"><strong>Follow us:</strong></p>
+              <p style="margin-bottom: 10px;">
+                <a href="https://x.com/ladderloop" target="_blank" style="color: #00ffcc; text-decoration: none; font-size: 0.75em; display: inline-block; padding: 5px 0; transition: all 0.3s;" onmouseover="this.style.color='#ff0066'; this.style.textShadow='0 0 10px #ff0066'" onmouseout="this.style.color='#00ffcc'; this.style.textShadow='none'">🐦 Twitter: @ladderloop</a>
+              </p>
+              <p>
+                <a href="https://instagram.com/ladderloopgame" target="_blank" style="color: #00ffcc; text-decoration: none; font-size: 0.75em; display: inline-block; padding: 5px 0; transition: all 0.3s;" onmouseover="this.style.color='#ff0066'; this.style.textShadow='0 0 10px #ff0066'" onmouseout="this.style.color='#00ffcc'; this.style.textShadow='none'">📷 Instagram: @ladderloopgame</a>
+              </p>
+            </div>
+          `;
+          break;
+          
+        case 'reviews':
+          content = `
+            <h2>REVIEWS</h2>
+            <p><strong>"I climbed once. Then I fell."</strong><br>- The Climber</p>
+            <p><strong>"Best. Ladder. Ever."</strong><br>- Some guy who is still playing</p>
+            <p><strong>"I fell off the ladder, and I haven't stopped playing since."</strong><br>- Time‑rich girl</p>
+            <p><strong>"It's just a ladder but I can't stop."</strong><br>- Confused Player</p>
+            <p><strong>"Simple. Addictive. Pointless. Perfect."</strong><br>- Game Critic</p>
+          `;
+          break;
+          
+        case 'faq':
+          content = `
+            <h2>FAQs</h2>
+            <p><strong>Q:</strong> What's the point?<br><strong>A:</strong> Exactly.</p>
+            <p><strong>Q:</strong> How do I win?<br><strong>A:</strong> You don't. But good luck trying.</p>
+            <p><strong>Q:</strong> Is this game addictive?<br><strong>A:</strong> Are you still playing? Enough said.</p>
+            <p><strong>Q:</strong> What happens when I reach the top?<br><strong>A:</strong> You fall. That's life.</p>
+            <p><strong>Q:</strong> Can I play on mobile?<br><strong>A:</strong> Yes. Fall anywhere, anytime.</p>
+            <p><strong>Q:</strong> Why is it called Ladder Loop?<br><strong>A:</strong> Because "Endless Falling Simulator" was taken.</p>
+          `;
+          break;
+          
+        case 'office':
+          content = `
+            <h2>OUR OFFICE</h2>
+            <p style="margin-bottom: 20px;">Where the magic happens!</p>
+            <img src="https://www.ladderloop.com/images/office/office_38.png" 
+                 alt="Our Office" 
+                 style="width: 100%; max-width: 600px; border: 3px solid #ff0066; border-radius: 10px; box-shadow: 0 0 30px rgba(255, 0, 102, 0.5); margin: 20px auto; display: block;">
+            <p style="text-align: center; margin-top: 15px;">We take our ladder development very seriously.</p>
+          `;
+          break;
+          
+        case 'merch':
+          content = `
+            <h2>MERCH</h2>
+            <p style="text-align: center; margin-bottom: 20px;">Launching Soon (maybe)</p>
+            <div class="carousel">
+              ${merchItems.map((item, i) => `
+                <img src="${item.src}" 
+                     class="carousel-image ${i === 0 ? 'active' : ''}" 
+                     alt="Merch ${i+1}"
+                     data-index="${i}">
+              `).join('')}
+              <div class="carousel-nav">
+                <button class="carousel-btn" onclick="previousMerch()">← Prev</button>
+                <button class="carousel-btn" onclick="nextMerch()">Next →</button>
+              </div>
+              <div class="carousel-dots">
+                ${merchItems.map((_, i) => `
+                  <div class="carousel-dot ${i === 0 ? 'active' : ''}" onclick="goToMerch(${i})"></div>
+                `).join('')}
+              </div>
+              <p class="image-caption" id="merchCaption">${merchItems[0].caption}</p>
+            </div>
+          `;
+          break;
+      }
+      
+      modalBody.innerHTML = content;
+      modalOverlay.style.display = 'flex';
+    }
+
+    function closeModal() {
+      modalOverlay.style.display = 'none';
+    }
+
+    function closeModalOnBackground(event) {
+      if (event.target === modalOverlay) {
+        closeModal();
+      }
+    }
+
+    function nextMerch() {
+      currentMerchIndex = (currentMerchIndex + 1) % merchItems.length;
+      updateMerchCarousel();
+    }
+
+    function previousMerch() {
+      currentMerchIndex = (currentMerchIndex - 1 + merchItems.length) % merchItems.length;
+      updateMerchCarousel();
+    }
+
+    function goToMerch(index) {
+      currentMerchIndex = index;
+      updateMerchCarousel();
+    }
+
+    function updateMerchCarousel() {
+      const images = document.querySelectorAll('.carousel-image');
+      const dots = document.querySelectorAll('.carousel-dot');
+      const caption = document.getElementById('merchCaption');
+      
+      images.forEach((img, i) => {
+        img.classList.toggle('active', i === currentMerchIndex);
+      });
+      
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentMerchIndex);
+      });
+      
+      if (caption) {
+        caption.textContent = merchItems[currentMerchIndex].caption;
+      }
+    }
+
+    // ESC key to close modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    function drawLadder() {
+      const currentColor = ladderColors[currentLadderColorIndex];
+      
+      if (currentColor.isRainbow) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, "#ff0066");
+        gradient.addColorStop(0.25, "#ff9900");
+        gradient.addColorStop(0.5, "#ffcc00");
+        gradient.addColorStop(0.75, "#00ff66");
+        gradient.addColorStop(1, "#00ccff");
+        ctx.strokeStyle = gradient;
+      } else {
+        ctx.strokeStyle = currentColor.color;
+      }
+      
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(150, 0);
+      ctx.lineTo(150, 450);
+      ctx.moveTo(250, 0);
+      ctx.lineTo(250, 450);
+      ctx.stroke();
+      
+      for (let i = 0; i < 450; i += 40) {
+        ctx.beginPath();
+        ctx.moveTo(150, i);
+        ctx.lineTo(250, i);
+        ctx.stroke();
+      }
+    }
+
+    function drawCharacter() {
+      ctx.fillStyle = "#ffcc00";
+      ctx.fillRect(character.x, character.y, character.width, character.height);
+    }
+
+    function drawScore() {
+      ctx.fillStyle = "#ffcc00";
+      ctx.font = "16px 'Press Start 2P', cursive";
+      ctx.textAlign = "left";
+      ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
+      ctx.shadowBlur = 10;
+      ctx.fillText("Score: " + score, 10, 30);
+      ctx.shadowBlur = 0;
+    }
+
+    function showOverlay(text) {
+      overlay.innerText = text;
+      overlay.style.display = "block";
+      freezeFrame = true;
+
+      setTimeout(() => {
+        overlay.style.display = "none";
+        freezeFrame = false;
+      }, 2500);
+    }
+
+    function checkColorUnlock(score) {
+      for (let i = 0; i < ladderColors.length; i++) {
+        if (score >= ladderColors[i].unlockScore && !unlockedColors.includes(i)) {
+          unlockedColors.push(i);
+          currentLadderColorIndex = i;
+          showOverlay(`🎨 Color Unlocked!\n${ladderColors[i].name}`);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function showFunnyMessage() {
+      const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      showOverlay(randomMessage);
+    }
+
+    function update() {
+      if (!gameStarted) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawLadder();
+      drawCharacter();
+      drawScore();
+
+      if (!freezeFrame) {
+        if (climbing) {
+          character.y -= speed;
+          if (character.y <= 0) {
+            climbing = false;
+            score++;
+            
+            const colorUnlocked = checkColorUnlock(score);
+            
+            if (!colorUnlocked) {
+              if (score % 5 === 0) showFunnyMessage();
+            }
+          }
+        } else {
+          character.y += speed;
+          if (character.y >= 420) character.y = 420;
+        }
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    function climb() {
+      if (!climbing && character.y >= 420 && !freezeFrame && gameStarted) {
+        climbing = true;
+        if (audioEnabled) {
+          climbAudio.currentTime = 0;
+          climbAudio.play();
+        }
+      }
+    }
+
+    canvas.addEventListener("click", climb);
+    
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space" && gameStarted) {
+        climb();
+        e.preventDefault();
+      }
+    });
+
+    function toggleMute() {
+      const muteBtn = document.getElementById('muteBtn');
+      audioEnabled = !audioEnabled;
+      
+      if (audioEnabled) {
+        muteBtn.innerHTML = '🔊 Sound';
+        muteBtn.classList.add('active');
+        if (climbing) {
+          climbAudio.play();
+        }
+      } else {
+        muteBtn.innerHTML = '🔇 Muted';
+        muteBtn.classList.remove('active');
+        climbAudio.pause();
+      }
+    }
+  </script>
+
+</body>
+</html>
