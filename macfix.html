@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ladder Loop - Infinite Climb</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border-top: 2px solid transparent;
+      border-image: linear-gradient(90deg, transparent, #ff0066, #00ffcc, #ff0066, transparent) 1;
+    }
+
+    @media (max-width: 768px) and (orientation: landscape) {
+      section {
+        min-height: auto;
+        padding: 2rem 1rem;
+      }
+    }
+
+    .container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: 3rem;
+      text-align: center;
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px rgba(0, 255, 204, 0.5);
+      position: absolute;
+      left: -9999px;
+      visibility: hidden;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      display: inline-block;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.4);
+      padding: 10px;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      max-width: 400px;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      border: 2px solid #00ffcc;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+      display: block;
+    }
+
+    @media (min-width: 1920px) {
+      canvas {
+        max-width: 700px;
+      }
+    }
+
+    @media (min-width: 2560px) {
+      canvas {
+        max-width: 1000px;
+      }
+    }
+
+    @media (min-width: 3840px) {
+      canvas {
+        max-width: 1400px;
+      }
+    }
+
+    @media (min-width: 5120px) {
+      canvas {
+        max-width: 1800px;
+      }
+    }
+
+    @media (max-width: 768px) and (orientation: landscape) {
+      canvas {
+        max-width: 300px;
+        max-height: 60vh;
+      }
+      
+      .canvas-wrapper {
+        padding: 5px;
+      }
+    }
+
+    .game-controls {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .game-btn {
+      padding: 1rem 2rem;
+      font-size: 0.9rem;
+      font-family: 'Press Start 2P', cursive;
+      background: rgba(255, 0, 102, 0.1);
+      color: #00ffcc;
+      border: 2px solid #ff0066;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 0 10px rgba(255, 0, 102, 0.3);
+    }
+
+    .game-btn:hover {
+      background: rgba(255, 0, 102, 0.3);
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .game-btn.active {
+      background: rgba(0, 255, 204, 0.3);
+      border-color: #00ffcc;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
+    }
+
+    .game-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 10, 10, 0.98);
+      color: #ffcc00;
+      font-size: 1.2rem;
+      padding: 3rem;
+      border: 3px solid #ff0066;
+      display: none;
+      z-index: 2000;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 0, 102, 0.8);
+      max-width: 90vw;
+      white-space: pre-line;
+      border-radius: 10px;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.3;
+    }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 3rem 1rem;
+      }
+      
+      .game-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 768px) and (orientation: landscape) {
+      .game-controls {
+        gap: 1rem;
+      }
+      
+      .game-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.6rem;
+      }
+      
+      .section-title {
+        margin-bottom: 1rem;
+      }
+    }
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #ff0066;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+    }
+
+    .nav-logo {
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 2px solid #ff0066;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+    }
+
+    .footer-text {
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Template section (this will be cloned) -->
+  <section class="game-section">
+    <div class="container">
+      <h2 class="section-title">PLAY</h2>
+      <div class="game-container">
+        <div class="canvas-wrapper">
+          <canvas width="400" height="450"></canvas>
+        </div>
+        <div class="game-controls">
+          <button class="game-btn mute-btn">🔊 Sound</button>
+          <button class="game-btn reset-btn">↻ Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="game-message"></div>
+  <audio src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
+
+  <script>
+    /* ===== Shared game state ===== */
+    let canvases = [];
+    let character = { x: 187, y: 420, width: 30, height: 30 };
+    let climbing = false;
+    let score = 0;
+    let speed = 4;
+    let freezeFrame = false;
+    let audioEnabled = false;
+    
+    let currentLadderColorIndex = 0;
+    let unlockedColors = [0];
+    
+    const ladderColors = [
+      { name: "Classic White", color: "#fff", unlockScore: 0 },
+      { name: "Electric Blue", color: "#00ccff", unlockScore: 5 },
+      { name: "Neon Pink", color: "#ff0066", unlockScore: 10 },
+      { name: "Toxic Green", color: "#00ff66", unlockScore: 15 },
+      { name: "Purple Haze", color: "#b200ff", unlockScore: 20 },
+      { name: "Golden Glory", color: "#ffcc00", unlockScore: 25 },
+      { name: "Crimson Rage", color: "#ff3333", unlockScore: 30 },
+      { name: "Cyber Orange", color: "#ff9900", unlockScore: 35 },
+      { name: "Mystic Violet", color: "#9933ff", unlockScore: 40 },
+      { name: "Arctic Cyan", color: "#00ffff", unlockScore: 45 },
+      { name: "Sunset Red", color: "#ff6666", unlockScore: 50 },
+      { name: "Lime Blast", color: "#ccff00", unlockScore: 60 },
+      { name: "Hot Magenta", color: "#ff00ff", unlockScore: 70 },
+      { name: "Ocean Teal", color: "#00cc99", unlockScore: 80 },
+      { name: "Rainbow Prism", color: "#fff", unlockScore: 100, isRainbow: true }
+    ];
+
+    const funnyMessages = [
+        "Follow us on Instagram: @ladderloop (it won't help your score)",
+  "Why are you still playing? Seriously?",
+  "Climbing ladders... again...",
+  "You've reached a new score... did you expect a reward?",
+  "Congratulations, you're still here. Impressive.",
+  "Are you stuck in a loop? 'Cause I think you are.",
+  "Climbing ladders for fun? Uh... okay.",
+  "This is the longest you've ever stuck with anything, huh?",
+  "The ladder flips. You climb. You fall. You repeat.",
+  "What should we name our character?",
+  "You must be addicted to this. Do you need help?",
+  "Is this game even fun? Are you sure?",
+  "You just like the music.",
+  "You climb because you must. The ladder is endless. The loop is life.",
+  "Another fall? Who saw that coming...",
+  "Is it even possible to 'win' this?",
+  "Just one more try... yeah, right.",
+  "Don't worry, nobody's judging you... except me.",
+  "Maybe the ladder is trying to tell you something.",
+  "You're not climbing, you're just falling upwards.",
+  "The ladder wins, always. Deal with it.",
+  "You've been falling for longer than most people can hold a job.",
+  "Every time you fall, an angel loses its wings. Sorry, angel.",
+  "Well, that was a spectacular failure.",
+  "Is the ladder just a metaphor for life? Discuss.",
+  "You fell again? Well, what else is new?",
+  "Why does falling feel like the only option?",
+  "You're climbing... but where are you really going?",
+  "The only thing you're getting out of this is a sore thumb.",
+  "Don't worry, the loop's endless... just like your frustration.",
+  "When does this cycle end? Not anytime soon, my friend.",
+  "A ladder without a top... how poetic.",
+  "You're halfway up, and still, no reward in sight.",
+  "The ladder's patience is infinite... but yours might not be.",
+  "You've reached a new score, and somehow, I'm less impressed each time.",
+  "What's at the top? Just more falling.",
+  "Let me guess... you're gonna fall right now.",
+  "One day you'll reach the top... but that day is not today.",
+  "The ladder just doesn't care, does it?",
+  "You should be getting paid for all this climbing... or falling.",
+  "You fell. Again. It's almost like you're playing for that purpose.",
+  "I believe in you... just kidding, I don't.",
+  "You're still trying? You must have a death wish.",
+  "Falling with style... or just falling.",
+  "You've climbed for hours. It feels like days, right?",
+  "Each fall is just another lesson. A lesson you keep ignoring.",
+  "Climbing this ladder is your version of therapy, isn't it?",
+  "Is there a 'just give up' button somewhere?",
+  "Who needs a reset button when you've already reset yourself?",
+  "You fell again? Don't worry, it's the game's fault, not yours.",
+  "Keep climbing... you'll fall again... and again... and again.",
+  "I'm not saying you're bad at this... but you're bad at this.",
+  "Does anyone ever reach the top? Or do we just keep falling forever?",
+  "Does your thumb hurt yet? Because mine does.",
+  "You're just a tiny pixel on a never-ending ladder, huh?",
+  "When will you learn? Just kidding, don't.",
+  "Have you tried... not falling?",
+  "You think you're close to winning... but you're not.",
+  "The ladder has one rule: 'No winners allowed.'",
+  "This is probably the most pointless thing you've done today.",
+  "I bet you can't make it 10 more seconds without falling.",
+  "You're still climbing? There's no top, you know.",
+  "This game was supposed to be fun, right?",
+  "Climbing a ladder is the easy part... it's the falling that gets you.",
+  "Why climb when you can just fall?",
+  "You're not falling... you're just 'adjusting your position.'",
+  "Every time you climb, the ladder laughs at you.",
+  "You fell again? But you had such high hopes!",
+  "I hope you're getting something out of this, because I'm not.",
+  "Each fall is like a little death. Embrace it.",
+  "The game is rigged. The ladder will always win.",
+  "You know what's more fun than climbing? Falling.",
+  "If falling was a sport, you'd be a champion.",
+  "Who needs goals when you have a never-ending ladder?",
+  "You've got a high score. Too bad it doesn't matter.",
+  "I've seen people climb ladders faster than you.",
+  "You climbed one step. You fell several.",
+  "No matter how high you climb, gravity's always waiting.",
+  "If you get to the top, let me know. I'll be waiting for your inevitable fall.",
+  "Are you winning yet? No? Well, keep trying.",
+  "I think you just like the sound of the music, don't you?",
+  "Just fall already, it's inevitable.",
+  "You're climbing a ladder... in a game. Is that life?",
+  "Fall down, get up, repeat. Sound familiar?",
+  "There's no escape from the loop... except maybe the game.",
+  "The ladder is your enemy... and it's winning.",
+  "Congratulations on making it to... the middle of the ladder.",
+  "You just climbed... and then fell. That's impressive, in a way."
+    ];
+
+    const messageBox = document.querySelector('.game-message');
+    const audioEl = document.querySelector('audio');
+    const muteBtns = [];
+    const resetBtns = [];
+
+    /* ===== Drawing functions ===== */
+    function drawLadder(ctx, canvas) {
+      const currentColor = ladderColors[currentLadderColorIndex];
+      
+      if (currentColor.isRainbow) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, "#ff0066");
+        gradient.addColorStop(0.2, "#ff9900");
+        gradient.addColorStop(0.4, "#ffcc00");
+        gradient.addColorStop(0.6, "#00ff66");
+        gradient.addColorStop(0.8, "#00ccff");
+        gradient.addColorStop(1, "#b200ff");
+        ctx.strokeStyle = gradient;
+      } else {
+        ctx.strokeStyle = currentColor.color;
+      }
+      
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(150, 0);
+      ctx.lineTo(150, canvas.height);
+      ctx.moveTo(250, 0);
+      ctx.lineTo(250, canvas.height);
+      ctx.stroke();
+      
+      for (let i = 0; i < canvas.height; i += 40) {
+        ctx.beginPath();
+        ctx.moveTo(150, i);
+        ctx.lineTo(250, i);
+        ctx.stroke();
+      }
+    }
+
+    function drawCharacter(ctx) {
+      ctx.fillStyle = "#ffcc00";
+      ctx.fillRect(character.x, character.y, character.width, character.height);
+    }
+
+    function drawScore(ctx) {
+      ctx.fillStyle = "#ffcc00";
+      ctx.font = "14px 'Press Start 2P', cursive";
+      ctx.textAlign = "left";
+      ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
+      ctx.shadowBlur = 10;
+
+      const scoreStr = "Pts: " + score;
+      let startX = 10, startY = 25, lineHeight = 18;
+      for (let i = 0; i < scoreStr.length; i++) {
+        ctx.fillText(scoreStr[i], startX, startY + i * lineHeight);
+      }
+      ctx.shadowBlur = 0;
+    }
+
+    /* ===== Game logic ===== */
+    function showMessage(text) {
+      messageBox.innerText = text;
+      messageBox.style.display = "block";
+      freezeFrame = true;
+      setTimeout(() => {
+        messageBox.style.display = "none";
+        freezeFrame = false;
+      }, 2500);
+    }
+
+    function checkColorUnlock(s) {
+      for (let i = 0; i < ladderColors.length; i++) {
+        if (s >= ladderColors[i].unlockScore && !unlockedColors.includes(i)) {
+          unlockedColors.push(i);
+          currentLadderColorIndex = i;
+          showMessage(`🎨 Color Unlocked!\n${ladderColors[i].name}`);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function showFunnyMessage() {
+      const msg = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      showMessage(msg);
+    }
+
+    function update() {
+      canvases.forEach(canvas => {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawLadder(ctx, canvas);
+        drawCharacter(ctx);
+        drawScore(ctx);
+      });
+
+      if (!freezeFrame) {
+        if (climbing) {
+          character.y -= speed;
+          if (character.y <= 0) {
+            climbing = false;
+            score++;
+            const unlocked = checkColorUnlock(score);
+            if (!unlocked && score % 5 === 0) showFunnyMessage();
+          }
+        } else {
+          character.y += speed;
+          if (character.y >= 420) character.y = 420;
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    function climb() {
+      if (!climbing && character.y >= 420 && !freezeFrame) {
+        climbing = true;
+        if (audioEnabled) {
+          audioEl.currentTime = 0;
+          audioEl.play().catch(() => {});
+        }
+      }
+    }
+
+    /* ===== Controls ===== */
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space" || e.key === " ") {
+        climb();
+        e.preventDefault();
+      }
+    });
+
+    function setupControls(muteBtn, resetBtn) {
+      muteBtns.push(muteBtn);
+      resetBtns.push(resetBtn);
+
+      muteBtn.addEventListener("click", () => {
+        audioEnabled = !audioEnabled;
+        muteBtns.forEach(btn => {
+          if (audioEnabled) {
+            btn.innerHTML = "🔊 Sound";
+            btn.classList.add("active");
+          } else {
+            btn.innerHTML = "🔇 Muted";
+            btn.classList.remove("active");
+          }
+        });
+        if (!audioEnabled) audioEl.pause();
+      });
+
+      resetBtn.addEventListener("click", () => {
+        score = 0;
+        character.y = 420;
+        climbing = false;
+        currentLadderColorIndex = 0;
+        unlockedColors = [0];
+        freezeFrame = false;
+        audioEl.pause();
+        audioEl.currentTime = 0;
+      });
+    }
+
+    /* ===== Section setup ===== */
+    function wireSection(section) {
+      const canvas = section.querySelector("canvas");
+      const muteBtn = section.querySelector(".mute-btn");
+      const resetBtn = section.querySelector(".reset-btn");
+      
+      if (!canvas || !muteBtn || !resetBtn) return;
+
+      canvases.push(canvas);
+      canvas.addEventListener("click", climb);
+      setupControls(muteBtn, resetBtn);
+    }
+
+    /* ===== Infinite scroll ===== */
+    window.addEventListener("DOMContentLoaded", () => {
+      const template = document.querySelector(".game-section");
+      if (!template) return;
+
+      wireSection(template);
+
+      // Add initial sections
+      for (let i = 0; i < 2; i++) {
+        const clone = template.cloneNode(true);
+        document.body.appendChild(clone);
+        wireSection(clone);
+      }
+
+      // Infinite scroll
+      window.addEventListener("scroll", () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+          const clone = template.cloneNode(true);
+          document.body.appendChild(clone);
+          wireSection(clone);
+        }
+      });
+
+      update();
+    });
+  </script>
+
+
+<script>
+// ADD-ON: Instructions overlay (WITH ANIMATIONS - FIXED)
+(function() {
+  // Add keyframe animations to document head
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes glow-pulse {
+      0%, 100% {
+        text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc, 0 0 60px #00ffcc;
+      }
+      50% {
+        text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ffcc, 0 0 90px #00ffcc, 0 0 120px #00ffcc;
+      }
+    }
+    
+    @keyframes underline-slide {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+    
+    .ladder-title-glow {
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+    
+    .action-word {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .action-word::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, #ff0066, #00ffcc);
+      animation: underline-slide 1.5s ease-out infinite;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Create instruction overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+  `;
+  
+  overlay.innerHTML = `
+    <div class="ladder-title-glow" style="
+      font-family: 'Press Start 2P', cursive;
+      color: #00ffcc;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      text-align: center;
+      margin-bottom: 2rem;
+    ">LADDER LOOP</div>
+    
+    <div style="
+      font-family: 'Press Start 2P', cursive;
+      color: #ffcc00;
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      text-align: center;
+      line-height: 2;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    ">
+      <div style="margin-bottom: 1rem;">🎮 PRESS <span style="color: #ff0066;">SPACE</span></div>
+      <div style="margin-bottom: 1rem;">OR</div>
+      <div style="margin-bottom: 2rem;">👆 TAP CANVAS</div>
+      <div style="font-size: clamp(0.6rem, 1.5vw, 0.9rem); color: #00ffcc;">
+        <span class="action-word">Climb</span> the ladder.<br>
+        Reach the top.<br>
+        <span class="action-word">Fall</span> back down.<br>
+        <span class="action-word">Repeat</span> forever.
+      </div>
+    </div>
+    
+    <button style="
+      font-family: 'Press Start 2P', cursive;
+      padding: 1rem 2rem;
+      font-size: clamp(0.7rem, 1.5vw, 1rem);
+      background: rgba(255, 0, 102, 0.2);
+      color: #00ffcc;
+      border: 2px solid #ff0066;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+      transition: all 0.3s;
+      margin-top: 2rem;
+    " onmouseover="this.style.background='rgba(255, 0, 102, 0.4)'; this.style.transform='scale(1.05)';" 
+       onmouseout="this.style.background='rgba(255, 0, 102, 0.2)'; this.style.transform='scale(1)';"
+    >START CLIMBING</button>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  // Remove overlay on button click or any key press
+  const startBtn = overlay.querySelector('button');
+  let overlayRemoved = false;
+  
+  function removeOverlay() {
+    if (overlayRemoved) return;
+    overlayRemoved = true;
+    
+    overlay.style.opacity = '1';
+    overlay.style.transition = 'opacity 0.5s';
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.remove();
+      style.remove(); // Also remove the style tag
+    }, 500);
+  }
+  
+  startBtn.addEventListener('click', removeOverlay);
+  
+  // Remove on ANY keydown or click anywhere
+  document.addEventListener('keydown', function(e) {
+    if (!overlayRemoved) removeOverlay();
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!overlayRemoved) removeOverlay();
+  });
+})();
+</script>
+<script>
+// ADD-ON: Infinite scroll memory management
+(function() {
+  const MAX_SECTIONS = 5; // Keep only 5 sections in DOM at a time
+  
+  // Override the existing scroll listener
+  const originalScrollHandler = window.onscroll;
+  
+  function cleanupSections() {
+    const sections = document.querySelectorAll('.game-section');
+    
+    if (sections.length > MAX_SECTIONS) {
+      const viewportTop = window.scrollY;
+      const viewportBottom = viewportTop + window.innerHeight;
+      
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = rect.top + viewportTop;
+        const sectionBottom = sectionTop + rect.height;
+        
+        // Remove sections that are far above or below viewport
+        const distanceAbove = viewportTop - sectionBottom;
+        const distanceBelow = sectionTop - viewportBottom;
+        
+        if (distanceAbove > window.innerHeight * 2 || distanceBelow > window.innerHeight * 2) {
+          // Remove canvas from global array before removing section
+          const canvas = section.querySelector('canvas');
+          if (canvas) {
+            const canvasIndex = canvases.indexOf(canvas);
+            if (canvasIndex > -1) {
+              canvases.splice(canvasIndex, 1);
+            }
+          }
+          section.remove();
+        }
+      });
+    }
+  }
+  
+  // Add cleanup to scroll events
+  window.addEventListener('scroll', () => {
+    cleanupSections();
+  }, { passive: true });
+  
+  // Also cleanup periodically
+  setInterval(cleanupSections, 5000);
+  
+  console.log('Infinite scroll optimization enabled: Max ' + MAX_SECTIONS + ' sections in DOM');
+})();
+</script>
+
+</body>
+</html>
