@@ -36,15 +36,11 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   
-  <style>
+ <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
     }
 
     body {
@@ -52,111 +48,26 @@
       background: #0a0a0a;
       color: #fff;
       overflow-x: hidden;
-      width: 100%;
     }
 
-    .nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 2px solid #ff0066;
-      z-index: 1000;
-      padding: 1rem 2rem;
+    section {
+      min-height: 100vh;
+      padding: 4rem 2rem;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
-    }
-
-    .nav-logo {
-      font-size: clamp(0.8rem, 2vw, 1.2rem);
-      font-weight: bold;
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: clamp(1rem, 2vw, 2rem);
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: #00ffcc;
-      text-decoration: none;
-      font-size: clamp(0.5rem, 1.2vw, 0.8rem);
-      transition: all 0.3s;
-      padding: 0.5rem 1rem;
-      border: 2px solid transparent;
-    }
-
-    .nav-links a:hover {
-      border: 2px solid #ff0066;
-      background: rgba(255, 0, 102, 0.1);
-      text-shadow: 0 0 10px #ff0066;
-    }
-
-    .burger {
-      display: none;
       flex-direction: column;
-      gap: 4px;
-      cursor: pointer;
-      padding: 8px;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border-top: 2px solid transparent;
+      border-image: linear-gradient(90deg, transparent, #ff0066, #00ffcc, #ff0066, transparent) 1;
     }
 
-    .burger-line {
-      width: 25px;
-      height: 3px;
-      background: #00ffcc;
-      transition: all 0.3s;
-      box-shadow: 0 0 5px #00ffcc;
+    @media (max-width: 768px) and (orientation: landscape) {
+      section {
+        min-height: auto;
+        padding: 2rem 1rem;
+      }
     }
-
-  section {
-  /* modern viewport height unit */
-  min-height: 100svh;
-
-  padding: clamp(4rem, 8vh, 8rem) clamp(1rem, 5vw, 4rem);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-/* fallback for browsers that don’t support svh */
-@supports not (height: 100svh) {
-  section {
-    min-height: 100vh;
-  }
-}
-
-/* orientation-specific tweak */
-@media (max-width: 768px) and (orientation: landscape) {
-  #hero {
-    justify-content: flex-start;   /* stop centering too high */
-    padding-top: 3rem;             /* push content down */
-  }
-}
-
-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #ff0066, #00ffcc, #ff0066, transparent);
-  animation: borderPulse 3s ease-in-out infinite;
-}
-
-@keyframes borderPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
 
     .container {
       max-width: 1400px;
@@ -164,73 +75,22 @@ section::before {
       margin: 0 auto;
     }
 
-    #hero {
+    .section-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: 3rem;
       text-align: center;
-      background: radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 100%);
-    }
-
-    #hero h1 {
-      font-size: clamp(2.5rem, 8vw, 6rem);
-      margin-bottom: clamp(1rem, 3vh, 2rem);
       color: #00ffcc;
-      text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
-      animation: pulseGlow 2s infinite alternate;
-    }
-
-    @keyframes pulseGlow {
-      from { 
-        text-shadow: 0 0 10px #ff0066, 0 0 20px #ff0066;
-        color: #ff0066;
-      }
-      to { 
-        text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
-        color: #00ffcc;
-      }
-    }
-
-    #hero p {
-      font-size: clamp(1rem, 3vw, 2rem);
-      margin-bottom: clamp(0.5rem, 2vh, 1rem);
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
-    }
-
-    #hero .subtitle {
-      font-size: clamp(0.6rem, 2vw, 1rem);
-      opacity: 0.8;
-      margin-bottom: clamp(2rem, 5vh, 4rem);
-      color: #fff;
-    }
-
-    .btn-primary {
-      padding: clamp(0.8rem, 2vh, 1.2rem) clamp(2rem, 5vw, 3rem);
-      font-size: clamp(0.7rem, 1.5vw, 1rem);
-      font-family: 'Press Start 2P', cursive;
-      background: linear-gradient(135deg, #ff0066, #00ccff);
-      color: #fff;
-      border: 3px solid #ff0066;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .btn-primary:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(255, 0, 102, 0.8);
-    }
-
-    #game {
-      background: #0a0a0a;
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px rgba(0, 255, 204, 0.5);
+      position: absolute;
+      left: -9999px;
+      visibility: hidden;
     }
 
     .game-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: clamp(1rem, 3vh, 2rem);
+      gap: 2rem;
       width: 100%;
     }
 
@@ -239,35 +99,15 @@ section::before {
       display: inline-block;
       border: 3px solid #ff0066;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.4), inset 0 0 30px rgba(0, 0, 0, 0.9);
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.4);
       padding: 10px;
       background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
     }
 
-    .resize-handle {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: rgba(255, 0, 102, 0.3);
-      border: 2px solid #ff0066;
-      cursor: nwse-resize;
-      z-index: 30;
-      transition: all 0.2s;
-    }
-
-    .resize-handle:hover {
-      background: rgba(255, 0, 102, 0.6);
-      box-shadow: 0 0 15px rgba(255, 0, 102, 0.8);
-    }
-
-    .resize-handle.bottom-right { bottom: 2px; right: 2px; }
-    .resize-handle.top-left { top: 2px; left: 2px; cursor: nwse-resize; }
-    .resize-handle.top-right { top: 2px; right: 2px; cursor: nesw-resize; }
-    .resize-handle.bottom-left { bottom: 2px; left: 2px; cursor: nesw-resize; }
-
     canvas {
-    width: 100%;
-  height: auto;
+      width: 100%;
+      height: auto;
+      max-width: 400px;
       background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
       border: 2px solid #00ffcc;
       border-radius: 5px;
@@ -275,16 +115,51 @@ section::before {
       display: block;
     }
 
+    @media (min-width: 1920px) {
+      canvas {
+        max-width: 700px;
+      }
+    }
+
+    @media (min-width: 2560px) {
+      canvas {
+        max-width: 1000px;
+      }
+    }
+
+    @media (min-width: 3840px) {
+      canvas {
+        max-width: 1400px;
+      }
+    }
+
+    @media (min-width: 5120px) {
+      canvas {
+        max-width: 1800px;
+      }
+    }
+
+    @media (max-width: 768px) and (orientation: landscape) {
+      canvas {
+        max-width: 300px;
+        max-height: 60vh;
+      }
+      
+      .canvas-wrapper {
+        padding: 5px;
+      }
+    }
+
     .game-controls {
       display: flex;
-      gap: clamp(0.8rem, 2vw, 1.5rem);
+      gap: 1.5rem;
       flex-wrap: wrap;
       justify-content: center;
     }
 
     .game-btn {
-      padding: clamp(0.6rem, 1.5vh, 1rem) clamp(1.2rem, 3vw, 2rem);
-      font-size: clamp(0.6rem, 1.2vw, 0.9rem);
+      padding: 1rem 2rem;
+      font-size: 0.9rem;
       font-family: 'Press Start 2P', cursive;
       background: rgba(255, 0, 102, 0.1);
       color: #00ffcc;
@@ -307,128 +182,6 @@ section::before {
       box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
     }
 
-    #about, #reviews, #faq, #office, #merch {
-      background: #0a0a0a;
-    }
-
-    .section-title {
-      font-size: clamp(2rem, 5vw, 4rem);
-      margin-bottom: clamp(2rem, 5vh, 4rem);
-      text-align: center;
-      color: #00ffcc;
-      text-shadow: 0 0 20px #00ffcc, 0 0 40px rgba(0, 255, 204, 0.5);
-    }
-
-    .content-box {
-      background: rgba(26, 26, 26, 0.8);
-      border: 2px solid #ff0066;
-      border-radius: 10px;
-      padding: clamp(1.5rem, 4vw, 3rem);
-      margin-bottom: clamp(1rem, 3vh, 2rem);
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
-      max-width: 800px;
-      width: 100%;
-      transition: all 0.3s;
-       margin-left: auto;
-         margin-right: auto;
-    }
-
-    .content-box:hover {
-      box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
-      transform: translateY(-5px);
-    }
-
-    .content-box p {
-      font-size: clamp(0.65rem, 1.5vw, 0.9rem);
-      line-height: 1.8;
-      margin-bottom: 1rem;
-      color: #fff;
-    }
-
-    .content-box strong {
-      color: #00ffcc;
-      text-shadow: 0 0 5px #00ffcc;
-    }
-
-    .social-links {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 2rem;
-      padding: clamp(1rem, 3vw, 2rem);
-      background: rgba(0, 255, 204, 0.05);
-      border: 2px solid #00ffcc;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
-    }
-
-    .social-links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: clamp(0.6rem, 1.3vw, 0.8rem);
-      transition: all 0.3s;
-      padding: 0.5rem;
-    }
-
-    .social-links a:hover {
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
-    }
-
-    .gallery {
-  display: grid;
-  justify-content: center;   /* centers the grid itself */
-  grid-template-columns: repeat(auto-fit, minmax(300px, auto));
-  gap: clamp(2rem, 4vw, 4rem);
-}
-
-
-    .gallery-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-              justify-items: center;   /* centers each item horizontally */
- width: auto;             /* don’t force full width */
-  margin: 0 auto;          /* center horizontally */
-      gap: 1rem;
-      background: rgba(26, 26, 26, 0.5);
-      border: 2px solid #ff0066;
-      border-radius: 10px;
-      padding: 1.5rem;
-      transition: all 0.3s;
-      box-shadow: 0 0 15px rgba(255, 0, 102, 0.2);
-        margin-left: auto;
-  margin-right: auto;
-    }
-
-    .gallery-item:hover {
-      box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
-      transform: translateY(-10px);
-    }
-
-    .gallery-item img {
-      width: 100%;
-      max-width: 500px;
-      height: auto;
-      border: 2px solid #00ffcc;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
-      transition: transform 0.3s;
-    }
-
-    .gallery-item img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(0, 255, 204, 0.6);
-    }
-
-    .gallery-caption {
-      font-size: clamp(0.6rem, 1.2vw, 0.8rem);
-      text-align: center;
-      line-height: 1.6;
-      max-width: 500px;
-      color: #00ffcc;
-    }
-
     .game-message {
       position: fixed;
       top: 50%;
@@ -436,8 +189,8 @@ section::before {
       transform: translate(-50%, -50%);
       background: rgba(10, 10, 10, 0.98);
       color: #ffcc00;
-      font-size: clamp(0.8rem, 2vw, 1.2rem);
-      padding: clamp(1.5rem, 4vw, 3rem);
+      font-size: 1.2rem;
+      padding: 3rem;
       border: 3px solid #ff0066;
       display: none;
       z-index: 2000;
@@ -447,36 +200,6 @@ section::before {
       white-space: pre-line;
       border-radius: 10px;
       text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
-    }
-
-    @media (max-width: 768px) {
-      .burger {
-        display: flex;
-      }
-
-      .nav-links {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        height: 100vh;
-        width: 70%;
-        max-width: 300px;
-        background: rgba(10, 10, 10, 0.98);
-        flex-direction: column;
-        padding: 5rem 2rem;
-        border-left: 2px solid #ff0066;
-        transition: right 0.3s;
-        gap: 2rem;
-        box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
-      }
-
-      .nav-links.active {
-        right: 0;
-      }
-
-      .resize-handle {
-        display: none;
-      }
     }
 
     body::before {
@@ -497,188 +220,113 @@ section::before {
       z-index: 9999;
       opacity: 0.3;
     }
+
+    @media (max-width: 768px) {
+      section {
+        padding: 3rem 1rem;
+      }
+      
+      .game-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 768px) and (orientation: landscape) {
+      .game-controls {
+        gap: 1rem;
+      }
+      
+      .game-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.6rem;
+      }
+      
+      .section-title {
+        margin-bottom: 1rem;
+      }
+    }
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #ff0066;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+    }
+
+    .nav-logo {
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 2px solid #ff0066;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+    }
+
+    .footer-text {
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
   </style>
 </head>
 <body>
 
-  <nav class="nav">
-    <div class="nav-logo">LADDER LOOP</div>
-    <div class="burger" onclick="toggleNav()">
-      <div class="burger-line"></div>
-      <div class="burger-line"></div>
-      <div class="burger-line"></div>
-    </div>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#hero" onclick="closeNav()">Home</a></li>
-      <li><a href="#game" onclick="closeNav()">Play</a></li>
-      <li><a href="#about" onclick="closeNav()">About</a></li>
-      <li><a href="#reviews" onclick="closeNav()">Reviews</a></li>
-      <li><a href="#faq" onclick="closeNav()">FAQ</a></li>
-      <li><a href="#office" onclick="closeNav()">Office</a></li>
-      <li><a href="#merch" onclick="closeNav()">Merch</a></li>
-    </ul>
-  </nav>
-
-  <section id="hero">
-    <h1>LADDER LOOP</h1>
-    <p>Climb. Fall. Repeat.</p>
-    <p class="subtitle">One button. Endless climb.</p>
-    <a href="#game" class="btn-primary">START GAME</a>
-  </section>
-
-  <section id="game">
+  <!-- Template section (this will be cloned) -->
+  <section class="game-section">
     <div class="container">
       <h2 class="section-title">PLAY</h2>
       <div class="game-container">
-        <div class="canvas-wrapper" id="canvasWrapper">
-          <canvas id="gameCanvas" width="400" height="450"></canvas>
-          <div class="resize-handle bottom-right" id="resizeBottomRight"></div>
-          <div class="resize-handle top-left" id="resizeTopLeft"></div>
-          <div class="resize-handle top-right" id="resizeTopRight"></div>
-          <div class="resize-handle bottom-left" id="resizeBottomLeft"></div>
+        <div class="canvas-wrapper">
+          <canvas width="400" height="450"></canvas>
         </div>
         <div class="game-controls">
-          <button class="game-btn" id="muteBtn" onclick="toggleMute()">🔊 Sound</button>
-          <button class="game-btn" onclick="resetGame()">↻ Reset</button>
+          <button class="game-btn mute-btn">🔊 Sound</button>
+          <button class="game-btn reset-btn">↻ Reset</button>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="about">
-    <div class="container">
-      <h2 class="section-title">THE GAME</h2>
-      <div class="content-box">
-        <p>Ladder Loop is a minimalist arcade climb.</p>
-        <p>How long can you last?</p>
-        <p>Unlock new ladder <strong style="background: linear-gradient(to right, #ff0066, #ff9900, #ffcc00, #00ff66, #00ccff, #b200ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">colors</strong> as you score!</p>
-        <p style="margin-top: 1.5rem;">Click or tap to climb. Fall. Repeat. That's it.</p>
-        <div class="social-links">
-          <strong style="color: #00ffcc; text-shadow: 0 0 10px #00ffcc;">Follow us:</strong>
-          <a href="https://x.com/ladderloop" target="_blank">🐦 Twitter: @ladderloop</a>
-          <a href="https://instagram.com/ladderloopgame" target="_blank">📷 Instagram: @ladderloopgame</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="reviews">
-    <div class="container">
-      <h2 class="section-title">REVIEWS</h2>
-      <div class="content-box">
-        <p><strong>"I climbed once. Then I fell."</strong><br>- The Climber</p>
-      </div>
-      <div class="content-box">
-        <p><strong>"Best. Ladder. Ever."</strong><br>- Some guy who is still playing</p>
-      </div>
-      <div class="content-box">
-        <p><strong>"I fell off the ladder, and I haven't stopped playing since."</strong><br>- Time‑rich girl</p>
-      </div>
-      <div class="content-box">
-        <p><strong>"It's just a ladder but I can't stop."</strong><br>- Confused Player</p>
-      </div>
-      <div class="content-box">
-        <p><strong>"Simple. Addictive. Pointless. Perfect."</strong><br>- Game Critic</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="faq">
-    <div class="container">
-      <h2 class="section-title">FAQs</h2>
-      <div class="content-box">
-        <p><strong>Q:</strong> What's the point?<br><strong>A:</strong> Exactly.</p>
-      </div>
-      <div class="content-box">
-        <p><strong>Q:</strong> How do I win?<br><strong>A:</strong> You don't. But good luck trying.</p>
-      </div>
-      <div class="content-box">
-        <p><strong>Q:</strong> Is this game addictive?<br><strong>A:</strong> Are you still playing? Enough said.</p>
-      </div>
-      <div class="content-box">
-        <p><strong>Q:</strong> What happens when I reach the top?<br><strong>A:</strong> You fall. That's life.</p>
-      </div>
-      <div class="content-box">
-        <p><strong>Q:</strong> Can I play on mobile?<br><strong>A:</strong> Yes. Fall anywhere, anytime.</p>
-      </div>
-      <div class="content-box">
-        <p><strong>Q:</strong> Why is it called Ladder Loop?<br><strong>A:</strong> Because "Endless Falling Simulator" was taken.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="office">
-    <div class="container">
-      <h2 class="section-title">OUR OFFICE</h2>
-      <p style="text-align: center; margin-bottom: 3rem; font-size: clamp(0.7rem, 1.5vw, 1rem); color: #00ffcc;">Where the magic happens!</p>
-      <div class="gallery">
-        <div class="gallery-item">
-          <img src="https://www.ladderloop.com/images/office/office_38.png" alt="Office">
-          <p class="gallery-caption">Our state-of-the-art development station where all the falling happens.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="merch">
-    <div class="container">
-      <h2 class="section-title">MERCH</h2>
-      <p style="text-align: center; margin-bottom: 3rem; font-size: clamp(0.7rem, 1.5vw, 1rem); color: #00ffcc;">Launching Soon (maybe)</p>
-      <div class="gallery">
-        <div class="gallery-item">
-          <img src="https://www.ladderloop.com/images/merch/merch_xmas.png" alt="Xmas Jumper">
-          <p class="gallery-caption">Ladder Loop Xmas Jumper – santa drops gifts, you just drop.</p>
-        </div>
-        <div class="gallery-item">
-          <img src="https://www.ladderloop.com/images/merch/merch7.png" alt="Hoodie">
-          <p class="gallery-caption">Ladder Loop Hoodie – keeps you warm while you fall endlessly.</p>
-        </div>
-        <div class="gallery-item">
-          <img src="https://www.ladderloop.com/images/merch/merch6.png" alt="Cap">
-          <p class="gallery-caption">Ladder Loop Cap – shields your eyes. Not your score.</p>
-        </div>
-       <!-- <div class="gallery-item">
-          <img src="https://www.ladderloop.com/images/merch/merch4.png" alt="Mug">
-          <p class="gallery-caption">Ladder Loop Mug – holds hot drinks. Not your dignity.</p>
-        </div>
-        <div class="gallery-item">
-          <img src="images/merch/merch3.png" alt="Mousemat">
-          <p class="gallery-caption">Ladder Loop Mousemat - Every click brings another fall.</p>
-        </div>
-        <div class="gallery-item">
-          <img src="images/merch/merch5.png" alt="Socks">
-          <p class="gallery-caption">Ladder Loop Socks – fall faster in style.</p>
-        </div>
-        -->
-        
-      </div>
-    </div>
-  </section>
-
-  <div class="game-message" id="gameMessage"></div>
-  <audio id="climbAudio" src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
+  <div class="game-message"></div>
+  <audio src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
 
   <script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-    const gameMessage = document.getElementById("gameMessage");
-    const climbAudio = document.getElementById("climbAudio");
-    const canvasWrapper = document.getElementById("canvasWrapper");
-
+    /* ===== Shared game state ===== */
+    let canvases = [];
     let character = { x: 187, y: 420, width: 30, height: 30 };
     let climbing = false;
     let score = 0;
     let speed = 4;
     let freezeFrame = false;
-    let gameStarted = false;
     let audioEnabled = false;
-    
-    let isResizing = false;
-    let resizeHandle = null;
-    let startX = 0, startY = 0, startWidth = 0, startHeight = 0;
     
     let currentLadderColorIndex = 0;
     let unlockedColors = [0];
+    
     const ladderColors = [
       { name: "Classic White", color: "#fff", unlockScore: 0 },
       { name: "Electric Blue", color: "#00ccff", unlockScore: 5 },
@@ -698,38 +346,103 @@ section::before {
     ];
 
     const funnyMessages = [
-      "Why are you still playing?",
-      "Climbing ladders... again...",
-      "The loop is endless",
-      "Gravity always wins",
-      "Just one more try...",
-      "You're stuck in the loop",
-      "The ladder never ends",
-      "Fall down, get up, repeat",
-      "This is your life now",
-      "Still climbing? Impressive."
+        "Follow us on Instagram: @ladderloop (it won't help your score)",
+  "Why are you still playing? Seriously?",
+  "Climbing ladders... again...",
+  "You've reached a new score... did you expect a reward?",
+  "Congratulations, you're still here. Impressive.",
+  "Are you stuck in a loop? 'Cause I think you are.",
+  "Climbing ladders for fun? Uh... okay.",
+  "This is the longest you've ever stuck with anything, huh?",
+  "The ladder flips. You climb. You fall. You repeat.",
+  "What should we name our character?",
+  "You must be addicted to this. Do you need help?",
+  "Is this game even fun? Are you sure?",
+  "You just like the music.",
+  "You climb because you must. The ladder is endless. The loop is life.",
+  "Another fall? Who saw that coming...",
+  "Is it even possible to 'win' this?",
+  "Just one more try... yeah, right.",
+  "Don't worry, nobody's judging you... except me.",
+  "Maybe the ladder is trying to tell you something.",
+  "You're not climbing, you're just falling upwards.",
+  "The ladder wins, always. Deal with it.",
+  "You've been falling for longer than most people can hold a job.",
+  "Every time you fall, an angel loses its wings. Sorry, angel.",
+  "Well, that was a spectacular failure.",
+  "Is the ladder just a metaphor for life? Discuss.",
+  "You fell again? Well, what else is new?",
+  "Why does falling feel like the only option?",
+  "You're climbing... but where are you really going?",
+  "The only thing you're getting out of this is a sore thumb.",
+  "Don't worry, the loop's endless... just like your frustration.",
+  "When does this cycle end? Not anytime soon, my friend.",
+  "A ladder without a top... how poetic.",
+  "You're halfway up, and still, no reward in sight.",
+  "The ladder's patience is infinite... but yours might not be.",
+  "You've reached a new score, and somehow, I'm less impressed each time.",
+  "What's at the top? Just more falling.",
+  "Let me guess... you're gonna fall right now.",
+  "One day you'll reach the top... but that day is not today.",
+  "The ladder just doesn't care, does it?",
+  "You should be getting paid for all this climbing... or falling.",
+  "You fell. Again. It's almost like you're playing for that purpose.",
+  "I believe in you... just kidding, I don't.",
+  "You're still trying? You must have a death wish.",
+  "Falling with style... or just falling.",
+  "You've climbed for hours. It feels like days, right?",
+  "Each fall is just another lesson. A lesson you keep ignoring.",
+  "Climbing this ladder is your version of therapy, isn't it?",
+  "Is there a 'just give up' button somewhere?",
+  "Who needs a reset button when you've already reset yourself?",
+  "You fell again? Don't worry, it's the game's fault, not yours.",
+  "Keep climbing... you'll fall again... and again... and again.",
+  "I'm not saying you're bad at this... but you're bad at this.",
+  "Does anyone ever reach the top? Or do we just keep falling forever?",
+  "Does your thumb hurt yet? Because mine does.",
+  "You're just a tiny pixel on a never-ending ladder, huh?",
+  "When will you learn? Just kidding, don't.",
+  "Have you tried... not falling?",
+  "You think you're close to winning... but you're not.",
+  "The ladder has one rule: 'No winners allowed.'",
+  "This is probably the most pointless thing you've done today.",
+  "I bet you can't make it 10 more seconds without falling.",
+  "You're still climbing? There's no top, you know.",
+  "This game was supposed to be fun, right?",
+  "Climbing a ladder is the easy part... it's the falling that gets you.",
+  "Why climb when you can just fall?",
+  "You're not falling... you're just 'adjusting your position.'",
+  "Every time you climb, the ladder laughs at you.",
+  "You fell again? But you had such high hopes!",
+  "I hope you're getting something out of this, because I'm not.",
+  "Each fall is like a little death. Embrace it.",
+  "The game is rigged. The ladder will always win.",
+  "You know what's more fun than climbing? Falling.",
+  "If falling was a sport, you'd be a champion.",
+  "Who needs goals when you have a never-ending ladder?",
+  "You've got a high score. Too bad it doesn't matter.",
+  "I've seen people climb ladders faster than you.",
+  "You climbed one step. You fell several.",
+  "No matter how high you climb, gravity's always waiting.",
+  "If you get to the top, let me know. I'll be waiting for your inevitable fall.",
+  "Are you winning yet? No? Well, keep trying.",
+  "I think you just like the sound of the music, don't you?",
+  "Just fall already, it's inevitable.",
+  "You're climbing a ladder... in a game. Is that life?",
+  "Fall down, get up, repeat. Sound familiar?",
+  "There's no escape from the loop... except maybe the game.",
+  "The ladder is your enemy... and it's winning.",
+  "Congratulations on making it to... the middle of the ladder.",
+  "You just climbed... and then fell. That's impressive, in a way."
     ];
 
-    function toggleNav() {
-      document.getElementById('navLinks').classList.toggle('active');
-    }
+    const messageBox = document.querySelector('.game-message');
+    const audioEl = document.querySelector('audio');
+    const muteBtns = [];
+    const resetBtns = [];
 
-    function closeNav() {
-      document.getElementById('navLinks').classList.remove('active');
-    }
-
-    const gameSection = document.getElementById('game');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !gameStarted) {
-          gameStarted = true;
-          update();
-        }
-      });
-    }, { threshold: 0.5 });
-    observer.observe(gameSection);
-
-    function drawLadder() {
+    /* ===== Drawing functions ===== */
+    function drawLadder(ctx, canvas) {
       const currentColor = ladderColors[currentLadderColorIndex];
       
       if (currentColor.isRainbow) {
@@ -748,12 +461,12 @@ section::before {
       ctx.lineWidth = 6;
       ctx.beginPath();
       ctx.moveTo(150, 0);
-      ctx.lineTo(150, 450);
+      ctx.lineTo(150, canvas.height);
       ctx.moveTo(250, 0);
-      ctx.lineTo(250, 450);
+      ctx.lineTo(250, canvas.height);
       ctx.stroke();
       
-      for (let i = 0; i < 450; i += 40) {
+      for (let i = 0; i < canvas.height; i += 40) {
         ctx.beginPath();
         ctx.moveTo(150, i);
         ctx.lineTo(250, i);
@@ -761,12 +474,12 @@ section::before {
       }
     }
 
-    function drawCharacter() {
+    function drawCharacter(ctx) {
       ctx.fillStyle = "#ffcc00";
       ctx.fillRect(character.x, character.y, character.width, character.height);
     }
 
-    function drawScore() {
+    function drawScore(ctx) {
       ctx.fillStyle = "#ffcc00";
       ctx.font = "14px 'Press Start 2P', cursive";
       ctx.textAlign = "left";
@@ -781,19 +494,20 @@ section::before {
       ctx.shadowBlur = 0;
     }
 
+    /* ===== Game logic ===== */
     function showMessage(text) {
-      gameMessage.innerText = text;
-      gameMessage.style.display = "block";
+      messageBox.innerText = text;
+      messageBox.style.display = "block";
       freezeFrame = true;
       setTimeout(() => {
-        gameMessage.style.display = "none";
+        messageBox.style.display = "none";
         freezeFrame = false;
       }, 2500);
     }
 
-    function checkColorUnlock(score) {
+    function checkColorUnlock(s) {
       for (let i = 0; i < ladderColors.length; i++) {
-        if (score >= ladderColors[i].unlockScore && !unlockedColors.includes(i)) {
+        if (s >= ladderColors[i].unlockScore && !unlockedColors.includes(i)) {
           unlockedColors.push(i);
           currentLadderColorIndex = i;
           showMessage(`🎨 Color Unlocked!\n${ladderColors[i].name}`);
@@ -804,16 +518,18 @@ section::before {
     }
 
     function showFunnyMessage() {
-      const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-      showMessage(randomMessage);
+      const msg = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      showMessage(msg);
     }
 
     function update() {
-      if (!gameStarted) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawLadder();
-      drawCharacter();
-      drawScore();
+      canvases.forEach(canvas => {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawLadder(ctx, canvas);
+        drawCharacter(ctx);
+        drawScore(ctx);
+      });
 
       if (!freezeFrame) {
         if (climbing) {
@@ -821,8 +537,8 @@ section::before {
           if (character.y <= 0) {
             climbing = false;
             score++;
-            const colorUnlocked = checkColorUnlock(score);
-            if (!colorUnlocked && score % 5 === 0) showFunnyMessage();
+            const unlocked = checkColorUnlock(score);
+            if (!unlocked && score % 5 === 0) showFunnyMessage();
           }
         } else {
           character.y += speed;
@@ -833,134 +549,270 @@ section::before {
     }
 
     function climb() {
-      if (!climbing && character.y >= 420 && !freezeFrame && gameStarted) {
+      if (!climbing && character.y >= 420 && !freezeFrame) {
         climbing = true;
         if (audioEnabled) {
-          climbAudio.currentTime = 0;
-          climbAudio.play();
+          audioEl.currentTime = 0;
+          audioEl.play().catch(() => {});
         }
       }
     }
 
-    canvas.addEventListener("click", climb);
+    /* ===== Controls ===== */
     document.addEventListener("keydown", (e) => {
-      if ((e.code === "Space" || e.key === " ") && gameStarted) {
+      if (e.code === "Space" || e.key === " ") {
         climb();
         e.preventDefault();
       }
     });
 
-    function toggleMute() {
-      const muteBtn = document.getElementById('muteBtn');
-      audioEnabled = !audioEnabled;
-      if (audioEnabled) {
-        muteBtn.innerHTML = '🔊 Sound';
-        muteBtn.classList.add('active');
-        if (climbing) climbAudio.play();
-      } else {
-        muteBtn.innerHTML = '🔇 Muted';
-        muteBtn.classList.remove('active');
-        climbAudio.pause();
-      }
-    }
+    function setupControls(muteBtn, resetBtn) {
+      muteBtns.push(muteBtn);
+      resetBtns.push(resetBtn);
 
-    function resetGame() {
-      score = 0;
-      character.y = 420;
-      climbing = false;
-      currentLadderColorIndex = 0;
-      unlockedColors = [0];
-      freezeFrame = false;
-      if (audioEnabled) {
-        climbAudio.pause();
-        climbAudio.currentTime = 0;
-      }
-    }
-
-    function initCanvasResize() {
-      const handles = document.querySelectorAll('.resize-handle');
-      handles.forEach(handle => {
-        handle.addEventListener('mousedown', startResize);
-        handle.addEventListener('touchstart', startResizeTouch, { passive: false });
+      muteBtn.addEventListener("click", () => {
+        audioEnabled = !audioEnabled;
+        muteBtns.forEach(btn => {
+          if (audioEnabled) {
+            btn.innerHTML = "🔊 Sound";
+            btn.classList.add("active");
+          } else {
+            btn.innerHTML = "🔇 Muted";
+            btn.classList.remove("active");
+          }
+        });
+        if (!audioEnabled) audioEl.pause();
       });
-      document.addEventListener('mousemove', doResize);
-      document.addEventListener('mouseup', stopResize);
-      document.addEventListener('touchmove', doResizeTouch, { passive: false });
-      document.addEventListener('touchend', stopResize);
+
+      resetBtn.addEventListener("click", () => {
+        score = 0;
+        character.y = 420;
+        climbing = false;
+        currentLadderColorIndex = 0;
+        unlockedColors = [0];
+        freezeFrame = false;
+        audioEl.pause();
+        audioEl.currentTime = 0;
+      });
     }
 
-    function startResize(e) {
-      isResizing = true;
-      resizeHandle = e.target.id;
-      startX = e.clientX;
-      startY = e.clientY;
-      startWidth = canvasWrapper.offsetWidth;
-      startHeight = canvasWrapper.offsetHeight;
-      e.preventDefault();
+    /* ===== Section setup ===== */
+    function wireSection(section) {
+      const canvas = section.querySelector("canvas");
+      const muteBtn = section.querySelector(".mute-btn");
+      const resetBtn = section.querySelector(".reset-btn");
+      
+      if (!canvas || !muteBtn || !resetBtn) return;
+
+      canvases.push(canvas);
+      canvas.addEventListener("click", climb);
+      setupControls(muteBtn, resetBtn);
     }
 
-    function startResizeTouch(e) {
-      isResizing = true;
-      resizeHandle = e.target.id;
-      const touch = e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-      startWidth = canvasWrapper.offsetWidth;
-      startHeight = canvasWrapper.offsetHeight;
-      e.preventDefault();
-    }
+    /* ===== Infinite scroll ===== */
+    window.addEventListener("DOMContentLoaded", () => {
+      const template = document.querySelector(".game-section");
+      if (!template) return;
 
-    function doResize(e) {
-      if (!isResizing) return;
-      const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-      applyResize(deltaX, deltaY);
-    }
+      wireSection(template);
 
-    function doResizeTouch(e) {
-      if (!isResizing) return;
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - startX;
-      const deltaY = touch.clientY - startY;
-      applyResize(deltaX, deltaY);
-      e.preventDefault();
-    }
-
-    function applyResize(deltaX, deltaY) {
-      let newWidth = startWidth, newHeight = startHeight;
-      switch(resizeHandle) {
-        case 'resizeBottomRight':
-          newWidth = startWidth + deltaX;
-          newHeight = startHeight + deltaY;
-          break;
-        case 'resizeTopLeft':
-          newWidth = startWidth - deltaX;
-          newHeight = startHeight - deltaY;
-          break;
-        case 'resizeTopRight':
-          newWidth = startWidth + deltaX;
-          newHeight = startHeight - deltaY;
-          break;
-        case 'resizeBottomLeft':
-          newWidth = startWidth - deltaX;
-          newHeight = startHeight + deltaY;
-          break;
+      // Add initial sections
+      for (let i = 0; i < 2; i++) {
+        const clone = template.cloneNode(true);
+        document.body.appendChild(clone);
+        wireSection(clone);
       }
 
-      newWidth = Math.max(200, Math.min(1200, newWidth));
-      newHeight = Math.max(225, Math.min(1200, newHeight));
-      canvasWrapper.style.width = newWidth + 'px';
-      canvasWrapper.style.height = newHeight + 'px';
-      canvas.style.width = '100%';
-      canvas.style.height = '100%';
-    }
+      // Infinite scroll
+      window.addEventListener("scroll", () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+          const clone = template.cloneNode(true);
+          document.body.appendChild(clone);
+          wireSection(clone);
+        }
+      });
 
-    function stopResize() {
-      isResizing = false;
-      resizeHandle = null;
-    }
-
-    window.addEventListener('load', initCanvasResize);
+      update();
+    });
   </script>
+
+
+<script>
+// ADD-ON: Instructions overlay (WITH ANIMATIONS - FIXED)
+(function() {
+  // Add keyframe animations to document head
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes glow-pulse {
+      0%, 100% {
+        text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc, 0 0 60px #00ffcc;
+      }
+      50% {
+        text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ffcc, 0 0 90px #00ffcc, 0 0 120px #00ffcc;
+      }
+    }
+    
+    @keyframes underline-slide {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+    
+    .ladder-title-glow {
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+    
+    .action-word {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .action-word::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, #ff0066, #00ffcc);
+      animation: underline-slide 1.5s ease-out infinite;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Create instruction overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+  `;
+  
+  overlay.innerHTML = `
+    <div class="ladder-title-glow" style="
+      font-family: 'Press Start 2P', cursive;
+      color: #00ffcc;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      text-align: center;
+      margin-bottom: 2rem;
+    ">LADDER LOOP</div>
+    
+    <div style="
+      font-family: 'Press Start 2P', cursive;
+      color: #ffcc00;
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      text-align: center;
+      line-height: 2;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    ">
+      <!--<div style="margin-bottom: 1rem;">🎮 PRESS <span style="color: #ff0066;">SPACE</span></div>
+      <div style="margin-bottom: 1rem;">OR</div>
+      <div style="margin-bottom: 2rem;">👆 TAP CANVAS</div>-->
+      <div style="font-size: clamp(0.6rem, 1.5vw, 0.9rem); color: #00ffcc;">
+        <span class="action-word">Climb</span> the ladder.<br>
+       
+        <span class="action-word">Fall</span> back down.<br>
+        <span class="action-word">Repeat</span> forever.
+      </div>
+    </div>
+    
+    <button style="
+      font-family: 'Press Start 2P', cursive;
+      padding: 1rem 2rem;
+      font-size: clamp(0.7rem, 1.5vw, 1rem);
+      background: rgba(255, 0, 102, 0.2);
+      color: #00ffcc;
+      border: 2px solid #ff0066;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+      transition: all 0.3s;
+      margin-top: 2rem;
+    " onmouseover="this.style.background='rgba(255, 0, 102, 0.4)'; this.style.transform='scale(1.05)';" 
+       onmouseout="this.style.background='rgba(255, 0, 102, 0.2)'; this.style.transform='scale(1)';"
+    >Tap or press Space</button>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  // Remove overlay on button click or any key press
+  const startBtn = overlay.querySelector('button');
+  let overlayRemoved = false;
+  
+  function removeOverlay() {
+    if (overlayRemoved) return;
+    overlayRemoved = true;
+    
+    overlay.style.opacity = '1';
+    overlay.style.transition = 'opacity 0.5s';
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+      overlay.remove();
+      style.remove(); // Also remove the style tag
+    }, 500);
+  }
+  
+  startBtn.addEventListener('click', removeOverlay);
+  
+  // Remove on ANY keydown or click anywhere
+  document.addEventListener('keydown', function(e) {
+    if (!overlayRemoved) removeOverlay();
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!overlayRemoved) removeOverlay();
+  });
+})();
+</script>
+<script>
+// ADD-ON: Instant loop (teleports back to create seamless loop)
+(function() {
+  const SECTIONS_BEFORE_LOOP = 3;
+  let isLooping = false;
+  
+  window.addEventListener('scroll', () => {
+    if (isLooping) return;
+    
+    const sections = document.querySelectorAll('.game-section');
+    const windowBottom = window.scrollY + window.innerHeight;
+    
+    // Check if we're near the bottom of the last section
+    if (sections.length >= SECTIONS_BEFORE_LOOP) {
+      const lastSection = sections[sections.length - 1];
+      const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
+      
+      if (windowBottom >= lastSectionBottom - 100) {
+        isLooping = true;
+        
+        // Instantly jump back to top
+        window.scrollTo(0, 0);
+        
+        setTimeout(() => {
+          isLooping = false;
+        }, 100);
+      }
+    }
+  }, { passive: true });
+  
+  console.log('Instant loop enabled: Loops after ' + SECTIONS_BEFORE_LOOP + ' sections');
+})();
+</script>
+
+
+
+
+
+
+
 </body>
 </html>
