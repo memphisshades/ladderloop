@@ -7,6 +7,10 @@
   <title>Ladder Loop Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-fullscreen">
+<meta name="mobile-web-app-capable" content="yes">
+  
   <!-- SEO -->
   <meta name="description" content="Climb, fall, repeat. Ladder Loop is a one‑button arcade game where gravity always wins.">
   <meta name="keywords" content="ladder loop, climb, fall, repeat, retro web game, one button game">
@@ -1246,5 +1250,17 @@
     window.addEventListener('load', initCanvasResize);
   </script>
 
+<script>
+
+  // Add this to your <script> section
+window.addEventListener('load', function() {
+  // Scroll down 1px to trigger browser UI hide
+  setTimeout(function() {
+    window.scrollTo(0, 1);
+  }, 100);
+});
+</script>
+
+  
 </body>
 </html>
