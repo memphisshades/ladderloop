@@ -641,12 +641,21 @@
         if (!audioEnabled) audioEl.pause();
       });
 
+  // Add this flag at the top with your other shared game state
+let isResetting = false;
+
+
       resetBtn.addEventListener("click", () => {
   // Get the current ground level (scaled or not)
   const groundLevel = window.groundLevel || 420;
   
+   // Prevent clicking during reset or if nothing to reset
+  if (isResetting) return;
+  
   // Only do ANYTHING if they actually have a score or have moved
   if (score > 0 || character.y < groundLevel) {
+   isResetting = true; // Lock the button
+   
     const resetMessages = [
       "Giving up already? Classic.",
       "Reset button pressed. Dreams crushed.",
@@ -673,7 +682,7 @@
     const msg = resetMessages[Math.floor(Math.random() * resetMessages.length)];
     showMessage(msg);
     
-    setTimeout(() => {
+     setTimeout(() => {
       score = 0;
       character.y = groundLevel;
       climbing = false;
@@ -682,6 +691,7 @@
       freezeFrame = false;
       audioEl.pause();
       audioEl.currentTime = 0;
+      isResetting = false; // Unlock the button after reset completes
     }, 2500);
   }
   // If they haven't played, button does NOTHING (no else block)
