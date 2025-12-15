@@ -222,6 +222,19 @@
       box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
     }
 
+    @keyframes mute-pulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 102, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(255, 0, 102, 0.9), 0 0 50px rgba(255, 0, 102, 0.5); }
+    }
+
+    .game-btn.pulse-muted {
+      animation: mute-pulse 1.5s ease-in-out;
+    }
+    
+    .game-btn.mute-btn:not(.active) {
+  animation: mute-pulse 1.5s ease-in-out infinite !important;
+}
+
     .game-message {
       position: fixed;
       top: 50%;
