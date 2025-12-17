@@ -876,28 +876,23 @@ let isResetting = false;
   });
 })();
 </script>
+
+
 <script>
-// ADD-ON: Instant loop - PERFORMANCE OPTIMIZED (loops with minimal sections)
+// ADD-ON: Instant loop (teleports back to create seamless loop)
 (function() {
-  const MAX_SECTIONS = 3; // Keep only 3 sections max
+  const SECTIONS_BEFORE_LOOP = 3;
   let isLooping = false;
   
-  // Remove the original infinite scroll and replace with limited version
-  window.addEventListener('DOMContentLoaded', () => {
-    // Wait for original setup to complete
-    setTimeout(() => {
-      // Check section count periodically and remove extras
-      setInterval(() => {
-        const sections = document.querySelectorAll('.game-section');
-        if (sections.length > MAX_SECTIONS) {
-          // Remove oldest sections beyond MAX_SECTIONS
-          for (let i = MAX_SECTIONS; i < sections.length; i++) {
-            sections[i].remove();
-          }
-        }
-      }, 1000);
-    }, 100);
-  });
+  // Clean up excess sections periodically
+  setInterval(() => {
+    const sections = document.querySelectorAll('.game-section');
+    if (sections.length > SECTIONS_BEFORE_LOOP) {
+      for (let i = SECTIONS_BEFORE_LOOP; i < sections.length; i++) {
+        sections[i].remove();
+      }
+    }
+  }, 1000);
   
   window.addEventListener('scroll', () => {
     if (isLooping) return;
@@ -905,12 +900,11 @@ let isResetting = false;
     const sections = document.querySelectorAll('.game-section');
     const windowBottom = window.scrollY + window.innerHeight;
     
-    if (sections.length >= MAX_SECTIONS) {
+    if (sections.length >= SECTIONS_BEFORE_LOOP) {
       const lastSection = sections[sections.length - 1];
       const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
       
-      // When near bottom, jump back to top
-      if (windowBottom >= lastSectionBottom - 200) {
+      if (windowBottom >= lastSectionBottom - 100) {
         isLooping = true;
         window.scrollTo(0, 0);
         setTimeout(() => { isLooping = false; }, 100);
@@ -918,9 +912,54 @@ let isResetting = false;
     }
   }, { passive: true });
   
+  console.log('Instant loop: Max ' + SECTIONS_BEFORE_LOOP + ' sections');
+})();
+</script>
+  
+  
+<!--
+<script>
+// ADD-ON: Instant loop - PERFORMANCE OPTIMIZED (loops with minimal sections)
+(function() {
+  const MAX_SECTIONS = 3;
+  let isLooping = false;
+
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      setInterval(() => {
+        const sections = document.querySelectorAll('.game-section');
+        if (sections.length > MAX_SECTIONS) {
+          for (let i = MAX_SECTIONS; i < sections.length; i++) {
+            sections[i].remove();
+          }
+        }
+      }, 1000);
+    }, 100);
+  });
+
+  window.addEventListener('scroll', () => {
+    if (isLooping) return;
+
+    const sections = document.querySelectorAll('.game-section');
+    const windowBottom = window.scrollY + window.innerHeight;
+
+    if (sections.length >= MAX_SECTIONS) {
+      const lastSection = sections[sections.length - 1];
+      const lastSectionBottom =
+        lastSection.offsetTop + lastSection.offsetHeight;
+
+      if (windowBottom >= lastSectionBottom - 200) {
+        isLooping = true;
+        window.scrollTo(0, 0);
+        setTimeout(() => { isLooping = false; }, 100);
+      }
+    }
+  }, { passive: true });
+
   console.log('Performance loop: Max ' + MAX_SECTIONS + ' sections');
 })();
 </script>
+-->
 
 
 <script>
