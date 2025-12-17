@@ -884,35 +884,31 @@ let isResetting = false;
   const SECTIONS_BEFORE_LOOP = 3;
   let isLooping = false;
   
-  // Clean up excess sections periodically
-  setInterval(() => {
-    const sections = document.querySelectorAll('.game-section');
-    if (sections.length > SECTIONS_BEFORE_LOOP) {
-      for (let i = SECTIONS_BEFORE_LOOP; i < sections.length; i++) {
-        sections[i].remove();
-      }
-    }
-  }, 1000);
-  
   window.addEventListener('scroll', () => {
     if (isLooping) return;
     
     const sections = document.querySelectorAll('.game-section');
     const windowBottom = window.scrollY + window.innerHeight;
     
+    // Check if we're near the bottom of the last section
     if (sections.length >= SECTIONS_BEFORE_LOOP) {
       const lastSection = sections[sections.length - 1];
       const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
       
       if (windowBottom >= lastSectionBottom - 100) {
         isLooping = true;
+        
+        // Instantly jump back to top
         window.scrollTo(0, 0);
-        setTimeout(() => { isLooping = false; }, 100);
+        
+        setTimeout(() => {
+          isLooping = false;
+        }, 100);
       }
     }
   }, { passive: true });
   
-  console.log('Instant loop: Max ' + SECTIONS_BEFORE_LOOP + ' sections');
+  console.log('Instant loop enabled: Loops after ' + SECTIONS_BEFORE_LOOP + ' sections');
 })();
 </script>
   
