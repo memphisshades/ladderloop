@@ -3815,12 +3815,17 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   
   function shatterScreen(overlay) {
-    const cols = 8;
-    const rows = 6;
+    // Mobile-friendly: Use fewer pieces on mobile
+    const isMobile = window.innerWidth <= 768;
+    const cols = isMobile ? 4 : 8;
+    const rows = isMobile ? 3 : 6;
     const w = window.innerWidth / cols;
     const h = window.innerHeight / rows;
     
     overlay.style.opacity = '0';
+    
+    // Use simpler animation on mobile
+    const animationDuration = isMobile ? 0.6 : 1.0;
     
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
@@ -3835,9 +3840,9 @@ window.addEventListener("DOMContentLoaded", () => {
         const pieceX = x + w / 2;
         const pieceY = y + h / 2;
         const angle = Math.atan2(pieceY - centerY, pieceX - centerX);
-        const distance = 500 + Math.random() * 300;
+        const distance = isMobile ? 300 : 500 + Math.random() * 300;
         const fallX = Math.cos(angle) * distance;
-        const fallY = Math.sin(angle) * distance + Math.random() * 200 + 200;
+        const fallY = Math.sin(angle) * distance + (isMobile ? 100 : Math.random() * 200 + 200);
         const rotation = (Math.random() - 0.5) * 360;
         
         piece.style.cssText = `
@@ -3851,19 +3856,26 @@ window.addEventListener("DOMContentLoaded", () => {
           --fall-y: ${fallY}px;
           --fall-rot: ${rotation}deg;
           background: rgba(10, 10, 10, 0.95);
-          backdrop-filter: blur(10px);
+          ${isMobile ? '' : 'backdrop-filter: blur(10px);'}
           border: 1px solid rgba(255, 255, 255, 0.2);
           animation-delay: ${Math.random() * 0.1}s;
+          animation-duration: ${animationDuration}s;
         `;
         
-        const content = overlay.cloneNode(true);
-        content.style.position = 'absolute';
-        content.style.left = `${-x}px`;
-        content.style.top = `${-y}px`;
-        content.style.width = '100vw';
-        content.style.height = '100vh';
-        content.style.opacity = '1';
-        piece.appendChild(content);
+        // On mobile, skip cloning the content to save performance
+        if (!isMobile) {
+          const content = overlay.cloneNode(true);
+          content.style.position = 'absolute';
+          content.style.left = `${-x}px`;
+          content.style.top = `${-y}px`;
+          content.style.width = '100vw';
+          content.style.height = '100vh';
+          content.style.opacity = '1';
+          piece.appendChild(content);
+        } else {
+          // Mobile: just use solid color
+          piece.style.background = `rgba(${Math.random() * 50 + 10}, ${Math.random() * 50 + 10}, ${Math.random() * 50 + 10}, 0.9)`;
+        }
         
         document.body.appendChild(piece);
       }
@@ -3985,6 +3997,9 @@ window.addEventListener("DOMContentLoaded", () => {
     
     shatterScreen(overlay);
     
+    // Faster cleanup on mobile
+    const cleanupTime = window.innerWidth <= 768 ? 700 : 1200;
+    
     setTimeout(() => {
       overlay.remove();
       document.querySelectorAll('.glass-piece').forEach(p => p.remove());
@@ -3992,42 +4007,33 @@ window.addEventListener("DOMContentLoaded", () => {
       if (window.ANGLO_POLISH_EDITION) {
         showCharacterSelect();
       }
-    }, 1200);
+    }, cleanupTime);
   }
   
   startBtn.addEventListener('click', removeOverlay);
   
+  // Prevent double-triggering on mobile
+  let eventFired = false;
+  
   document.addEventListener('keydown', function(e) {
-    if (!overlayRemoved) removeOverlay();
+    if (!overlayRemoved && !eventFired) {
+      eventFired = true;
+      removeOverlay();
+    }
   });
   
   document.addEventListener('click', function(e) {
-    if (!overlayRemoved) removeOverlay();
+    if (!overlayRemoved && !eventFired) {
+      eventFired = true;
+      removeOverlay();
+    }
   });
-})();
-</script>
-<script>
-(function() {
-  const SECTIONS_BEFORE_LOOP = 3;
-  let isLooping = false;
   
-  window.addEventListener('scroll', () => {
-    if (isLooping) return;
-    
-    const sections = document.querySelectorAll('.game-section');
-    const windowBottom = window.scrollY + window.innerHeight;
-    
-    if (sections.length >= SECTIONS_BEFORE_LOOP) {
-      const lastSection = sections[sections.length - 1];
-      const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
-      
-      if (windowBottom >= lastSectionBottom - 100) {
-        isLooping = true;
-        window.scrollTo(0, 0);
-        setTimeout(() => {
-          isLooping = false;
-        }, 100);
-      }
+  // Touch events for mobile
+  document.addEventListener('touchstart', function(e) {
+    if (!overlayRemoved && !eventFired) {
+      eventFired = true;
+      removeOverlay();
     }
   }, { passive: true });
 })();
