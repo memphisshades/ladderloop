@@ -1,0 +1,4629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ladder Loop Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border-top: 2px solid transparent;
+      border-image: linear-gradient(90deg, transparent, #ff0066, #00ffcc, #ff0066, transparent) 1;
+    }
+
+    .container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: 3rem;
+      text-align: center;
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px rgba(0, 255, 204, 0.5);
+      position: absolute;
+      left: -9999px;
+      visibility: hidden;
+    }
+
+    .game-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      width: 100%;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      display: inline-block;
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.4);
+      padding: 10px;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      max-width: 400px;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      border: 2px solid #00ffcc;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+      display: block;
+    }
+
+    @media (min-width: 1920px) {
+      canvas {
+        max-width: 700px;
+      }
+    }
+
+    @media (min-width: 2560px) {
+      canvas {
+        max-width: 1000px;
+      }
+    }
+
+    @media (min-width: 3840px) {
+      canvas {
+        max-width: 1400px;
+      }
+    }
+
+    @media (min-width: 5120px) {
+      canvas {
+        max-width: 1800px;
+      }
+    }
+
+        .game-controls {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+   .trade-game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.98);
+  z-index: 9000;
+  display: none;
+  overflow-y: auto;
+  padding: 2rem 1rem;
+}
+
+.trade-game-overlay.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.race-game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.98);
+  z-index: 9000;
+  display: none;
+  overflow-y: auto;
+  padding: 2rem 1rem;
+}
+
+.race-game-overlay.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.trade-game-title {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  color: #00ffcc;
+  text-shadow: 0 0 20px #00ffcc;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.trade-progress {
+  width: 100%;
+  max-width: 400px;
+  height: 30px;
+  background: rgba(255, 0, 102, 0.2);
+  border: 2px solid #ff0066;
+  border-radius: 5px;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+.trade-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00ffcc, #00ff66);
+  width: 0%;
+  transition: width 0.3s;
+}
+
+
+    .game-btn {
+  padding: clamp(0.6rem, 2.5vw, 1rem) clamp(1rem, 5vw, 2rem);
+  font-size: clamp(0.55rem, 2.2vw, 0.9rem);
+  font-family: 'Press Start 2P', cursive;
+
+  background: rgba(255, 0, 102, 0.12);
+  color: #00ffcc;
+  border: 2px solid #ff0066;
+  border-radius: 6px;
+
+  cursor: pointer;
+  transition: 
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  box-shadow: 0 0 10px rgba(255, 0, 102, 0.35);
+  white-space: nowrap;
+
+  /* 🔥 Mobile tap fix */
+  min-height: 44px;
+  touch-action: manipulation;
+}    .game-btn:hover {
+      background: rgba(255, 0, 102, 0.3);
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.6);
+      transform: translateY(-2px);
+    }
+
+    .game-btn.active {
+      background: rgba(0, 255, 204, 0.3);
+      border-color: #00ffcc;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
+    }
+
+    @keyframes mute-pulse {f
+      0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 102, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(255, 0, 102, 0.9), 0 0 50px rgba(255, 0, 102, 0.5); }
+    }
+
+    .game-btn.mute-btn:not(.active) {
+      animation: mute-pulse 1.5s ease-in-out infinite !important;
+    }
+
+.gallery-canvas button {
+  backdrop-filter: blur(6px);
+}
+
+.gallery-canvas button:hover {
+  transform: scale(1.08);
+}
+
+
+    .game-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(10, 10, 10, 0.98);
+      color: #ffcc00;
+      font-size: 1.2rem;
+      padding: 3rem;
+      border: 3px solid #ff0066;
+      display: none;
+      z-index: 2000;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255, 0, 102, 0.8);
+      max-width: 90vw;
+      white-space: pre-line;
+      border-radius: 10px;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.15) 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.3;
+    }
+
+    /* Character Selection Overlay */
+    .character-select-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 10, 0.98);
+      z-index: 10001;
+      display: none;
+      overflow-y: auto;
+      padding: 4rem 2rem;
+    }
+
+    .character-select-overlay.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .character-select-title {
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .character-select-subtitle {
+      font-size: clamp(0.7rem, 2vw, 1rem);
+      color: #ffcc00;
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .character-card {
+      background: rgba(255, 0, 102, 0.1);
+      border: 2px solid #ff0066;
+      border-radius: 10px;
+      padding: 2rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .character-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.8);
+      background: rgba(255, 0, 102, 0.2);
+    }
+
+    .character-preview {
+      width: 100px;
+      height: 100px;
+      border: 2px solid #00ffcc;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .character-card-name {
+      color: #ffcc00;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .character-card-role {
+      color: #00ffcc;
+      font-size: 0.6rem;
+      text-align: center;
+    }
+
+    /* Gallery Overlay Styles */
+    .gallery-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a0a0a;
+      z-index: 5000;
+      display: none;
+     overflow-y: auto;  /* Add this here instead */
+
+    }
+
+    .gallery-overlay.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+  
+/* Canvas-relative controls */
+.gallery-canvas {
+  position: relative;
+}
+
+/* Close button (top-right INSIDE canvas) */
+.gallery-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.7rem;
+  z-index: 5;
+}
+
+/* Next character button (bottom-right INSIDE canvas) */
+.gallery-next-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.7rem;
+  z-index: 5;
+}
+
+/* Previous character button (bottom-left INSIDE canvas) */
+.gallery-prev-btn {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.7rem;
+  z-index: 5;
+}
+
+  
+
+ .gallery-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;  /* Change to stretch */
+  justify-content: center;
+  overflow-y: auto;
+}
+
+    .gallery-slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+
+ .gallery-slide.active {
+  display: flex;
+  align-items: center;  /* Change back to center */
+  justify-content: center;
+  padding: 2rem 1rem;  /* Add padding all around */
+  overflow-y: auto;  /* Add scrolling to the slide itself */
+  min-height: 100%;  /* Ensure it takes full height */
+}
+    .character-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .character-name {
+      color: #ffcc00;
+      font-size: 1.2rem;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    }
+
+    .character-status {
+      color: #00ffcc;
+      font-size: 0.7rem;
+      padding: 0.5rem 1rem;
+      background: rgba(0, 255, 204, 0.1);
+      border: 2px solid #00ffcc;
+      border-radius: 5px;
+    }
+
+    /* Glass Breaking Effect - TV Screen Smash */
+    @keyframes piece-fall {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--fall-x), var(--fall-y)) rotate(var(--fall-rot));
+        opacity: 0;
+      }
+    }
+
+    .glass-piece {
+      position: absolute;
+      background: inherit;
+      overflow: hidden;
+      animation: piece-fall 1s ease-in forwards;
+    }
+
+    .glass-piece::before {
+      content: '';
+      position: absolute;
+      top: var(--piece-y);
+      left: var(--piece-x);
+      width: 100vw;
+      height: 100vh;
+      background: inherit;
+      box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.3);
+    }
+
+   @media (max-width: 768px) {
+  .character-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .character-card {
+    padding: 1rem;
+  }
+
+  .character-preview {
+    width: 80px;
+    height: 80px;
+  }
+
+  .game-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.65rem;
+  }
+
+  .game-controls {
+    gap: 0.75rem;
+  }
+
+  .gallery-close-btn {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.65rem;
+  }
+
+  .gallery-nav-btn {
+    padding: 1rem 0.75rem;
+    font-size: 1.2rem;
+  }
+
+  .gallery-nav-btn.prev {
+    left: 0.5rem;
+  }
+
+  .gallery-nav-btn.next {
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.55rem;
+  }
+
+  .game-controls {
+    gap: 0.5rem;
+  }
+
+  section {
+    padding: 2rem 1rem;
+  }
+
+  .gallery-close-btn {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.55rem;
+  }
+
+  .gallery-nav-btn {
+    padding: 0.75rem 0.5rem;
+    font-size: 1rem;
+  }
+
+  .gallery-nav-btn.prev {
+    left: 0.25rem;
+  }
+
+  .gallery-nav-btn.next {
+    right: 0.25rem;
+  }
+}
+
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Template section -->
+  <section class="game-section">
+    <div class="container">
+      <h2 class="section-title">PLAY</h2>
+      <div class="game-container">
+        <div class="canvas-wrapper">
+          <canvas width="400" height="450"></canvas>
+        </div>
+      
+ <div class="game-controls">
+  <button class="game-btn mute-btn">🔊</button>
+  <button class="game-btn reset-btn">↻</button>
+  <button class="game-btn trade-btn">🔨 </button>
+  <button class="game-btn race-btn">🏁 </button>
+  <button class="game-btn gallery-btn">🎨</button>
+</div>
+      </div>
+    </div>
+  </section>
+
+   <!-- Character Selection Overlay -->
+  <div class="character-select-overlay" id="characterSelect">
+    <h1 class="character-select-title">ANGLO POLISH BUILDERS</h1>
+    <p class="character-select-subtitle">SELECT YOUR CHARACTER</p>
+    <div class="character-grid" id="characterGrid"></div>
+    
+    <!-- ADD THIS NEW SECTION -->
+    <div style="margin-top: 3rem; text-align: center; max-width: 800px;">
+      <h3 style="
+        font-family: 'Press Start 2P', cursive;
+        font-size: 1rem;
+        color: #ff0066;
+        text-shadow: 0 0 10px rgba(255, 0, 102, 0.8);
+        margin-bottom: 1.5rem;
+      ">THE TEAM</h3>
+      <div style="
+        border: 3px solid #00ffcc;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(0, 255, 204, 0.5);
+        max-width: 600px;
+        margin: 0 auto;
+      ">
+        <img src="images/team.jpg" 
+             alt="Anglo Polish Builders Team" 
+             style="width: 100%; height: auto; display: block;"
+             onerror="this.style.display='none';">
+      </div>
+    </div>
+  </div>
+
+  <!-- Gallery Overlay -->
+  <div class="gallery-overlay" id="galleryOverlay"></div>
+
+<div class="trade-game-overlay" id="tradeGameOverlay"></div>
+<div class="race-game-overlay" id="raceGameOverlay"></div>
+
+  <div class="game-message"></div>
+  <audio src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
+
+  <script>
+    /* ===== ANGLO POLISH EDITION TOGGLE ===== */
+    const ANGLO_POLISH_EDITION = true; // Set to false to disable Anglo Polish Edition
+    
+    // Update page title based on edition
+    if (ANGLO_POLISH_EDITION) {
+      document.title = "Ladder Loop - Anglo Polish Builders Edition";
+    } else {
+      document.title = "Ladder Loop Game";
+    }
+
+    /* ===== Anglo Polish Characters Database ===== */
+    const angloPolishCharacters = [
+      {
+        id: "swarvek",
+        name: "Swarvek",
+        role: "The Boss",
+        color: "#ff9900"
+      },
+      {
+        id: "derek",
+        name: "Derek",
+        role: "Site Manager",
+        color: "#00ccff"
+      },
+      {
+        id: "michel",
+        name: "Michel",
+        role: "Workman",
+        color: "#ffcc00"
+      },
+      {
+        id: "mario",
+        name: "Mario",
+        role: "Painter",
+        color: "#ff0066"
+      },
+      {
+        id: "greg",
+        name: "Greg",
+        role: "Plumber",
+        color: "#00ff66"
+      }
+    ];
+
+    let selectedCharacter = null; // Will be set after character selection
+let showDefaultCharacter = true; // Show yellow cube initially
+window.ANGLO_POLISH_EDITION = ANGLO_POLISH_EDITION;
+
+    /* ===== Shared game state ===== */
+    let canvases = [];
+    let character = { x: 187, y: 420, width: 30, height: 30 };
+    let climbing = false;
+    let score = 0;
+    let speed = 4;
+    let freezeFrame = false;
+    let audioEnabled = true;
+    
+    let currentLadderColorIndex = 0;
+    let unlockedColors = [0];
+
+// Trade game state
+let tradeGameActive = false;
+let tradeProgress = 0;
+let tradeClicks = 0;
+let tradeTarget = 30;
+let tradeAnimationId = null;
+// Race game state
+let raceGameActive = false;
+let raceAnimationId = null;
+let racePlayerX = 200;
+let racePlayerY = 350;
+let raceSpeed = 0;
+let racePosition = 1;
+let raceLapDistance = 0;
+let raceCurrentLap = 1;
+let raceTotalLaps = 3;
+let raceObstacles = [];
+let raceOpponents = [];
+let raceKeys = {};
+let raceFinished = false;
+let raceStartTime = 0;
+let raceBestTime = Infinity;
+let raceLastLapTime = 0;
+let raceBestLap = Infinity;
+
+let raceCheckpoints = [];
+let raceDrift = 0;
+let raceEngineSound = null;
+let raceCountdownSound = null;
+let raceFinishSound = null;
+let raceMenuMusic = null;
+const lapLength = 1000;
+
+
+
+
+  // Polish Audio Variables =====
+    let polishAudioInterval = null;
+    let polishAudio = null;
+
+    // 
+    function initPolishAudio() {
+      if (!polishAudio) {
+        polishAudio = new Audio('polish.mp3');
+        polishAudio.volume = 0.7;
+      }
+    }
+
+   function playPolishAudio() {
+  if (polishAudio && !climbing && !freezeFrame) {
+    // Wait for metadata to load before getting duration
+    if (polishAudio.readyState >= 1) {
+      // Metadata loaded, we can get duration
+      const audioDuration = polishAudio.duration;
+      const maxStartTime = Math.max(0, audioDuration - 30);
+      const randomStart = Math.random() * maxStartTime;
+      
+      polishAudio.currentTime = randomStart;
+      polishAudio.play().catch(e => console.log('Polish audio play failed:', e));
+      
+      // Stop after 30 seconds
+      setTimeout(() => {
+        if (polishAudio) {
+          polishAudio.pause();
+        }
+      }, 30000);
+    } else {
+      // Metadata not loaded yet, load it first
+      polishAudio.addEventListener('loadedmetadata', function playOnce() {
+        const audioDuration = polishAudio.duration;
+        const maxStartTime = Math.max(0, audioDuration - 30);
+        const randomStart = Math.random() * maxStartTime;
+        
+        polishAudio.currentTime = randomStart;
+        polishAudio.play().catch(e => console.log('Polish audio play failed:', e));
+        
+        // Stop after 30 seconds
+        setTimeout(() => {
+          if (polishAudio) {
+            polishAudio.pause();
+          }
+        }, 30000);
+        
+        // Remove this one-time listener
+        polishAudio.removeEventListener('loadedmetadata', playOnce);
+      });
+      
+      // Trigger loading
+      polishAudio.load();
+    }
+  }
+}
+
+    function startPolishAudioLoop() {
+      if (polishAudioInterval) {
+        clearInterval(polishAudioInterval);
+      }
+      
+      initPolishAudio();
+      playPolishAudio();
+      
+      polishAudioInterval = setInterval(() => {
+        playPolishAudio();
+      }, 180000);
+    }
+
+    function stopPolishAudioLoop() {
+      if (polishAudioInterval) {
+        clearInterval(polishAudioInterval);
+        polishAudioInterval = null;
+      }
+      
+      if (polishAudio) {
+        polishAudio.pause();
+        polishAudio.currentTime = 0;
+      }
+    }
+
+
+
+    
+    const ladderColors = [
+      { name: "Classic White", color: "#fff", unlockScore: 0 },
+      { name: "Electric Blue", color: "#00ccff", unlockScore: 5 },
+      { name: "Neon Pink", color: "#ff0066", unlockScore: 10 },
+      { name: "Toxic Green", color: "#00ff66", unlockScore: 15 },
+      { name: "Purple Haze", color: "#b200ff", unlockScore: 20 },
+      { name: "Golden Glory", color: "#ffcc00", unlockScore: 25 },
+      { name: "Crimson Rage", color: "#ff3333", unlockScore: 30 },
+      { name: "Cyber Orange", color: "#ff9900", unlockScore: 35 },
+      { name: "Mystic Violet", color: "#9933ff", unlockScore: 40 },
+      { name: "Arctic Cyan", color: "#00ffff", unlockScore: 45 },
+      { name: "Sunset Red", color: "#ff6666", unlockScore: 50 },
+      { name: "Lime Blast", color: "#ccff00", unlockScore: 60 },
+      { name: "Hot Magenta", color: "#ff00ff", unlockScore: 70 },
+      { name: "Ocean Teal", color: "#00cc99", unlockScore: 80 },
+      { name: "Rainbow Prism", color: "#fff", unlockScore: 100, isRainbow: true }
+    ];
+
+  // Character-specific funny messages for Anglo Polish Edition
+const characterMessages = {
+  swarvek: [
+    "Swarvek says: 'In my day, we climbed faster!'",
+    "The boss is watching. He's not impressed.",
+    "Swarvek built this company from scratch. You can't even climb a ladder.",
+    "Boss man expects results, not excuses.",
+    "Swarvek's spirit level is more balanced than you.",
+    "The boss has seen it all. This? Not impressive.",
+    "Swarvek: 'My grandmother climbs better than this.'",
+    "You're making the boss reconsider his hiring policy.",
+    "Swarvek's thinking about docking your pay.",
+    "The boss doesn't accept 'almost' - he accepts results."
+  ],
+  derek: [
+    "Derek measured twice. You still fell once.",
+    "The site manager has standards. You're not meeting them.",
+    "Derek's clipboard just got another mark against you.",
+    "Site manager's note: 'Needs improvement. Lots of it.'",
+    "Derek's tape measure is more accurate than your climbing.",
+    "The site manager has seen enough. Take a break.",
+    "Derek's shaking his head. That's never good.",
+    "Site manager's report: 'Unacceptable performance.'",
+    "Derek's measuring your failure in real-time.",
+    "The site manager expected better from you."
+  ],
+  michel: [
+    "Michel wired this perfectly. Your climbing? Not so much.",
+    "The electrician's work is flawless. Yours? Questionable.",
+    "Michel could wire a building faster than you climb.",
+    "Even the wiring has better connections than your climbing.",
+    "Michel's drill has more torque than your performance.",
+    "The electrician finished his job. You're still trying.",
+    "Michel's watching between drilling. He's not impressed.",
+    "The electrician's precision vs your falling. No contest.",
+    "Michel says: 'This job needs rewiring. So does your technique.'",
+    "Even power tools are more reliable than you."
+  ],
+  greg: [
+    "Greg fixed the pipes. Can you fix your climbing?",
+    "The plumber's seen worse blockages than your performance.",
+    "Greg's plunger has more suction than your grip.",
+    "Plumber's assessment: 'This is going down the drain.'",
+    "Greg could unclog a drain faster than you climb.",
+    "The plumber's shaking his head behind his glasses.",
+    "Greg's seen pipes in better shape than your climbing.",
+    "Plumber's diagnosis: 'Complete system failure.'",
+    "Greg's toolkit is more useful than your climbing skills.",
+    "The plumber's patching leaks. You're creating them."
+  ],
+  mario: [
+    "Mario's seen better brushstrokes than your climbing.",
+    "The painter could finish a mural faster than you climb.",
+    "Mario's paint job is smoother than your technique.",
+    "Painter's review: 'Needs another coat... and another try.'",
+    "Mario's brush has better precision than your climbing.",
+    "The painter's whistling. It's not a compliment.",
+    "Mario says: 'Even wet paint dries faster than you climb.'",
+    "The painter's masterpiece vs your disaster. Quite the contrast.",
+    "Mario's wondering if he should paint over this embarrassment.",
+    "The painter's teeth are brighter than your future."
+  ]
+};
+
+const funnyMessages = ANGLO_POLISH_EDITION ? 
+  (selectedCharacter ? characterMessages[selectedCharacter.id] || characterMessages.swarvek : characterMessages.swarvek)
+: [
+    "Follow us on Instagram: @ladderloopgame (it won't help your score)",
+    // ... all your original 50+ messages stay here ...
+];
+    const messageBox = document.querySelector('.game-message');
+    const audioEl = document.querySelector('audio');
+    const muteBtns = [];
+    const resetBtns = [];
+    const galleryBtns = [];
+
+    /* ===== Drawing functions ===== */
+    function drawLadder(ctx, canvas) {
+      const currentColor = ladderColors[currentLadderColorIndex];
+      
+      if (currentColor.isRainbow) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, "#ff0066");
+        gradient.addColorStop(0.2, "#ff9900");
+        gradient.addColorStop(0.4, "#ffcc00");
+        gradient.addColorStop(0.6, "#00ff66");
+        gradient.addColorStop(0.8, "#00ccff");
+        gradient.addColorStop(1, "#b200ff");
+        ctx.strokeStyle = gradient;
+      } else {
+        ctx.strokeStyle = currentColor.color;
+      }
+      
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(150, 0);
+      ctx.lineTo(150, canvas.height);
+      ctx.moveTo(250, 0);
+      ctx.lineTo(250, canvas.height);
+      ctx.stroke();
+      
+      for (let i = 0; i < canvas.height; i += 40) {
+        ctx.beginPath();
+        ctx.moveTo(150, i);
+        ctx.lineTo(250, i);
+        ctx.stroke();
+      }
+    }
+
+  function drawCharacter(ctx) {
+  // Read from window to get latest value set by mobile script
+  const currentSelectedCharacter = typeof window.selectedCharacter !== 'undefined' ? window.selectedCharacter : selectedCharacter;
+  const currentShowDefault = typeof window.showDefaultCharacter !== 'undefined' ? window.showDefaultCharacter : showDefaultCharacter;
+  
+  // Show default yellow cube before character selection or if not Anglo Polish
+  if (currentShowDefault || !ANGLO_POLISH_EDITION) {
+    ctx.fillStyle = "#ffcc00";
+    ctx.fillRect(character.x, character.y, character.width, character.height);
+    return;
+  }
+  
+  // After character selection in Anglo Polish Edition
+  if (currentSelectedCharacter && currentSelectedCharacter.id === "swarvek") {
+    drawSwarvekSprite(ctx, character.x, character.y, character.width);
+  } else if (currentSelectedCharacter && currentSelectedCharacter.id === "michel") {
+    drawMichelSprite(ctx, character.x, character.y, character.width);
+  } else if (currentSelectedCharacter && currentSelectedCharacter.id === "greg") {
+    drawGregSprite(ctx, character.x, character.y, character.width);
+  } else if (currentSelectedCharacter && currentSelectedCharacter.id === "mario") {
+    drawMarioSprite(ctx, character.x, character.y, character.width);
+  } else if (currentSelectedCharacter && currentSelectedCharacter.id === "derek") {
+    drawDerekSprite(ctx, character.x, character.y, character.width);
+  } else if (currentSelectedCharacter) {
+    ctx.fillStyle = currentSelectedCharacter.color;
+    ctx.fillRect(character.x, character.y, character.width, character.height);
+  }
+}
+
+
+
+function drawBenchedCube(ctx, canvas) {
+  // Read from window to get latest value set by mobile script
+  const currentShowDefault = typeof window.showDefaultCharacter !== 'undefined' ? window.showDefaultCharacter : showDefaultCharacter;
+  const currentSelectedCharacter = typeof window.selectedCharacter !== 'undefined' ? window.selectedCharacter : selectedCharacter;
+  
+  if (!ANGLO_POLISH_EDITION || currentShowDefault) return;
+  if (!currentSelectedCharacter) return;
+  
+  const s = window.gameScale || 1;
+  
+  // Position on the right side, sitting on ground
+  const cubeSize = 25 * s;
+  const cubeX = canvas.width - 80 * s;
+  const cubeY = canvas.height - cubeSize + 2 * s;
+  
+  // Draw the benched yellow cube
+  ctx.fillStyle = "#ffcc00";
+  ctx.fillRect(cubeX, cubeY, cubeSize, cubeSize);
+  
+  // Add a slight shadow to make it look grounded
+  ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+  ctx.fillRect(cubeX + 2 * s, cubeY + cubeSize, cubeSize - 4 * s, 3 * s);
+  
+  // Draw "BENCHED" text
+  ctx.fillStyle = "#ff0066";
+  ctx.font = `${8 * s}px 'Press Start 2P', cursive`;
+  ctx.textAlign = "center";
+  ctx.shadowColor = "rgba(255, 0, 102, 0.8)";
+  ctx.shadowBlur = 5 * s;
+  ctx.fillText("BENCHED", cubeX + cubeSize / 2, cubeY - 8 * s);
+  ctx.shadowBlur = 0;
+  ctx.textAlign = "left";
+}
+
+
+
+   function drawSwarvekSprite(ctx, x, y, size) {
+
+ const w = size; // width
+  const h = size; // height
+
+  // Bigger body
+    ctx.fillStyle = '#c9453b'; // Red hoodie
+    ctx.fillRect(x - w * 0.1, y + h * 0.35, w * 1.2, h * 0.65);
+    
+    // Head (wider)
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x + w * 0.1, y, w * 0.8, h * 0.4);
+    
+    // Hard hat (yellow)
+    ctx.fillStyle = '#c9453b';
+    ctx.fillRect(x + w * 0.05, y - h * 0.25, w * 0.9, h * 0.3);
+    ctx.fillRect(x, y - h * 0.05, w, h * 0.1); // Brim
+    
+    // Eyes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w * 0.25, y + h * 0.15, w * 0.15, h * 0.1);
+    ctx.fillRect(x + w * 0.6, y + h * 0.15, w * 0.15, h * 0.1);
+    
+    // Strong eyebrows
+    ctx.fillStyle = '#5a3a2a';
+    ctx.fillRect(x + w * 0.2, y + h * 0.1, w * 0.25, h * 0.08);
+    ctx.fillRect(x + w * 0.55, y + h * 0.1, w * 0.25, h * 0.08);
+    
+    // Muscular arms
+ctx.fillStyle = '#c9453b';
+ctx.fillRect(x - w * 0.15, y + h * 0.5, w * 0.5, h * 0.2);
+ctx.fillRect(x + w * 0.65, y + h * 0.5, w * 0.5, h * 0.2);
+    
+    // SPIRIT LEVEL IN LEFT HAND
+// Level body (yellow aluminum)
+ctx.fillStyle = '#FFD700';
+ctx.fillRect(x - w * 0.5, y + h * 0.52, w * 0.45, h * 0.1);
+
+// Level ends (black caps)
+ctx.fillStyle = '#000';
+ctx.fillRect(x - w * 0.5, y + h * 0.52, w * 0.05, h * 0.1);
+ctx.fillRect(x - w * 0.1, y + h * 0.52, w * 0.05, h * 0.1);
+
+// Spirit bubble vial (glass)
+ctx.fillStyle = 'rgba(200, 230, 255, 0.6)';
+ctx.fillRect(x - w * 0.35, y + h * 0.54, w * 0.15, h * 0.06);
+
+// Bubble vial frame (black)
+ctx.strokeStyle = '#000';
+ctx.lineWidth = 1;
+ctx.strokeRect(x - w * 0.35, y + h * 0.54, w * 0.15, h * 0.06);
+
+// Air bubble (animated - wobbles)
+const bubbleTime = Date.now() / 300;
+const bubbleOffset = Math.sin(bubbleTime) * w * 0.02;
+ctx.fillStyle = '#FFFF00';
+ctx.beginPath();
+ctx.arc(x - w * 0.275 + bubbleOffset, y + h * 0.57, w * 0.03, 0, Math.PI * 2);
+ctx.fill();
+
+// Center line markers
+ctx.fillStyle = '#FF0000';
+ctx.fillRect(x - w * 0.28, y + h * 0.545, w * 0.01, h * 0.05);
+
+    
+  }
+
+
+
+function drawMichelSprite(ctx, x, y, size) {
+  const w = size; // width
+  const h = size; // height
+  
+  // Body
+    ctx.fillStyle = '#4ecdc4'; // Teal hoodie
+    ctx.fillRect(x, y + h * 0.4, w, h * 0.6);
+    
+   // Head
+ctx.fillStyle = '#f4c49c';
+ctx.fillRect(x + w * 0.2, y, w * 0.6, h * 0.4);
+
+// Brown hair in middle (mohawk style)
+ctx.fillStyle = '#5a3a2a';
+ctx.fillRect(x + w * 0.35, y - h * 0.15, w * 0.3, h * 0.2);    
+    // Eyes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w * 0.3, y + h * 0.15, w * 0.12, h * 0.1);
+    ctx.fillRect(x + w * 0.58, y + h * 0.15, w * 0.12, h * 0.1);
+    
+    // Stubble (dotted shadow)
+    ctx.fillStyle = 'rgba(42, 42, 42, 0.4)';
+    ctx.fillRect(x + w * 0.25, y + h * 0.28, w * 0.5, h * 0.12);
+    
+    // Arms
+    ctx.fillStyle = '#4ecdc4';
+ctx.fillRect(x - w * 0.1, y + h * 0.5, w * 0.4, h * 0.15);
+ctx.fillRect(x + w * 0.7, y + h * 0.5, w * 0.4, h * 0.15);
+
+// POWER DRILL IN RIGHT HAND
+// Drill body (red/black)
+ctx.fillStyle = '#CC0000';
+ctx.fillRect(x + w * 1.05, y + h * 0.48, w * 0.25, h * 0.15);
+
+// Drill grip (black)
+ctx.fillStyle = '#1a1a1a';
+ctx.fillRect(x + w * 1.08, y + h * 0.56, w * 0.12, h * 0.18);
+
+// Battery pack (yellow)
+ctx.fillStyle = '#FFD700';
+ctx.fillRect(x + w * 1.09, y + h * 0.63, w * 0.10, h * 0.08);
+
+// Drill chuck (silver)
+ctx.fillStyle = '#C0C0C0';
+ctx.fillRect(x + w * 1.28, y + h * 0.51, w * 0.08, h * 0.09);
+
+// Drill bit (animated spinning!)
+const drillTime = Date.now() / 50;
+const drillRotation = drillTime % 4;
+
+ctx.fillStyle = '#808080';
+// Draw rotating bit (4 positions for spinning effect)
+if (drillRotation < 1) {
+  ctx.fillRect(x + w * 1.36, y + h * 0.545, w * 0.12, h * 0.02);
+} else if (drillRotation < 2) {
+  ctx.fillRect(x + w * 1.36, y + h * 0.53, w * 0.12, h * 0.06);
+} else if (drillRotation < 3) {
+  ctx.fillRect(x + w * 1.36, y + h * 0.545, w * 0.12, h * 0.02);
+} else {
+  ctx.fillRect(x + w * 1.36, y + h * 0.53, w * 0.12, h * 0.06);
+}
+
+// Drill bit tip (darker)
+ctx.fillStyle = '#404040';
+ctx.fillRect(x + w * 1.46, y + h * 0.545, w * 0.04, h * 0.02);
+
+// Power LED (glowing green)
+ctx.fillStyle = '#00FF00';
+ctx.beginPath();
+ctx.arc(x + w * 1.12, y + h * 0.50, w * 0.02, 0, Math.PI * 2);
+ctx.fill();
+
+// Drill dust particles (animated)
+const dust1 = (drillTime * 2) % 30;
+const dust2 = ((drillTime * 2) + 10) % 30;
+const dust3 = ((drillTime * 2) + 20) % 30;
+
+ctx.fillStyle = 'rgba(139, 69, 19, 0.5)';
+if (dust1 < 25) {
+  ctx.fillRect(x + w * 1.48, y + h * 0.50 + dust1, w * 0.02, h * 0.02);
+}
+if (dust2 < 25) {
+  ctx.fillRect(x + w * 1.46, y + h * 0.52 + dust2, w * 0.02, h * 0.02);
+}
+if (dust3 < 25) {
+  ctx.fillRect(x + w * 1.50, y + h * 0.48 + dust3, w * 0.02, h * 0.02);
+}
+}
+
+
+function drawGregSprite(ctx, x, y, size) {
+  const w = size; // width
+  const h = size; // height
+  
+ // Wider body
+    ctx.fillStyle = '#95e1d3'; // Mint hoodie
+    ctx.fillRect(x - w * 0.15, y + h * 0.35, w * 1.3, h * 0.65);
+    
+    // Wider head
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x + w * 0.05, y + h * 0.05, w * 0.9, h * 0.4);
+    
+    // Brown cap
+    ctx.fillStyle = '#6b4423';
+    ctx.fillRect(x + w * 0.1, y - h * 0.15, w * 0.8, h * 0.25);
+    ctx.fillRect(x + w * 0.05, y - h * 0.02, w * 0.9, h * 0.12); // Brim
+    
+    // Glasses frames
+    ctx.fillStyle = '#333';
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    
+    // Left lens
+    ctx.strokeRect(x + w * 0.22, y + h * 0.18, w * 0.22, h * 0.15);
+    ctx.fillStyle = 'rgba(200, 230, 255, 0.3)';
+    ctx.fillRect(x + w * 0.22, y + h * 0.18, w * 0.22, h * 0.15);
+    
+    // Right lens
+    ctx.strokeStyle = '#333';
+    ctx.strokeRect(x + w * 0.56, y + h * 0.18, w * 0.22, h * 0.15);
+    ctx.fillStyle = 'rgba(200, 230, 255, 0.3)';
+    ctx.fillRect(x + w * 0.56, y + h * 0.18, w * 0.22, h * 0.15);
+    
+    // Bridge
+    ctx.fillStyle = '#333';
+    ctx.fillRect(x + w * 0.44, y + h * 0.22, w * 0.12, h * 0.05);
+    
+    // Eyes behind glasses
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w * 0.28, y + h * 0.22, w * 0.1, h * 0.08);
+    ctx.fillRect(x + w * 0.62, y + h * 0.22, w * 0.1, h * 0.08);
+    
+  // Wider arms
+ctx.fillStyle = '#95e1d3';
+ctx.fillRect(x - w * 0.2, y + h * 0.5, w * 0.5, h * 0.2);
+ctx.fillRect(x + w * 0.7, y + h * 0.5, w * 0.5, h * 0.2);
+
+// PLUNGER IN RIGHT HAND (MUCH BIGGER!)
+// Wooden handle (brown) - extends way up
+ctx.fillStyle = '#8B4513';
+ctx.fillRect(x + w * 1.12, y + h * 0.15, w * 0.08, h * 0.50);
+
+// Handle grip end (darker knob at top)
+ctx.fillStyle = '#654321';
+ctx.fillRect(x + w * 1.10, y + h * 0.13, w * 0.12, h * 0.05);
+
+// Handle middle grip ring (texture)
+ctx.fillStyle = '#654321';
+ctx.fillRect(x + w * 1.11, y + h * 0.35, w * 0.10, h * 0.03);
+
+// Handle-to-cup connection (metal shaft)
+ctx.fillStyle = '#C0C0C0';
+ctx.fillRect(x + w * 1.135, y + h * 0.63, w * 0.05, h * 0.05);
+
+// Large rubber cup (black/dark red) - BIGGER
+ctx.fillStyle = '#8B0000';
+ctx.fillRect(x + w * 1.06, y + h * 0.68, w * 0.20, h * 0.12);
+
+// Rubber cup flared bottom - WIDER
+ctx.fillStyle = '#8B0000';
+ctx.beginPath();
+ctx.moveTo(x + w * 1.02, y + h * 0.80);
+ctx.lineTo(x + w * 1.06, y + h * 0.68);
+ctx.lineTo(x + w * 1.26, y + h * 0.68);
+ctx.lineTo(x + w * 1.30, y + h * 0.80);
+ctx.fill();
+
+// Rubber cup inner shadow (darker)
+ctx.fillStyle = '#4B0000';
+ctx.fillRect(x + w * 1.09, y + h * 0.70, w * 0.14, h * 0.08);
+
+// Rubber cup rim detail
+ctx.fillStyle = '#6B0000';
+ctx.fillRect(x + w * 1.06, y + h * 0.67, w * 0.20, h * 0.02);
+
+// WATER SPLASHES (animated - plunging action!)
+const plungeTime = Date.now() / 200;
+const plungeOffset = Math.abs(Math.sin(plungeTime)) * 12; // Bigger bounce
+
+// Water splash particles
+const splash1 = (plungeTime * 3) % 30;
+const splash2 = ((plungeTime * 3) + 10) % 30;
+const splash3 = ((plungeTime * 3) + 20) % 30;
+const splash4 = ((plungeTime * 3) + 5) % 30;
+
+ctx.fillStyle = 'rgba(74, 144, 226, 0.7)'; // Blue water
+
+// Multiple splash particles when plunging down
+if (splash1 < 20 && plungeOffset < 3) {
+  ctx.fillRect(x + w * 1.00, y + h * 0.80 - splash1, w * 0.04, h * 0.06);
+}
+if (splash2 < 20 && plungeOffset < 3) {
+  ctx.fillRect(x + w * 1.32, y + h * 0.80 - splash2, w * 0.04, h * 0.06);
+}
+if (splash3 < 20 && plungeOffset < 3) {
+  ctx.fillRect(x + w * 1.08, y + h * 0.80 - splash3, w * 0.04, h * 0.05);
+}
+if (splash4 < 20 && plungeOffset < 3) {
+  ctx.fillRect(x + w * 1.24, y + h * 0.80 - splash4, w * 0.04, h * 0.05);
+}
+
+// Water droplets on plunger cup
+ctx.fillStyle = 'rgba(74, 144, 226, 0.8)';
+ctx.fillRect(x + w * 1.10, y + h * 0.72, w * 0.03, h * 0.04);
+ctx.fillRect(x + w * 1.19, y + h * 0.74, w * 0.03, h * 0.04);
+ctx.fillRect(x + w * 1.14, y + h * 0.77, w * 0.04, h * 0.03);
+  }
+
+
+
+function drawDerekSprite(ctx, x, y, size) {
+  const w = size;
+  const h = size;
+
+  /* ================= BODY ================= */
+
+  // Hoodie
+  ctx.fillStyle = '#aa96da';
+  ctx.fillRect(x, y + h * 0.42, w, h * 0.58);
+
+  // Arms
+  ctx.fillRect(x - w * 0.12, y + h * 0.52, w * 0.38, h * 0.14);
+  ctx.fillRect(x + w * 0.74, y + h * 0.52, w * 0.38, h * 0.14);
+
+  /* ================= HEAD ================= */
+
+ // Head
+ctx.fillStyle = '#f4c49c';
+ctx.fillRect(x + w * 0.22, y + h * 0.05, w * 0.56, h * 0.38);
+
+// Brown hair
+ctx.fillStyle = '#5a3a2a';
+ctx.fillRect(x + w * 0.22, y - h * 0.05, w * 0.56, h * 0.14);
+
+// Hair on sides
+ctx.fillRect(x + w * 0.18, y + h * 0.05, w * 0.08, h * 0.15);
+ctx.fillRect(x + w * 0.74, y + h * 0.05, w * 0.08, h * 0.15);
+  /* ================= FACE ================= */
+
+  // Eyes
+  ctx.fillStyle = '#000';
+  ctx.fillRect(x + w * 0.30, y + h * 0.16, w * 0.10, h * 0.08);
+  ctx.fillRect(x + w * 0.60, y + h * 0.16, w * 0.10, h * 0.08);
+
+  // Long but slimmer nose (main)
+  ctx.fillStyle = '#d9a07c';
+  ctx.fillRect(
+    x + w * 0.46,
+    y + h * 0.16,
+    w * 0.14,
+    h * 0.30
+  );
+
+  // Nose tip
+  ctx.fillStyle = '#c9896a';
+  ctx.fillRect(
+    x + w * 0.48,
+    y + h * 0.40,
+    w * 0.10,
+    h * 0.06
+  );
+
+  // Subtle nose shadow
+  ctx.fillStyle = '#c18463';
+  ctx.fillRect(
+    x + w * 0.44,
+    y + h * 0.40,
+    w * 0.04,
+    h * 0.06
+  );
+
+  /* ================= TAPE MEASURE ================= */
+
+  const tapeTime = Date.now() / 300;
+  const tapeWiggle = Math.sin(tapeTime) * (w * 0.02);
+
+  // Tape case
+  ctx.fillStyle = '#FFD700';
+  ctx.fillRect(
+    x - w * 0.24,
+    y + h * 0.55,
+    w * 0.16,
+    h * 0.16
+  );
+
+  // Case stripe
+  ctx.fillStyle = '#000';
+  ctx.fillRect(
+    x - w * 0.24,
+    y + h * 0.61,
+    w * 0.16,
+    h * 0.03
+  );
+
+  // Belt clip
+  ctx.fillStyle = '#C0C0C0';
+  ctx.fillRect(
+    x - w * 0.10,
+    y + h * 0.56,
+    w * 0.03,
+    h * 0.10
+  );
+
+  // Tape blade (wiggles only itself)
+  ctx.save();
+  ctx.translate(tapeWiggle, 0);
+
+  ctx.fillStyle = '#FFEB3B';
+  ctx.fillRect(
+    x - w * 0.42,
+    y + h * 0.58,
+    w * 0.20,
+    h * 0.05
+  );
+
+  // Measurement marks
+  ctx.fillStyle = '#000';
+  for (let i = 0; i < 5; i++) {
+    ctx.fillRect(
+      x - w * 0.40 + i * w * 0.04,
+      y + h * 0.58,
+      w * 0.005,
+      h * 0.03
+    );
+  }
+
+  // Hook
+  ctx.fillStyle = '#C0C0C0';
+  ctx.fillRect(
+    x - w * 0.45,
+    y + h * 0.585,
+    w * 0.03,
+    h * 0.04
+  );
+
+  ctx.restore();
+}
+
+
+
+
+function drawMarioSprite(ctx, x, y, size) {
+  const w = size;
+  const h = size;
+
+  const bodyW = w * 0.65;
+  const bodyX = x + (w - bodyW) / 2;
+
+  const time = Date.now();
+
+  /* ================= BODY ================= */
+
+  ctx.fillStyle = '#f38181';
+  ctx.fillRect(bodyX, y + h * 0.42, bodyW, h * 0.58);
+
+  // Arms
+  ctx.fillRect(bodyX - w * 0.14, y + h * 0.52, w * 0.32, h * 0.12);
+  ctx.fillRect(bodyX + bodyW - w * 0.18, y + h * 0.52, w * 0.32, h * 0.12);
+
+  /* ================= HEAD ================= */
+
+  ctx.fillStyle = '#f4c49c';
+  ctx.fillRect(x + w * 0.26, y + h * 0.10, w * 0.48, h * 0.36);
+
+  /* ================= WAVY BLOND HAIR ================= */
+
+  ctx.fillStyle = '#f4d03f';
+
+  ctx.fillRect(x + w * 0.26, y + h * 0.02, w * 0.48, h * 0.14);
+
+  // Waves
+  ctx.fillRect(x + w * 0.28, y - h * 0.02, w * 0.10, h * 0.06);
+  ctx.fillRect(x + w * 0.40, y - h * 0.03, w * 0.12, h * 0.07);
+  ctx.fillRect(x + w * 0.54, y - h * 0.02, w * 0.10, h * 0.06);
+
+  ctx.fillRect(x + w * 0.24, y + h * 0.08, w * 0.06, h * 0.08);
+  ctx.fillRect(x + w * 0.70, y + h * 0.08, w * 0.06, h * 0.08);
+
+  /* ================= FACE ================= */
+
+  // Wink logic: once every ~4 seconds, lasts ~250ms
+  const winkCycle = time % 4000;
+  const isWinking = winkCycle > 3300 && winkCycle < 3550;
+
+  ctx.fillStyle = '#000';
+
+  // Left eye (normal)
+  ctx.fillRect(x + w * 0.34, y + h * 0.22, w * 0.08, h * 0.07);
+
+  // Right eye (wink)
+  if (isWinking) {
+    ctx.fillRect(x + w * 0.58, y + h * 0.25, w * 0.08, h * 0.02);
+  } else {
+    ctx.fillRect(x + w * 0.58, y + h * 0.22, w * 0.08, h * 0.07);
+  }
+
+  // Smile
+  ctx.fillRect(x + w * 0.34, y + h * 0.34, w * 0.32, h * 0.04);
+
+  /* ================= TEETH ================= */
+
+  ctx.fillStyle = '#fff';
+
+  const toothY = y + h * 0.35;
+
+  ctx.fillRect(x + w * 0.36, toothY, w * 0.06, h * 0.025);
+  ctx.fillRect(x + w * 0.44, toothY, w * 0.06, h * 0.025);
+  ctx.fillRect(x + w * 0.52, toothY, w * 0.06, h * 0.025);
+
+  // Sparkle (tiny + occasional)
+  const sparkleCycle = time % 3000;
+  if (sparkleCycle < 200) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x + w * 0.48, toothY - h * 0.015, w * 0.015, h * 0.015);
+    ctx.fillRect(x + w * 0.475, toothY - h * 0.01, w * 0.025, h * 0.005);
+  }
+
+  /* ================= PAINTBRUSH ================= */
+
+  ctx.fillStyle = '#8B4513';
+  ctx.fillRect(bodyX + bodyW + w * 0.10, y + h * 0.54, w * 0.22, h * 0.07);
+
+  ctx.fillStyle = '#C0C0C0';
+  ctx.fillRect(bodyX + bodyW + w * 0.28, y + h * 0.52, w * 0.07, h * 0.11);
+
+  ctx.fillStyle = '#E8E8E8';
+  ctx.fillRect(bodyX + bodyW + w * 0.35, y + h * 0.50, w * 0.11, h * 0.15);
+
+  ctx.fillStyle = '#4169E1';
+  ctx.fillRect(bodyX + bodyW + w * 0.35, y + h * 0.52, w * 0.11, h * 0.10);
+
+  /* ================= DRIPPING PAINT ================= */
+
+  const drip1 = (time / 200 % 30) * 2;
+  const drip2 = ((time / 200 + 10) % 30) * 2;
+  const drip3 = ((time / 200 + 20) % 30) * 2;
+
+  ctx.fillStyle = '#4169E1';
+
+  if (drip1 < 50) {
+    ctx.fillRect(bodyX + bodyW + w * 0.39, y + h * 0.68 + drip1, w * 0.035, h * 0.07);
+  }
+  if (drip2 < 50) {
+    ctx.fillRect(bodyX + bodyW + w * 0.35, y + h * 0.82 + drip2, w * 0.045, h * 0.06);
+  }
+  if (drip3 < 50) {
+    ctx.fillRect(bodyX + bodyW + w * 0.42, y + h * 0.94 + drip3, w * 0.035, h * 0.05);
+  }
+}
+
+
+
+function drawScore(ctx) {
+  const s = window.gameScale || 1;
+  
+  // Read from window to get latest value set by mobile script
+  const currentSelectedCharacter = typeof window.selectedCharacter !== 'undefined' ? window.selectedCharacter : selectedCharacter;
+
+  const x = 10 * s;
+  let y = 10 * s;
+
+  const lineHeight = 14 * s;
+  const sectionGap = 10 * s;
+
+  // ---- TEXT STYLE ----
+  ctx.fillStyle = "#ffcc00";
+  ctx.font = `${12 * s}px 'Press Start 2P', cursive`;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
+  ctx.shadowBlur = 8 * s;
+
+  // ---- NAME (VERTICAL) ----
+  const name = currentSelectedCharacter?.name || "Player";
+  for (let i = 0; i < name.length; i++) {
+    ctx.fillText(name[i], x, y + i * lineHeight);
+  }
+
+  y += name.length * lineHeight + sectionGap;
+
+  // ---- SCORE (VERTICAL) ----
+  const scoreStr = "Pts:" + score;
+  for (let i = 0; i < scoreStr.length; i++) {
+    ctx.fillText(scoreStr[i], x, y + i * lineHeight);
+  }
+
+  ctx.shadowBlur = 0;
+}
+
+    /* ===== Gallery Drawing Function ===== */
+ function drawGalleryCharacter(ctx, canvas, charData) {
+  const s = window.gameScale || 1;
+  const charSize = 100 * s;
+  const spriteX = (400 - 100) / 2 * s;
+  const spriteY = 50 * s; // Move sprite to top half
+  
+  // Draw the animated sprite at the top
+  if (ANGLO_POLISH_EDITION && charData.id === "swarvek") {
+    drawSwarvekSprite(ctx, spriteX, spriteY, charSize);
+  } else if (ANGLO_POLISH_EDITION && charData.id === "michel") {
+    drawMichelSprite(ctx, spriteX, spriteY, charSize);
+  } else if (ANGLO_POLISH_EDITION && charData.id === "greg") {
+    drawGregSprite(ctx, spriteX, spriteY, charSize);
+  } else if (ANGLO_POLISH_EDITION && charData.id === "mario") {
+    drawMarioSprite(ctx, spriteX, spriteY, charSize);
+  } else if (ANGLO_POLISH_EDITION && charData.id === "derek") {
+    drawDerekSprite(ctx, spriteX, spriteY, charSize);
+  } else {
+    ctx.fillStyle = charData.color;
+    ctx.fillRect(spriteX, spriteY, charSize, charSize);
+  }
+  
+  // Draw the photo below the sprite
+  if (ANGLO_POLISH_EDITION && charData.id && charData.image) {
+    const imgSize = 200 * s;
+    const imgX = (400 - 200) / 2 * s;
+    const imgY = 200 * s;
+    
+    // Draw border
+    ctx.strokeStyle = '#00ffcc';
+    ctx.lineWidth = 3 * s;
+    ctx.strokeRect(imgX, imgY, imgSize, imgSize);
+    
+    // Draw the image
+    ctx.drawImage(charData.image, imgX, imgY, imgSize, imgSize);
+    
+    // Draw glow effect
+    ctx.shadowColor = 'rgba(0, 255, 204, 0.5)';
+    ctx.shadowBlur = 20 * s;
+    ctx.strokeRect(imgX, imgY, imgSize, imgSize);
+    ctx.shadowBlur = 0;
+  }
+}
+
+
+
+
+
+   /* ===== Character Selection ===== */
+function showCharacterSelect() {
+  const overlay = document.getElementById('characterSelect');
+  const grid = document.getElementById('characterGrid');
+  
+  grid.innerHTML = '';
+  
+  angloPolishCharacters.forEach(char => {
+    const card = document.createElement('div');
+    card.className = 'character-card';
+    
+    const imageName = 'images/' + char.id + '.jpg';
+    
+    card.innerHTML = `
+      <div class="character-preview" style="background: ${char.color}; overflow: hidden; position: relative;">
+        <img src="${imageName}" 
+             alt="${char.name}" 
+             style="width: 100%; height: 100%; object-fit: cover; display: block;"
+             onerror="this.style.display='none';">
+      </div>
+      <div class="character-card-name">${char.name}</div>
+      <div class="character-card-role">${char.role}</div>
+    `;
+    
+   card.addEventListener('click', () => {
+      selectedCharacter = char;
+      showDefaultCharacter = false; // This ensures benched cube appears
+      overlay.classList.remove('active');
+      stopPolishAudioLoop();
+      showMessage(`Now playing as ${char.name}!`);
+      
+      // Force a redraw to show the benched cube
+      canvases.forEach(canvas => {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawLadder(ctx, canvas);
+        drawCharacter(ctx);
+        drawBenchedCube(ctx, canvas);
+        drawScore(ctx);
+      });
+    });
+    
+    grid.appendChild(card);
+  });
+  
+  overlay.classList.add('active');
+  startPolishAudioLoop();
+}
+    /* ===== Game logic ===== */
+   function showMessage(text, duration = 2500) {
+  messageBox.innerText = text;
+  messageBox.style.display = "block";
+  freezeFrame = true;
+  setTimeout(() => {
+    messageBox.style.display = "none";
+    freezeFrame = false;
+  }, duration);
+}
+    function checkColorUnlock(s) {
+      for (let i = 0; i < ladderColors.length; i++) {
+        if (s >= ladderColors[i].unlockScore && !unlockedColors.includes(i)) {
+          unlockedColors.push(i);
+          currentLadderColorIndex = i;
+          showMessage(`🎨 Color Unlocked!\n${ladderColors[i].name}`);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function showFunnyMessage() {
+      const msg = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+      showMessage(msg);
+    }
+
+   function update() {
+  canvases.forEach(canvas => {
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawLadder(ctx, canvas);
+    drawCharacter(ctx);
+    drawBenchedCube(ctx, canvas);  // ADD THIS LINE
+    drawScore(ctx);
+  });
+      if (!freezeFrame) {
+        if (climbing) {
+          character.y -= speed;
+          if (character.y <= 0) {
+            climbing = false;
+            score++;
+            const unlocked = checkColorUnlock(score);
+            if (!unlocked && score % 5 === 0) showFunnyMessage();
+          }
+        } else {
+          character.y += speed;
+          if (character.y >= 420) character.y = 420;
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    function climb() {
+      if (!climbing && character.y >= 420 && !freezeFrame) {
+        climbing = true;
+        if (audioEnabled) {
+          audioEl.currentTime = 0;
+          audioEl.play().catch(() => {});
+        }
+      }
+    }
+
+    /* ===== Gallery Functions ===== */
+let currentGalleryIndex = 0;
+let galleryCharacters = [];
+let galleryAnimationId = null;
+
+function openGallery() {
+  const overlay = document.getElementById('galleryOverlay');
+  overlay.classList.add('active');
+  overlay.innerHTML = '';
+  
+  galleryCharacters = ANGLO_POLISH_EDITION ? angloPolishCharacters : [
+
+    { name: "Classic Block", color: "#ffcc00", role: "Default" },
+    { name: "Red Square", color: "#ff0066", role: "Unlock: 5 pts" },
+    { name: "Blue Cube", color: "#00ccff", role: "Unlock: 10 pts" },
+    { name: "Green Cube", color: "#00ff66", role: "Unlock: 15 pts" },
+    { name: "Purple Block", color: "#b200ff", role: "Unlock: 20 pts" }
+  ];
+
+// Preload images for gallery
+if (ANGLO_POLISH_EDITION) {
+  galleryCharacters.forEach(char => {
+    if (char.id) {
+      const img = new Image();
+      img.src = 'images/' + char.id + '.jpg';
+      img.onload = () => {
+        char.image = img;
+      };
+    }
+  });
+}
+  
+  currentGalleryIndex = ANGLO_POLISH_EDITION ? 
+    angloPolishCharacters.findIndex(c => c.id === selectedCharacter.id) : 0;
+  
+  const content = document.createElement('div');
+  content.className = 'gallery-content';
+  overlay.appendChild(content);
+  
+  galleryCharacters.forEach((char, index) => {
+    const slide = document.createElement('div');
+    slide.className = 'gallery-slide';
+    if (index === currentGalleryIndex) slide.classList.add('active');
+
+    const isCurrentChar = ANGLO_POLISH_EDITION && char.id === selectedCharacter.id;
+    const selectBtnText = isCurrentChar ? '✓ Current Character' : '⚡ Select & Reset';
+    
+    slide.innerHTML = `
+      <section style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div class="container">
+          <h2 class="section-title">CHARACTER GALLERY</h2>
+          <div class="game-container">
+           <div class="canvas-wrapper gallery-canvas">
+              <canvas width="400" height="450"></canvas>
+             <button class="game-btn gallery-close-btn">✕</button>
+<button class="game-btn prev-char-btn gallery-prev-btn">◀</button>
+<button class="game-btn next-char-btn gallery-next-btn">▶</button>            </div>
+            <div class="character-info">
+              <div class="character-name">${char.name}</div>
+              <div class="character-status">${char.role}</div>
+              ${ANGLO_POLISH_EDITION ? `
+                <button class="game-btn select-char-btn ${isCurrentChar ? 'active' : ''}" 
+                        style="margin-top: 0.75rem;"
+                        ${isCurrentChar ? 'disabled' : ''}>
+                  ${selectBtnText}
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+    
+    content.appendChild(slide);
+
+    const prevCharBtn = slide.querySelector('.prev-char-btn');
+if (prevCharBtn) {
+  prevCharBtn.onclick = () => navigateGallery(-1);
+}
+
+const nextCharBtn = slide.querySelector('.next-char-btn');
+if (nextCharBtn) {
+  nextCharBtn.onclick = () => navigateGallery(1);
+}
+
+    
+    const canvas = slide.querySelector('canvas');
+    const s = window.gameScale || 1;
+    canvas.width = 400 * s;
+    canvas.height = 450 * s;
+    
+    canvas.charData = char;
+    
+    if (ANGLO_POLISH_EDITION) {
+      const selectBtn = slide.querySelector('.select-char-btn');
+      if (selectBtn && !isCurrentChar) {
+        selectBtn.onclick = () => switchCharacter(char);
+      }
+    }
+  });
+  
+  // MOVE THIS OUTSIDE THE LOOP - attach close button handlers AFTER all slides created
+  const closeButtons = document.querySelectorAll('.gallery-close-btn');
+  closeButtons.forEach(btn => {
+    btn.onclick = closeGallery;
+  });
+  
+  startGalleryAnimation();
+}
+function startGalleryAnimation() {
+  if (galleryAnimationId) {
+    cancelAnimationFrame(galleryAnimationId);
+  }
+  
+  function animateGallery() {
+    const galleryCanvases = document.querySelectorAll('.gallery-overlay canvas');
+    galleryCanvases.forEach(canvas => {
+      const char = canvas.charData;
+      
+      if (char) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        drawGalleryCharacter(ctx, canvas, char);
+      }
+    });
+
+    
+    galleryAnimationId = requestAnimationFrame(animateGallery);
+  }
+  
+  animateGallery();
+}
+
+function switchCharacter(char) {
+  selectedCharacter = char;
+  showDefaultCharacter = false;
+  
+  // Reset the game
+  const groundLevel = window.groundLevel || 420;
+  score = 0;
+  character.y = groundLevel;
+  climbing = false;
+  currentLadderColorIndex = 0;
+  unlockedColors = [0];
+  freezeFrame = false;
+  audioEl.pause();
+  audioEl.currentTime = 0;
+  
+  closeGallery();
+  
+  showMessage(`Now playing as ${char.name}!\nScore reset to 0`);
+}
+
+function navigateGallery(direction) {
+  const slides = document.querySelectorAll('.gallery-slide');
+  slides[currentGalleryIndex].classList.remove('active');
+  
+  currentGalleryIndex += direction;
+  if (currentGalleryIndex < 0) currentGalleryIndex = galleryCharacters.length - 1;
+  if (currentGalleryIndex >= galleryCharacters.length) currentGalleryIndex = 0;
+  
+  slides[currentGalleryIndex].classList.add('active');
+}
+
+function closeGallery() {
+  const overlay = document.getElementById('galleryOverlay');
+  overlay.classList.remove('active');
+  
+  // Stop gallery animation
+  if (galleryAnimationId) {
+    cancelAnimationFrame(galleryAnimationId);
+    galleryAnimationId = null;
+  }
+}
+
+
+
+/* ===== Trade Game Functions ===== */
+const tradeGames = {
+  swarvek: {
+    title: "BUILD A HOUSE",
+    action: "HAMMER",
+    emoji: "🔨",
+    stages: [
+      { name: "Foundation", progress: 20 },
+      { name: "Walls", progress: 40 },
+      { name: "Roof", progress: 60 },
+      { name: "Windows", progress: 80 },
+      { name: "Door", progress: 100 }
+    ]
+  },
+  derek: {
+    title: "CONSTRUCT FRAMEWORK",
+    action: "MEASURE",
+    emoji: "📏",
+    stages: [
+      { name: "Planning", progress: 20 },
+      { name: "Frame Posts", progress: 40 },
+      { name: "Cross Beams", progress: 60 },
+      { name: "Bracing", progress: 80 },
+      { name: "Inspection", progress: 100 }
+    ]
+  },
+  michel: {
+    title: "WIRE THE HOUSE",
+    action: "DRILL",
+    emoji: "⚡",
+    stages: [
+      { name: "Main Panel", progress: 20 },
+      { name: "Cable Runs", progress: 40 },
+      { name: "Outlets", progress: 60 },
+      { name: "Switches", progress: 80 },
+      { name: "Testing", progress: 100 }
+    ]
+  },
+  greg: {
+    title: "PLUMB THE BATHROOM",
+    action: "WRENCH",
+    emoji: "🚽",
+    stages: [
+      { name: "Water Lines", progress: 20 },
+      { name: "Drain Pipes", progress: 40 },
+      { name: "Toilet", progress: 60 },
+      { name: "Sink", progress: 80 },
+      { name: "Shower", progress: 100 }
+    ]
+  },
+  mario: {
+    title: "PAINT THE ROOM",
+    action: "PAINT",
+    emoji: "🎨",
+    stages: [
+      { name: "Prep Surface", progress: 20 },
+      { name: "First Coat", progress: 40 },
+      { name: "Second Coat", progress: 60 },
+      { name: "Detail Work", progress: 80 },
+      { name: "Touch Ups", progress: 100 }
+    ]
+  }
+};
+
+function openTradeGame() {
+  console.log('Trade game opening...', selectedCharacter, showDefaultCharacter);
+  
+  if (!selectedCharacter || showDefaultCharacter) {
+    showMessage("Select a character first!\nPress 🎨 Gallery");
+    return;
+  }
+
+  console.log('Opening trade game for:', selectedCharacter.name);
+
+  // Pause the main game
+  freezeFrame = true;
+  climbing = false;
+  audioEl.pause();
+
+  const overlay = document.getElementById('tradeGameOverlay');
+  console.log('Overlay element:', overlay);
+  overlay.classList.add('active');
+  
+  tradeGameActive = true;
+  tradeProgress = 0;
+  tradeClicks = 0;
+  
+  const game = tradeGames[selectedCharacter.id];
+  const currentStage = game.stages.find(s => tradeProgress < s.progress) || game.stages[0];
+  
+  overlay.innerHTML = `
+    <section style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+      <div class="container" style="max-width: 600px;">
+        <h2 class="trade-game-title">${game.title}</h2>
+        <p class="trade-game-subtitle">Click to ${game.action}!</p>
+        
+        <div class="canvas-wrapper" style="position: relative;">
+          <canvas id="tradeCanvas" width="400" height="450"></canvas>
+          <button class="game-btn" 
+                  style="position: absolute; top: 10px; right: 10px; z-index: 10;"
+                  onclick="closeTradeGame()">✕</button>
+        </div>
+        
+        <div class="trade-progress">
+          <div class="trade-progress-bar" id="tradeProgressBar" style="width: 0%"></div>
+        </div>
+        
+        <div class="trade-score-display">
+          <div id="tradeStage">${currentStage.name}</div>
+          <div style="font-size: 0.7em; margin-top: 0.5rem;">Progress: <span id="tradePercent">0</span>%</div>
+        </div>
+        
+        <div class="trade-controls">
+          <button class="game-btn" id="tradeActionBtn" style="font-size: 1.5rem; padding: 1.5rem 3rem;">
+            ${game.emoji} ${game.action}
+          </button>
+        </div>
+      </div>
+    </section>
+  `;
+  
+  const canvas = document.getElementById('tradeCanvas');
+  const s = window.gameScale || 1;
+  canvas.width = 400 * s;
+  canvas.height = 450 * s;
+  
+  const actionBtn = document.getElementById('tradeActionBtn');
+  actionBtn.addEventListener('click', handleTradeAction);
+  
+  startTradeAnimation();
+}
+
+let tradeTimingBar = 0;
+let tradeTimingDirection = 1;
+let tradePerfectHits = 0;
+let tradeCombo = 0;
+
+
+
+function handleTradeAction() {
+  if (!tradeGameActive) return;
+  
+  playTradeSound(selectedCharacter.id);
+  
+  tradeClicks++;
+  tradeProgress = Math.min(100, (tradeClicks / tradeTarget) * 100);
+
+
+  
+  const progressBar = document.getElementById('tradeProgressBar');
+  const percentDisplay = document.getElementById('tradePercent');
+  const stageDisplay = document.getElementById('tradeStage');
+  
+  if (progressBar) progressBar.style.width = tradeProgress + '%';
+  if (percentDisplay) percentDisplay.textContent = Math.floor(tradeProgress);
+  
+  const game = tradeGames[selectedCharacter.id];
+  const currentStage = game.stages.find(s => tradeProgress < s.progress) || game.stages[game.stages.length - 1];
+  if (stageDisplay) stageDisplay.textContent = currentStage.name;
+  
+   if (tradeProgress >= 100) {
+    tradeGameActive = false;
+    playTradeCompleteSound();
+    setTimeout(() => {
+      showMessage(`🎉 JOB COMPLETE!\n${selectedCharacter.name} finished the work!`);
+
+      setTimeout(closeTradeGame, 2500);
+    }, 500);
+  }
+}
+
+function startTradeAnimation() {
+  if (tradeAnimationId) {
+    cancelAnimationFrame(tradeAnimationId);
+  }
+  
+  function animate() {
+    const canvas = document.getElementById('tradeCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const s = window.gameScale || 1;
+    
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw background
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw character doing their trade
+    drawTradeScene(ctx, canvas, selectedCharacter, tradeProgress);
+    
+    if (tradeGameActive) {
+      tradeAnimationId = requestAnimationFrame(animate);
+    }
+  }
+  
+  animate();
+}
+
+function drawTradeScene(ctx, canvas, char, progress) {
+  const s = window.gameScale || 1;
+  const charSize = 80 * s;
+  const charX = 50 * s;
+  const charY = canvas.height - charSize - 20 * s;
+  
+  // Draw the character sprite
+  if (char.id === "swarvek") {
+    drawSwarvekSprite(ctx, charX, charY, charSize);
+    drawHouseConstruction(ctx, canvas, progress);
+  } else if (char.id === "derek") {
+    drawDerekSprite(ctx, charX, charY, charSize);
+    drawFramework(ctx, canvas, progress);
+  } else if (char.id === "michel") {
+    drawMichelSprite(ctx, charX, charY, charSize);
+    drawWiring(ctx, canvas, progress);
+  } else if (char.id === "greg") {
+    drawGregSprite(ctx, charX, charY, charSize);
+    drawBathroom(ctx, canvas, progress);
+  } else if (char.id === "mario") {
+    drawMarioSprite(ctx, charX, charY, charSize);
+    drawPainting(ctx, canvas, progress);
+  }
+}
+
+function drawHouseConstruction(ctx, canvas, progress) {
+  const s = window.gameScale || 1;
+  const houseX = 200 * s;
+  const houseY = canvas.height - 200 * s;
+  const houseW = 150 * s;
+  const houseH = 120 * s;
+  
+  // Foundation (0-20%)
+  if (progress >= 0) {
+    ctx.fillStyle = '#8B7355';
+    ctx.fillRect(houseX, houseY + houseH, houseW, 20 * s);
+  }
+  
+  // Walls (20-40%)
+  if (progress >= 20) {
+    const wallProgress = Math.min((progress - 20) / 20, 1);
+    ctx.fillStyle = '#CD853F';
+    ctx.fillRect(houseX, houseY + houseH - (houseH * wallProgress), houseW, houseH * wallProgress);
+  }
+  
+  // Roof (40-60%)
+  if (progress >= 40) {
+    const roofProgress = Math.min((progress - 40) / 20, 1);
+    ctx.fillStyle = '#8B4513';
+    ctx.beginPath();
+    ctx.moveTo(houseX + houseW / 2, houseY - 50 * s * roofProgress);
+    ctx.lineTo(houseX - 10 * s, houseY);
+    ctx.lineTo(houseX + houseW + 10 * s, houseY);
+    ctx.closePath();
+    ctx.fill();
+  }
+  
+  // Windows (60-80%)
+  if (progress >= 60) {
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(houseX + 20 * s, houseY + 30 * s, 30 * s, 30 * s);
+    ctx.fillRect(houseX + houseW - 50 * s, houseY + 30 * s, 30 * s, 30 * s);
+  }
+  
+  // Door (80-100%)
+  if (progress >= 80) {
+    ctx.fillStyle = '#654321';
+    ctx.fillRect(houseX + houseW / 2 - 20 * s, houseY + 60 * s, 40 * s, 60 * s);
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath();
+    ctx.arc(houseX + houseW / 2 + 10 * s, houseY + 90 * s, 3 * s, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function drawFramework(ctx, canvas, progress) {
+  const s = window.gameScale || 1;
+  const frameX = 200 * s;
+  const frameY = canvas.height - 200 * s;
+  const frameW = 150 * s;
+  const frameH = 150 * s;
+  
+  ctx.strokeStyle = '#8B4513';
+  ctx.lineWidth = 4 * s;
+  
+  // Vertical posts (0-40%)
+  if (progress >= 0) {
+    const postProgress = Math.min(progress / 40, 1);
+    for (let i = 0; i <= 3; i++) {
+      ctx.beginPath();
+      ctx.moveTo(frameX + (i * frameW / 3), frameY + frameH);
+      ctx.lineTo(frameX + (i * frameW / 3), frameY + frameH - (frameH * postProgress));
+      ctx.stroke();
+    }
+  }
+  
+  // Horizontal beams (40-80%)
+  if (progress >= 40) {
+    const beamProgress = Math.min((progress - 40) / 40, 1);
+    for (let i = 0; i <= 3; i++) {
+      ctx.beginPath();
+      ctx.moveTo(frameX, frameY + frameH - (i * frameH / 3));
+      ctx.lineTo(frameX + (frameW * beamProgress), frameY + frameH - (i * frameH / 3));
+      ctx.stroke();
+    }
+  }
+  
+  // Cross bracing (80-100%)
+  if (progress >= 80) {
+    ctx.strokeStyle = '#FF6600';
+    ctx.beginPath();
+    ctx.moveTo(frameX, frameY + frameH);
+    ctx.lineTo(frameX + frameW, frameY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(frameX + frameW, frameY + frameH);
+    ctx.lineTo(frameX, frameY);
+    ctx.stroke();
+  }
+}
+
+function drawWiring(ctx, canvas, progress) {
+  const s = window.gameScale || 1;
+  const wallX = 180 * s;
+  const wallY = 100 * s;
+  const wallW = 180 * s;
+  const wallH = 250 * s;
+  
+  // Wall outline
+  ctx.strokeStyle = '#666';
+  ctx.lineWidth = 2 * s;
+  ctx.strokeRect(wallX, wallY, wallW, wallH);
+  
+  // Electrical panel (0-20%)
+  if (progress >= 0) {
+    ctx.fillStyle = '#444';
+    ctx.fillRect(wallX + 10 * s, wallY + 10 * s, 40 * s, 60 * s);
+    ctx.fillStyle = '#00ff66';
+    for (let i = 0; i < 4; i++) {
+      ctx.fillRect(wallX + 15 * s, wallY + 15 * s + (i * 12 * s), 30 * s, 8 * s);
+    }
+  }
+  
+  // Cable runs (20-60%)
+  if (progress >= 20) {
+    const cableProgress = Math.min((progress - 20) / 40, 1);
+    ctx.strokeStyle = '#FF6600';
+    ctx.lineWidth = 3 * s;
+    
+    // Vertical cable
+    ctx.beginPath();
+    ctx.moveTo(wallX + 30 * s, wallY + 70 * s);
+    ctx.lineTo(wallX + 30 * s, wallY + 70 * s + (wallH - 100 * s) * cableProgress);
+    ctx.stroke();
+    
+    // Horizontal cables
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      ctx.moveTo(wallX + 30 * s, wallY + 100 * s + (i * 60 * s));
+      ctx.lineTo(wallX + 30 * s + (wallW - 60 * s) * cableProgress, wallY + 100 * s + (i * 60 * s));
+      ctx.stroke();
+    }
+  }
+  
+  // Outlets and switches (60-100%)
+  if (progress >= 60) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(wallX + wallW - 40 * s, wallY + 100 * s, 30 * s, 20 * s);
+    ctx.fillRect(wallX + wallW - 40 * s, wallY + 160 * s, 30 * s, 20 * s);
+    ctx.fillRect(wallX + wallW - 40 * s, wallY + 220 * s, 30 * s, 20 * s);
+    
+    // Socket holes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(wallX + wallW - 35 * s, wallY + 105 * s, 8 * s, 10 * s);
+    ctx.fillRect(wallX + wallW - 23 * s, wallY + 105 * s, 8 * s, 10 * s);
+  }
+}
+
+function drawBathroom(ctx, canvas, progress) {
+  const s = window.gameScale || 1;
+  const roomX = 150 * s;
+  const roomY = 80 * s;
+  const roomW = 200 * s;
+  const roomH = 280 * s;
+  
+  // Room outline
+  ctx.fillStyle = '#E8E8E8';
+  ctx.fillRect(roomX, roomY, roomW, roomH);
+  ctx.strokeStyle = '#666';
+  ctx.lineWidth = 2 * s;
+  ctx.strokeRect(roomX, roomY, roomW, roomH);
+  
+  // Water lines (0-20%)
+  if (progress >= 0) {
+    ctx.strokeStyle = '#4169E1';
+    ctx.lineWidth = 4 * s;
+    ctx.beginPath();
+    ctx.moveTo(roomX + 10 * s, roomY);
+    ctx.lineTo(roomX + 10 * s, roomY + roomH);
+    ctx.stroke();
+  }
+  
+  // Drain pipes (20-40%)
+  if (progress >= 20) {
+    ctx.strokeStyle = '#666';
+    ctx.lineWidth = 5 * s;
+    ctx.beginPath();
+    ctx.moveTo(roomX + roomW - 10 * s, roomY);
+    ctx.lineTo(roomX + roomW - 10 * s, roomY + roomH);
+    ctx.stroke();
+  }
+  
+  // Toilet (40-60%)
+  if (progress >= 40) {
+    ctx.fillStyle = '#fff';
+    // Bowl
+    ctx.fillRect(roomX + 30 * s, roomY + 200 * s, 50 * s, 60 * s);
+    // Tank
+    ctx.fillRect(roomX + 35 * s, roomY + 170 * s, 40 * s, 40 * s);
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 2 * s;
+    ctx.strokeRect(roomX + 30 * s, roomY + 200 * s, 50 * s, 60 * s);
+    ctx.strokeRect(roomX + 35 * s, roomY + 170 * s, 40 * s, 40 * s);
+  }
+  
+  // Sink (60-80%)
+  if (progress >= 60) {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(roomX + 110 * s, roomY + 100 * s, 70 * s, 40 * s);
+    ctx.strokeStyle = '#ccc';
+    ctx.strokeRect(roomX + 110 * s, roomY + 100 * s, 70 * s, 40 * s);
+    // Faucet
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fillRect(roomX + 140 * s, roomY + 90 * s, 10 * s, 20 * s);
+  }
+  
+  // Shower (80-100%)
+  if (progress >= 80) {
+    // Shower base
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(roomX + 110 * s, roomY + 200 * s, 70 * s, 70 * s);
+    ctx.strokeStyle = '#ccc';
+    ctx.strokeRect(roomX + 110 * s, roomY + 200 * s, 70 * s, 70 * s);
+    // Shower head
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fillRect(roomX + 140 * s, roomY + 180 * s, 15 * s, 10 * s);
+    // Water drops
+    ctx.fillStyle = '#4169E1';
+    for (let i = 0; i < 5; i++) {
+      ctx.fillRect(roomX + 135 * s + (i * 8 * s), roomY + 195 * s + (i * 6 * s), 3 * s, 6 * s);
+    }
+  }
+}
+
+function drawPainting(ctx, canvas, progress) {
+  const s = window.gameScale || 1;
+  const wallX = 150 * s;
+  const wallY = 80 * s;
+  const wallW = 200 * s;
+  const wallH = 280 * s;
+  
+  // Base wall (unpainted)
+  ctx.fillStyle = '#D3D3D3';
+  ctx.fillRect(wallX, wallY, wallW, wallH);
+  
+  // Paint progress (0-100%)
+  if (progress > 0) {
+    const paintH = (wallH * progress) / 100;
+    
+    // First coat (0-40%) - lighter blue
+    if (progress <= 40) {
+      ctx.fillStyle = 'rgba(65, 105, 225, 0.5)';
+      ctx.fillRect(wallX, wallY, wallW, paintH);
+    }
+    // Second coat (40-60%) - darker blue
+    else if (progress <= 60) {
+      ctx.fillStyle = 'rgba(65, 105, 225, 0.5)';
+      ctx.fillRect(wallX, wallY, wallW, wallH);
+      ctx.fillStyle = '#4169E1';
+      ctx.fillRect(wallX, wallY, wallW, paintH - wallH);
+    }
+    // Detail work (60-100%) - full coverage
+    else {
+      ctx.fillStyle = '#4169E1';
+      ctx.fillRect(wallX, wallY, wallW, wallH);
+      
+      // Add paint drips for effect
+      for (let i = 0; i < 5; i++) {
+        const dripX = wallX + (i * 40 * s) + 20 * s;
+        const dripY = wallY + wallH;
+        ctx.fillStyle = 'rgba(65, 105, 225, 0.7)';
+        ctx.fillRect(dripX, dripY, 5 * s, 15 * s);
+      }
+    }
+  }
+  
+  // Paint brush in foreground
+  const brushX = wallX + wallW / 2;
+  const brushY = wallY + (wallH * progress / 100);
+  ctx.fillStyle = '#8B4513';
+  ctx.fillRect(brushX, brushY, 8 * s, 40 * s);
+  ctx.fillStyle = '#4169E1';
+  ctx.fillRect(brushX - 5 * s, brushY - 20 * s, 18 * s, 25 * s);
+}
+
+function closeTradeGame() {
+  tradeGameActive = false;
+  
+  if (tradeAnimationId) {
+    cancelAnimationFrame(tradeAnimationId);
+    tradeAnimationId = null;
+  }
+  
+  const overlay = document.getElementById('tradeGameOverlay');
+  overlay.classList.remove('active');
+  
+  // Resume the main game
+  freezeFrame = false;
+}
+
+// Make closeTradeGame available globally
+window.closeTradeGame = closeTradeGame;
+
+// ===== TRADE GAME SOUND EFFECTS =====
+
+function playTradeSound(characterId) {
+  if (!audioEnabled) return;
+  
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  
+  if (characterId === 'swarvek') {
+    // Hammer sound
+    playHammerSound(audioContext);
+  } else if (characterId === 'derek') {
+    // Tape measure sound
+    playTapeMeasureSound(audioContext);
+  } else if (characterId === 'michel') {
+    // Drill sound
+    playDrillSound(audioContext);
+  } else if (characterId === 'greg') {
+    // Plunger sound
+    playPlungerSound(audioContext);
+  } else if (characterId === 'mario') {
+    // Paint brush sound
+    playBrushSound(audioContext);
+  }
+}
+
+function playHammerSound(audioContext) {
+  // Bang sound
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.value = 150;
+  oscillator.type = 'square';
+  
+  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.1);
+}
+
+function playTapeMeasureSound(audioContext) {
+  // Clicking/measuring sound
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.value = 800;
+  oscillator.type = 'sine';
+  
+  gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.05);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.05);
+}
+
+function playDrillSound(audioContext) {
+  // Buzzing drill sound
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.value = 200;
+  oscillator.type = 'sawtooth';
+  
+  gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.2);
+}
+
+function playPlungerSound(audioContext) {
+  // Suction/pop sound
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+  oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.15);
+  oscillator.type = 'sine';
+  
+  gainNode.gain.setValueAtTime(0.25, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.15);
+}
+
+function playBrushSound(audioContext) {
+  // Swishing brush sound
+  const bufferSize = audioContext.sampleRate * 0.1;
+  const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+  const data = buffer.getChannelData(0);
+  
+  for (let i = 0; i < bufferSize; i++) {
+    data[i] = (Math.random() * 2 - 1) * 0.1;
+  }
+  
+  const source = audioContext.createBufferSource();
+  source.buffer = buffer;
+  
+  const gainNode = audioContext.createGain();
+  gainNode.gain.value = 0.15;
+  
+  source.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  source.start();
+}
+
+function playTradeCompleteSound() {
+  if (!audioEnabled) return;
+  
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const notes = [523, 659, 784]; // C, E, G chord
+  
+  notes.forEach((freq, index) => {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = freq;
+    oscillator.type = 'sine';
+    
+    const startTime = audioContext.currentTime + (index * 0.1);
+    gainNode.gain.setValueAtTime(0.2, startTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.4);
+    
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 0.4);
+  });
+}
+
+
+
+/* ===== RACE GAME FUNCTIONS ===== */
+
+const raceVehicles = {
+  swarvek: {
+    name: "Boss Van",
+    color: "#ff9900",
+    emoji: "🚐",
+    maxSpeed: 8,
+    acceleration: 0.3,
+    handling: 0.8
+  },
+  derek: {
+    name: "Site Truck",
+    color: "#00ccff",
+    emoji: "🚚",
+    maxSpeed: 7,
+    acceleration: 0.25,
+    handling: 0.7
+  },
+  michel: {
+    name: "Electric Van",
+    color: "#ffcc00",
+    emoji: "⚡",
+    maxSpeed: 9,
+    acceleration: 0.4,
+    handling: 0.9
+  },
+  greg: {
+    name: "Plumber Van",
+    color: "#00ff66",
+    emoji: "🚙",
+    maxSpeed: 7.5,
+    acceleration: 0.28,
+    handling: 0.85
+  },
+  mario: {
+    name: "Painter Wagon",
+    color: "#ff0066",
+    emoji: "🎨",
+    maxSpeed: 8.5,
+    acceleration: 0.35,
+    handling: 0.95
+  }
+};
+
+function openRaceGame() {
+  if (!selectedCharacter || showDefaultCharacter) {
+    showMessage("Select a character first!\nPress 🎨 Gallery");
+    return;
+  }
+
+  freezeFrame = true;
+  climbing = false;
+  audioEl.pause();
+
+  const overlay = document.getElementById('raceGameOverlay');
+  overlay.classList.add('active');
+  
+  raceGameActive = true;
+  racePlayerX = 200;
+  racePlayerY = 350;
+  raceSpeed = 0;
+  racePosition = 1;
+  raceLapDistance = 0;
+  raceCurrentLap = 1;
+  raceObstacles = [];
+  raceOpponents = [];
+  raceKeys = {};
+  raceFinished = false;
+   raceStartTime = Date.now();
+  raceLastLapTime = Date.now();
+  raceCheckpoints = [];
+  raceDrift = 0;
+
+  
+  // Create AI opponents from other characters
+  const s = window.gameScale || 1;
+  angloPolishCharacters.forEach((char, index) => {
+    if (char.id !== selectedCharacter.id) {
+      const vehicle = raceVehicles[char.id];
+      raceOpponents.push({
+        character: char,
+        vehicle: vehicle,
+        x: 120 + (index * 60) * s,
+        y: -100 - (index * 80) * s, // Stagger starting positions
+        speed: vehicle.maxSpeed * 0.6 + Math.random() * 2,
+        lapDistance: 0,
+        currentLap: 1,
+        finished: false
+      });
+    }
+  });
+  
+  const vehicle = raceVehicles[selectedCharacter.id];
+  
+  overlay.innerHTML = `
+    <section style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+      <div class="container" style="max-width: 600px;">
+<h2 class="trade-game-title">🏁 POLE POSITION 🏁</h2>        <p class="trade-game-subtitle">${vehicle.name} - ${vehicle.emoji}</p>
+        
+        <div class="canvas-wrapper" style="position: relative;">
+         <canvas id="raceCanvas" width="${400 * s}" height="${450 * s}"></canvas>
+          <button class="game-btn" 
+                  style="position: absolute; top: 10px; right: 10px; z-index: 10;"
+                  onclick="closeRaceGame()">✕</button>
+          
+          <div id="raceCountdown" style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 3rem;
+            color: #00ffcc;
+            text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc;
+            z-index: 100;
+            pointer-events: none;
+          "></div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; margin-top: 1rem; font-family: 'Press Start 2P', cursive; font-size: 0.65rem;">
+          <div style="color: #00ffcc; text-align: center;">
+            <div style="font-size: 0.5rem; opacity: 0.7;">LAP</div>
+            <div id="raceLap">1/${raceTotalLaps}</div>
+          </div>
+          <div style="color: #ffcc00; text-align: center;">
+            <div style="font-size: 0.5rem; opacity: 0.7;">POSITION</div>
+            <div id="racePos">1st</div>
+          </div>
+          <div style="color: #ff0066; text-align: center;">
+            <div style="font-size: 0.5rem; opacity: 0.7;">TIME</div>
+            <div id="raceTime">0:00</div>
+          </div>
+        </div>
+        
+        <div id="raceBestTime" style="margin-top: 0.5rem; text-align: center; color: #00ff66; font-family: 'Press Start 2P', cursive; font-size: 0.55rem; opacity: 0.8;">
+          Best: ${raceBestTime === Infinity ? '--:--' : raceBestTime + 's'}
+        </div>
+
+        
+        <div style="margin-top: 1rem; text-align: center; color: #00ffcc; font-family: 'Press Start 2P', cursive; font-size: 0.55rem;">
+          ⬆️ Gas | ⬇️ Brake | ⬅️➡️ Steer | SPACE Boost
+        </div>
+        
+        <div style="margin-top: 0.75rem; padding: 0.5rem; background: rgba(0, 255, 102, 0.1); border: 2px solid #00ff66; border-radius: 5px;">
+          <div style="font-family: 'Press Start 2P', cursive; font-size: 0.45rem; color: #00ff66; text-align: center; line-height: 1.6;">
+            Racing against:<br>
+            ${raceOpponents.map(o => o.character.name).join(' • ')}
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+  
+  const canvas = document.getElementById('raceCanvas');
+console.log('Race canvas created:', canvas, 'dimensions:', canvas.width, 'x', canvas.height);  
+  document.addEventListener('keydown', handleRaceKeyDown);
+  document.addEventListener('keyup', handleRaceKeyUp);
+  
+    
+  startRaceCountdown();
+}
+
+
+function handleRaceKeyDown(e) {
+  if (!raceGameActive) return;
+  
+  if (e.code === 'Space' && raceSpeed > 3) {
+    raceSpeed = Math.min(raceSpeed * 1.3, raceVehicles[selectedCharacter.id].maxSpeed * 1.5);
+    e.preventDefault();
+  }
+  
+  raceKeys[e.key] = true;
+  e.preventDefault();
+}
+
+function handleRaceKeyUp(e) {
+  if (!raceGameActive) return;
+  raceKeys[e.key] = false;
+  e.preventDefault();
+}
+
+function startRaceCountdown() {
+  const countdownEl = document.getElementById('raceCountdown');
+  if (!countdownEl) return;
+  
+  let count = 3;
+  countdownEl.textContent = count;
+  
+  const interval = setInterval(() => {
+    count--;
+    
+    if (count > 0) {
+      countdownEl.textContent = count;
+    } else if (count === 0) {
+      countdownEl.textContent = 'GO!';
+      countdownEl.style.color = '#00ff66';
+      raceStartTime = Date.now();
+      startRaceAnimation();
+    } else {
+      countdownEl.style.display = 'none';
+      clearInterval(interval);
+    }
+  }, 1000);
+}
+
+function startRaceCountdown() {
+  const countdownEl = document.getElementById('raceCountdown');
+  if (!countdownEl) return;
+  
+  let count = 3;
+  countdownEl.textContent = count;
+  
+  const interval = setInterval(() => {
+    count--;
+    
+    if (count > 0) {
+      countdownEl.textContent = count;
+      playRaceCountdownBeep();
+    } else if (count === 0) {
+      countdownEl.textContent = 'GO!';
+      countdownEl.style.color = '#00ff66';
+      playRaceStartSound();
+      raceStartTime = Date.now();
+      startRaceAnimation();
+      startEngineSound();
+    } else {
+      countdownEl.style.display = 'none';
+      clearInterval(interval);
+    }
+  }, 1000);
+}
+
+// ADD ALL THESE SOUND FUNCTIONS HERE:
+
+function playRaceCountdownBeep() {
+  if (window.raceSFXMuted || !audioEnabled) return;
+  
+  // Create countdown beep using Web Audio API
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.value = 800; // Beep pitch
+  oscillator.type = 'square';
+  
+  gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.1);
+}
+
+function playRaceStartSound() {
+  if (window.raceSFXMuted || !audioEnabled) return;
+  
+  // Create "GO!" sound
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.value = 1200; // Higher pitch for GO
+  oscillator.type = 'sine';
+  
+  gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.3);
+}
+
+function startEngineSound() {
+  if (window.raceSFXMuted || !audioEnabled) return;
+  
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  let engineOscillator = null;
+  let engineGain = null;
+  
+  function updateEngine() {
+  // CHECK MUTE STATUS HERE TOO
+  if (!raceGameActive || window.raceSFXMuted) {
+    if (engineOscillator) {
+      try {
+        engineOscillator.stop();
+      } catch(e) {}
+    }
+    return;
+  }
+    
+    // Stop old oscillator if exists
+    if (engineOscillator) {
+      try {
+        engineOscillator.stop();
+      } catch(e) {}
+    }
+    
+    // Create new engine sound
+    engineOscillator = audioContext.createOscillator();
+    engineGain = audioContext.createGain();
+    
+    // Engine frequency changes with speed (like RPM)
+    const baseFreq = 80;
+    const speedFreq = raceSpeed * 40;
+    engineOscillator.frequency.value = baseFreq + speedFreq;
+    
+    // Engine volume based on speed
+    const volume = Math.max(0.05, Math.min(raceSpeed / 10, 0.2));
+    engineGain.gain.value = volume;
+    
+    // Use sawtooth for engine-like sound
+    engineOscillator.type = 'sawtooth';
+    
+    engineOscillator.connect(engineGain);
+    engineGain.connect(audioContext.destination);
+    
+    engineOscillator.start();
+    
+    // Update engine sound continuously
+    setTimeout(updateEngine, 100);
+  }
+  
+  updateEngine();
+}
+
+function playRaceFinishSound() {
+  if (window.raceSFXMuted || !audioEnabled) return;
+  
+  // Victory fanfare
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const notes = [523, 659, 784, 1047]; // C, E, G, C (octave)
+  
+  notes.forEach((freq, index) => {
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.value = freq;
+    oscillator.type = 'sine';
+    
+    const startTime = audioContext.currentTime + (index * 0.15);
+    gainNode.gain.setValueAtTime(0.3, startTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + 0.3);
+    
+    oscillator.start(startTime);
+    oscillator.stop(startTime + 0.3);
+  });
+}
+
+function playBoostSound() {
+  if (window.raceSFXMuted || !audioEnabled) return;
+  
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+  oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
+  oscillator.type = 'sawtooth';
+  
+  gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + 0.2);
+}
+
+// THEN CONTINUE WITH THE REST OF YOUR CODE (spawnRaceObstacle, updateRaceGame, etc.)
+
+function spawnRaceObstacle() {
+  const types = ['cone', 'checkpoint'];
+  const weights = [70, 30];
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
+  let random = Math.random() * totalWeight;
+  
+  let type = 'cone';
+  for (let i = 0; i < types.length; i++) {
+    random -= weights[i];
+    if (random <= 0) {
+      type = types[i];
+      break;
+    }
+  }
+  
+  const s = window.gameScale || 1;
+  
+  raceObstacles.push({
+    x: 100 + Math.random() * 200,
+    y: -50 * s,
+    width: type === 'checkpoint' ? 220 * s : 30 * s,
+    height: type === 'checkpoint' ? 15 * s : 30 * s,
+    type: type,
+    speed: 2 + Math.random() * 2,
+    collected: false,
+    hit: false
+  });
+}
+
+function updateRaceGame() {
+  if (!raceGameActive || raceFinished) return;
+  
+  const vehicle = raceVehicles[selectedCharacter.id];
+  const s = window.gameScale || 1;
+  const canvas = document.getElementById('raceCanvas');
+  if (!canvas) return;
+  
+  // Handle player controls
+  if (raceKeys['ArrowUp']) {
+    raceSpeed = Math.min(raceSpeed + vehicle.acceleration, vehicle.maxSpeed);
+  } else if (raceKeys['ArrowDown']) {
+    raceSpeed = Math.max(raceSpeed - 0.5, 0);
+  } else {
+    raceSpeed *= 0.98;
+  }
+  
+  if (raceKeys['ArrowLeft']) {
+    racePlayerX -= vehicle.handling * 5;
+    racePlayerX = Math.max(80 * s, racePlayerX);
+    if (raceSpeed > 5) raceDrift = -2;
+  }
+  if (raceKeys['ArrowRight']) {
+    racePlayerX += vehicle.handling * 5;
+    racePlayerX = Math.min(320 * s, racePlayerX);
+    if (raceSpeed > 5) raceDrift = 2;
+  }
+  
+  raceDrift *= 0.9;
+  
+  // Dynamic player Y position based on relative speed
+  const avgOpponentSpeed = raceOpponents.reduce((sum, opp) => sum + opp.speed, 0) / raceOpponents.length;
+  const speedDifference = raceSpeed - avgOpponentSpeed;
+  
+  // Move player up/down based on relative speed
+  racePlayerY -= speedDifference * 2 * s; // Multiplier for visual effect
+  
+  // Keep player on screen
+  racePlayerY = Math.max(100 * s, Math.min(canvas.height - 150 * s, racePlayerY));
+
+  // Update player lap progress
+  raceLapDistance += raceSpeed;
+
+
+
+  if (raceLapDistance >= lapLength) {
+    raceLapDistance = 0;
+    
+    // Calculate lap time
+    const lapTime = ((Date.now() - raceLastLapTime) / 1000).toFixed(2);
+    let lapMsg = `Lap ${raceCurrentLap} Complete!\nTime: ${lapTime}s`;
+    
+    if (lapTime < raceBestLap) {
+      raceBestLap = lapTime;
+      lapMsg += '\n🔥 BEST LAP! 🔥';
+    }
+    
+    // Show lap notification briefly
+    const lapNotif = document.createElement('div');
+    lapNotif.style.cssText = `
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 255, 102, 0.9);
+      color: #000;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      font-family: 'Press Start 2P', cursive;
+      font-size: 0.7rem;
+      text-align: center;
+      z-index: 50;
+      pointer-events: none;
+      box-shadow: 0 0 20px rgba(0, 255, 102, 0.8);
+    `;
+    lapNotif.textContent = lapMsg;
+    document.querySelector('.canvas-wrapper').appendChild(lapNotif);
+    setTimeout(() => lapNotif.remove(), 2000);
+    
+    raceLastLapTime = Date.now();
+    raceCurrentLap++;
+    
+    if (raceCurrentLap > raceTotalLaps) {
+      raceFinished = true;
+      const finalTime = ((Date.now() - raceStartTime) / 1000).toFixed(2);
+      
+      // Calculate final position
+      let finalPosition = 1;
+      raceOpponents.forEach(opp => {
+        if (opp.currentLap > raceCurrentLap || 
+           (opp.currentLap === raceCurrentLap && opp.lapDistance > raceLapDistance)) {
+          finalPosition++;
+        }
+      });
+      
+      // Calculate points
+     let newRecord = '';
+      if (finalTime < raceBestTime) {
+        raceBestTime = finalTime;
+        newRecord = '\n🌟 NEW RECORD! 🌟';
+      }
+
+      
+       const positionText = ['1st', '2nd', '3rd', '4th', '5th'][finalPosition - 1];
+      const emoji = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][finalPosition - 1];
+      
+      // Show who beat you
+      let rankings = `\n\n--- FINAL RANKINGS ---\n`;
+      let allRacers = [{name: selectedCharacter.name, lap: raceCurrentLap, distance: raceLapDistance, isPlayer: true}];
+      raceOpponents.forEach(opp => {
+        allRacers.push({name: opp.character.name, lap: opp.currentLap, distance: opp.lapDistance, isPlayer: false});
+      });
+      
+      allRacers.sort((a, b) => {
+        if (b.lap !== a.lap) return b.lap - a.lap;
+        return b.distance - a.distance;
+      });
+      
+      allRacers.forEach((racer, idx) => {
+        const pos = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][idx];
+        const you = racer.isPlayer ? ' (YOU)' : '';
+        rankings += `${pos} ${racer.name}${you}\n`;
+      });
+      
+    setTimeout(() => {
+        showMessage(`${emoji} RACE COMPLETE! ${emoji}\n${selectedCharacter.name} finished ${positionText}!\n\nTime: ${finalTime}s${newRecord}${rankings}`, 4000);
+        setTimeout(() => {
+          showRaceAgainPrompt();
+        }, 4500);
+      }, 500);
+
+     return;
+    }
+    
+    const lapEl = document.getElementById('raceLap');
+    if (lapEl) lapEl.textContent = `${raceCurrentLap}/${raceTotalLaps}`;
+  }
+  
+   // Update AI opponents
+  raceOpponents.forEach(opp => {
+    if (opp.finished) return;
+    
+    // AI movement
+    opp.lapDistance += opp.speed;
+    
+    // AI visual movement - based on speed difference with player
+    const relativeSpeed = (raceSpeed - opp.speed) * s;
+    opp.y += relativeSpeed * 3; // Multiplier makes overtaking more visible
+
+    
+    // AI steering (simple lane changing)
+    const centerX = 200 * s;
+    if (Math.random() < 0.02) {
+      opp.targetX = centerX + (Math.random() - 0.5) * 100 * s;
+    }
+    if (opp.targetX) {
+      if (opp.x < opp.targetX) opp.x += 2 * s;
+      if (opp.x > opp.targetX) opp.x -= 2 * s;
+    }
+    opp.x = Math.max(90 * s, Math.min(310 * s, opp.x));
+    
+    // AI lap progress
+    if (opp.lapDistance >= lapLength) {
+      opp.lapDistance = 0;
+      opp.currentLap++;
+      if (opp.currentLap > raceTotalLaps) {
+        opp.finished = true;
+      }
+    }
+    
+    // Wrap AI cars around screen
+    if (opp.y > canvas.height + 50 * s) {
+      opp.y = -100 * s;
+    } else if (opp.y < -150 * s) {
+      opp.y = canvas.height + 50 * s;
+    }
+ 
+
+    
+     });
+  
+  // Calculate position
+  racePosition = 1;
+  raceOpponents.forEach(opp => {
+    if (opp.currentLap > raceCurrentLap || 
+       (opp.currentLap === raceCurrentLap && opp.lapDistance > raceLapDistance)) {
+      racePosition++;
+    }
+  });
+  
+  const posEl = document.getElementById('racePos');
+  const positions = ['1st', '2nd', '3rd', '4th', '5th'];
+  if (posEl) posEl.textContent = positions[racePosition - 1] || '5th';
+  
+ 
+  
+  // Update time
+  const currentTime = ((Date.now() - raceStartTime) / 1000);
+  const minutes = Math.floor(currentTime / 60);
+  const seconds = Math.floor(currentTime % 60);
+  const timeEl = document.getElementById('raceTime');
+  if (timeEl) timeEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+
+function startRaceAnimation() {
+  if (raceAnimationId) {
+    cancelAnimationFrame(raceAnimationId);
+  }
+  
+  function animate() {
+    const canvas = document.getElementById('raceCanvas');
+    if (!canvas) {
+      console.log('Race canvas not found!');
+      return;
+    }
+    
+    // Ensure canvas has proper dimensions
+    const s = window.gameScale || 1;
+    if (canvas.width !== 400 * s) {
+      canvas.width = 400 * s;
+      canvas.height = 450 * s;
+      console.log('Race canvas resized to:', canvas.width, 'x', canvas.height);
+    }
+    
+    updateRaceGame();
+    drawRaceGame(canvas);    
+    if (raceGameActive) {
+      raceAnimationId = requestAnimationFrame(animate);
+    }
+  }
+  
+  animate();
+}
+
+function drawRaceGame(canvas) {
+  const ctx = canvas.getContext('2d');
+  const s = window.gameScale || 1;
+  
+  ctx.fillStyle = '#2d5016';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  const roadX = 80 * s;
+  const roadWidth = 240 * s;
+  
+  ctx.fillStyle = '#3a3a3a';
+  ctx.fillRect(roadX, 0, roadWidth, canvas.height);
+  
+  const edgeOffset = (Date.now() / 20) % (40 * s);
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 3 * s;
+  ctx.setLineDash([20 * s, 20 * s]);
+  ctx.lineDashOffset = -edgeOffset;
+  ctx.beginPath();
+  ctx.moveTo(roadX, 0);
+  ctx.lineTo(roadX, canvas.height);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(roadX + roadWidth, 0);
+  ctx.lineTo(roadX + roadWidth, canvas.height);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  const centerOffset = (Date.now() / 15) % (25 * s);
+  ctx.strokeStyle = '#ffcc00';
+  ctx.lineWidth = 2 * s;
+  ctx.setLineDash([15 * s, 10 * s]);
+  ctx.lineDashOffset = -centerOffset;
+  ctx.beginPath();
+  ctx.moveTo(roadX + roadWidth / 2, 0);
+  ctx.lineTo(roadX + roadWidth / 2, canvas.height);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+    
+const vehicle = raceVehicles[selectedCharacter.id];
+  const playerWidth = 35 * s;
+  const playerHeight = 50 * s;
+  
+  ctx.save();
+  ctx.translate(racePlayerX + playerWidth / 2, racePlayerY + playerHeight / 2);
+  ctx.rotate(raceDrift * 0.05);
+  ctx.translate(-(racePlayerX + playerWidth / 2), -(racePlayerY + playerHeight / 2));
+  
+  // Shadow
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+  ctx.fillRect(racePlayerX + 3 * s, racePlayerY + playerHeight + 2 * s, playerWidth - 6 * s, 4 * s);
+  
+  // Car body (main color) - REAR
+  ctx.fillStyle = vehicle.color;
+  ctx.fillRect(racePlayerX + 5 * s, racePlayerY, playerWidth - 10 * s, playerHeight * 0.7);
+  
+  // Car roof/cabin
+  ctx.fillStyle = vehicle.color;
+  ctx.fillRect(racePlayerX + 8 * s, racePlayerY + playerHeight * 0.65, playerWidth - 16 * s, playerHeight * 0.25);
+  
+  // Windshield (front window) - now at FRONT (top)
+  ctx.fillStyle = 'rgba(135, 206, 235, 0.7)';
+  ctx.fillRect(racePlayerX + 10 * s, racePlayerY + playerHeight * 0.73, playerWidth - 20 * s, playerHeight * 0.15);
+  
+  // Side windows
+  ctx.fillStyle = 'rgba(100, 149, 237, 0.6)';
+  ctx.fillRect(racePlayerX + 9 * s, racePlayerY + playerHeight * 0.5, 3 * s, playerHeight * 0.15);
+  ctx.fillRect(racePlayerX + playerWidth - 12 * s, racePlayerY + playerHeight * 0.5, 3 * s, playerHeight * 0.15);
+  
+  // Hood details (front stripes) - now at FRONT
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+  ctx.fillRect(racePlayerX + 10 * s, racePlayerY + playerHeight * 0.53, playerWidth - 20 * s, 2 * s);
+  ctx.fillRect(racePlayerX + 10 * s, racePlayerY + playerHeight * 0.58, playerWidth - 20 * s, 2 * s);
+  
+  // Headlights (bright yellow) - now at TOP (front of car)
+  ctx.fillStyle = '#ffff00';
+  ctx.fillRect(racePlayerX + 7 * s, racePlayerY + playerHeight * 0.05, 6 * s, 4 * s);
+  ctx.fillRect(racePlayerX + playerWidth - 13 * s, racePlayerY + playerHeight * 0.05, 6 * s, 4 * s);
+  
+  // Headlight glow
+  ctx.fillStyle = 'rgba(255, 255, 0, 0.4)';
+  ctx.fillRect(racePlayerX + 6 * s, racePlayerY + playerHeight * 0.04, 8 * s, 6 * s);
+  ctx.fillRect(racePlayerX + playerWidth - 14 * s, racePlayerY + playerHeight * 0.04, 8 * s, 6 * s);
+  
+  // Front bumper - now at TOP
+  ctx.fillStyle = '#333';
+  ctx.fillRect(racePlayerX + 3 * s, racePlayerY, playerWidth - 6 * s, 3 * s);
+  
+  // Wheels (black with highlights)
+  ctx.fillStyle = '#1a1a1a';
+  // Left wheels
+  ctx.fillRect(racePlayerX + 2 * s, racePlayerY + playerHeight * 0.15, 7 * s, 10 * s);
+  ctx.fillRect(racePlayerX + 2 * s, racePlayerY + playerHeight * 0.65, 7 * s, 10 * s);
+  // Right wheels
+  ctx.fillRect(racePlayerX + playerWidth - 9 * s, racePlayerY + playerHeight * 0.15, 7 * s, 10 * s);
+  ctx.fillRect(racePlayerX + playerWidth - 9 * s, racePlayerY + playerHeight * 0.65, 7 * s, 10 * s);
+  
+  // Wheel highlights
+  ctx.fillStyle = '#666';
+  ctx.fillRect(racePlayerX + 3 * s, racePlayerY + playerHeight * 0.17, 5 * s, 6 * s);
+  ctx.fillRect(racePlayerX + 3 * s, racePlayerY + playerHeight * 0.67, 5 * s, 6 * s);
+  ctx.fillRect(racePlayerX + playerWidth - 8 * s, racePlayerY + playerHeight * 0.17, 5 * s, 6 * s);
+  ctx.fillRect(racePlayerX + playerWidth - 8 * s, racePlayerY + playerHeight * 0.67, 5 * s, 6 * s);
+  
+  // Character emoji on roof
+  ctx.fillStyle = '#fff';
+  ctx.font = `${14 * s}px Arial`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(vehicle.emoji, racePlayerX + playerWidth / 2, racePlayerY + playerHeight * 0.78);  // Character emoji on roof
+  ctx.fillStyle = '#fff';
+  ctx.font = `${14 * s}px Arial`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(vehicle.emoji, racePlayerX + playerWidth / 2, racePlayerY + playerHeight * 0.22);
+  
+ <!-- // Racing number on hood-->
+  <!--ctx.fillStyle = '#fff';-->
+  <!--ctx.font = `bold ${10 * s}px 'Press Start 2P', cursive`;-->
+<!--  ctx.fillText('1', racePlayerX + playerWidth / 2, racePlayerY + playerHeight * 0.55);-->
+
+  
+  ctx.restore();
+
+
+// Draw character sprite in bottom left corner
+  const spriteSize = 60 * s;
+  const spriteX = 20 * s;
+  const spriteY = canvas.height - spriteSize - 20 * s;
+  
+  // Draw background box for sprite
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.fillRect(spriteX - 5 * s, spriteY - 5 * s, spriteSize + 10 * s, spriteSize + 10 * s);
+  ctx.strokeStyle = selectedCharacter.color;
+  ctx.lineWidth = 3 * s;
+  ctx.strokeRect(spriteX - 5 * s, spriteY - 5 * s, spriteSize + 10 * s, spriteSize + 10 * s);
+  
+  // Draw the character sprite
+  if (selectedCharacter.id === "swarvek") {
+    drawSwarvekSprite(ctx, spriteX, spriteY, spriteSize);
+  } else if (selectedCharacter.id === "derek") {
+    drawDerekSprite(ctx, spriteX, spriteY, spriteSize);
+  } else if (selectedCharacter.id === "michel") {
+    drawMichelSprite(ctx, spriteX, spriteY, spriteSize);
+  } else if (selectedCharacter.id === "greg") {
+    drawGregSprite(ctx, spriteX, spriteY, spriteSize);
+  } else if (selectedCharacter.id === "mario") {
+    drawMarioSprite(ctx, spriteX, spriteY, spriteSize);
+  }
+
+
+// Draw speedometer in bottom right corner
+  const speedoSize = 80 * s;
+  const speedoX = canvas.width - speedoSize - 20 * s;
+  const speedoY = canvas.height - speedoSize - 20 * s;
+  
+  // Speedometer background circle
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.beginPath();
+  ctx.arc(speedoX + speedoSize / 2, speedoY + speedoSize / 2, speedoSize / 2, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Speedometer border
+  ctx.strokeStyle = '#00ffcc';
+  ctx.lineWidth = 3 * s;
+  ctx.beginPath();
+  ctx.arc(speedoX + speedoSize / 2, speedoY + speedoSize / 2, speedoSize / 2, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  // Speed arc (0 to maxSpeed)
+  const maxSpeed = vehicle.maxSpeed * 1.5; // Account for boost
+  const speedPercent = Math.min(raceSpeed / maxSpeed, 1);
+  const startAngle = Math.PI * 0.75; // Start from bottom left
+  const endAngle = startAngle + (Math.PI * 1.5 * speedPercent); // Sweep clockwise
+  
+  // Speed arc background (gray)
+  ctx.strokeStyle = 'rgba(100, 100, 100, 0.3)';
+  ctx.lineWidth = 8 * s;
+  ctx.beginPath();
+  ctx.arc(speedoX + speedoSize / 2, speedoY + speedoSize / 2, speedoSize / 2 - 10 * s, Math.PI * 0.75, Math.PI * 0.75 + Math.PI * 1.5);
+  ctx.stroke();
+  
+  // Speed arc (colored based on speed)
+  const speedColor = speedPercent < 0.5 ? '#00ff66' : speedPercent < 0.8 ? '#ffcc00' : '#ff0066';
+  ctx.strokeStyle = speedColor;
+  ctx.lineWidth = 8 * s;
+  ctx.beginPath();
+  ctx.arc(speedoX + speedoSize / 2, speedoY + speedoSize / 2, speedoSize / 2 - 10 * s, startAngle, endAngle);
+  ctx.stroke();
+  
+  // Speed number in center
+  ctx.fillStyle = '#fff';
+  ctx.font = `bold ${16 * s}px 'Press Start 2P', cursive`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(Math.floor(raceSpeed), speedoX + speedoSize / 2, speedoY + speedoSize / 2 - 5 * s);
+  
+  // "MPH" label
+  ctx.font = `${7 * s}px 'Press Start 2P', cursive`;
+  ctx.fillStyle = '#00ffcc';
+  ctx.fillText('MPH', speedoX + speedoSize / 2, speedoY + speedoSize / 2 + 12 * s);
+  
+  // Reset text alignment
+  ctx.textAlign = 'left';
+
+
+// Draw AI opponent cars
+  raceOpponents.forEach(opp => {
+    if (opp.y < -70 * s || opp.y > canvas.height + 10 * s) return;
+    
+    const oppWidth = 32 * s;
+    const oppHeight = 48 * s;
+    
+    // Shadow
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    ctx.fillRect(opp.x + 3 * s, opp.y + oppHeight + 2 * s, oppWidth - 6 * s, 3 * s);
+    
+    // Car body - REAR
+    ctx.fillStyle = opp.vehicle.color;
+    ctx.fillRect(opp.x + 5 * s, opp.y, oppWidth - 10 * s, oppHeight * 0.7);
+    
+    // Car roof/cabin
+    ctx.fillStyle = opp.vehicle.color;
+    ctx.fillRect(opp.x + 7 * s, opp.y + oppHeight * 0.65, oppWidth - 14 * s, oppHeight * 0.25);
+    
+    // Windshield - at FRONT (top)
+    ctx.fillStyle = 'rgba(135, 206, 235, 0.6)';
+    ctx.fillRect(opp.x + 9 * s, opp.y + oppHeight * 0.73, oppWidth - 18 * s, oppHeight * 0.15);
+    
+    // Side windows
+    ctx.fillStyle = 'rgba(100, 149, 237, 0.5)';
+    ctx.fillRect(opp.x + 8 * s, opp.y + oppHeight * 0.5, 3 * s, oppHeight * 0.13);
+    ctx.fillRect(opp.x + oppWidth - 11 * s, opp.y + oppHeight * 0.5, 3 * s, oppHeight * 0.13);
+    
+    // Headlights - at TOP (front)
+    ctx.fillStyle = '#ffff00';
+    ctx.fillRect(opp.x + 6 * s, opp.y + oppHeight * 0.05, 5 * s, 3 * s);
+    ctx.fillRect(opp.x + oppWidth - 11 * s, opp.y + oppHeight * 0.05, 5 * s, 3 * s);
+    
+    // Front bumper
+    ctx.fillStyle = '#333';
+    ctx.fillRect(opp.x + 3 * s, opp.y, oppWidth - 6 * s, 2 * s);
+    
+    // Wheels
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(opp.x + 2 * s, opp.y + oppHeight * 0.15, 6 * s, 9 * s);
+    ctx.fillRect(opp.x + oppWidth - 8 * s, opp.y + oppHeight * 0.15, 6 * s, 9 * s);
+    ctx.fillRect(opp.x + 2 * s, opp.y + oppHeight * 0.65, 6 * s, 9 * s);
+    ctx.fillRect(opp.x + oppWidth - 8 * s, opp.y + oppHeight * 0.65, 6 * s, 9 * s);
+    
+    // Wheel highlights
+    ctx.fillStyle = '#555';
+    ctx.fillRect(opp.x + 3 * s, opp.y + oppHeight * 0.17, 4 * s, 5 * s);
+    ctx.fillRect(opp.x + oppWidth - 7 * s, opp.y + oppHeight * 0.17, 4 * s, 5 * s);
+    ctx.fillRect(opp.x + 3 * s, opp.y + oppHeight * 0.67, 4 * s, 5 * s);
+    ctx.fillRect(opp.x + oppWidth - 7 * s, opp.y + oppHeight * 0.67, 4 * s, 5 * s);
+    
+    // Character emoji on roof
+    ctx.fillStyle = '#fff';
+    ctx.font = `${12 * s}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(opp.vehicle.emoji, opp.x + oppWidth / 2, opp.y + oppHeight * 0.78);
+    
+    // Character name above car
+    ctx.fillStyle = '#fff';
+    ctx.font = `${7 * s}px 'Press Start 2P', cursive`;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+    ctx.shadowBlur = 3 * s;
+    ctx.fillText(opp.character.name, opp.x + oppWidth / 2, opp.y - 8 * s);
+    ctx.shadowBlur = 0;
+  });
+  
+  if (raceSpeed > 3) {
+    ctx.strokeStyle = `rgba(255, 255, 255, ${Math.min(raceSpeed / 10, 0.5)})`;
+    ctx.lineWidth = 2 * s;
+    for (let i = 0; i < 8; i++) {
+      const lineY = (racePlayerY + Math.random() * canvas.height) % canvas.height;
+      const lineLength = raceSpeed * 3 * s;
+      ctx.beginPath();
+      ctx.moveTo(racePlayerX - 20 * s, lineY);
+      ctx.lineTo(racePlayerX - 20 * s - lineLength, lineY - lineLength * 0.5);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(racePlayerX + playerWidth + 20 * s, lineY);
+      ctx.lineTo(racePlayerX + playerWidth + 20 * s + lineLength, lineY - lineLength * 0.5);
+      ctx.stroke();
+    }
+  }
+  
+  if (raceSpeed > raceVehicles[selectedCharacter.id].maxSpeed) {
+    ctx.fillStyle = 'rgba(0, 255, 204, 0.3)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.strokeStyle = '#00ffcc';
+    ctx.lineWidth = 3 * s;
+    ctx.strokeRect(10 * s, 10 * s, canvas.width - 20 * s, canvas.height - 20 * s);
+  }
+}
+function closeRaceGame() {
+  raceGameActive = false;
+  
+  if (raceAnimationId) {
+    cancelAnimationFrame(raceAnimationId);
+    raceAnimationId = null;
+  }
+  
+  document.removeEventListener('keydown', handleRaceKeyDown);
+  document.removeEventListener('keyup', handleRaceKeyUp);
+  
+  const overlay = document.getElementById('raceGameOverlay');
+  overlay.classList.remove('active');
+  
+  freezeFrame = false;
+}
+
+window.closeRaceGame = closeRaceGame;
+
+function showRaceAgainPrompt() {
+  const overlay = document.getElementById('raceGameOverlay');
+  
+  // Create prompt overlay
+  const promptDiv = document.createElement('div');
+  promptDiv.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(10, 10, 10, 0.98);
+    border: 3px solid #00ffcc;
+    border-radius: 10px;
+    padding: 2rem;
+    z-index: 10000;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0, 255, 204, 0.8);
+  `;
+  
+  promptDiv.innerHTML = `
+    <div style="
+      font-family: 'Press Start 2P', cursive;
+      color: #00ffcc;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 10px rgba(0, 255, 204, 0.8);
+    ">RACE AGAIN?</div>
+    
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+      <button class="game-btn" id="raceAgainYes" style="
+        background: rgba(0, 255, 102, 0.2);
+        border-color: #00ff66;
+        padding: 1rem 2rem;
+        font-size: 0.9rem;
+      ">YES</button>
+      
+      <button class="game-btn" id="raceAgainNo" style="
+        background: rgba(255, 0, 102, 0.2);
+        border-color: #ff0066;
+        padding: 1rem 2rem;
+        font-size: 0.9rem;
+      ">NO</button>
+    </div>
+  `;
+  
+  document.body.appendChild(promptDiv);
+  
+  document.getElementById('raceAgainYes').onclick = () => {
+    promptDiv.remove();
+    closeRaceGame();
+    // Small delay then reopen
+    setTimeout(() => {
+      openRaceGame();
+    }, 100);
+  };
+  
+  document.getElementById('raceAgainNo').onclick = () => {
+    promptDiv.remove();
+    closeRaceGame();
+  };
+}
+
+
+
+    /* ===== Controls ===== */
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Space" || e.key === " ") {
+        climb();
+        e.preventDefault();
+      }
+    });
+
+    let isResetting = false;
+
+function setupControls(muteBtn, resetBtn, galleryBtn, tradeBtn, raceBtn) {
+
+  muteBtns.push(muteBtn);
+  resetBtns.push(resetBtn);
+  if (galleryBtn) galleryBtns.push(galleryBtn);
+
+  muteBtn.addEventListener("click", () => {
+    audioEnabled = !audioEnabled;
+    muteBtns.forEach(btn => {
+      if (audioEnabled) {
+        btn.innerHTML = "🔊 Sound";
+        btn.classList.add("active");
+      } else {
+        btn.innerHTML = "🔇 Muted";
+        btn.classList.remove("active");
+      }
+    });
+    if (!audioEnabled) audioEl.pause();
+  });
+
+  resetBtn.addEventListener("click", () => {
+    const groundLevel = window.groundLevel || 420;
+    
+    if (isResetting) return;
+    
+    if (score > 0 || character.y < groundLevel) {
+      isResetting = true;
+
+          
+       // Character-specific reset messages for Anglo Polish Edition
+const characterResetMessages = {
+    swarvek: [
+        "Swarvek: 'In Poland, we don't reset. We finish job.'",
+        "The boss expected better. Much better.",
+        "Swarvek's spirit level is disappointed in you.",
+        "Boss man's verdict: 'Not Anglo Polish standard.'",
+        "Swarvek: 'My grandmother has better work ethic.'",
+        "The boss is reconsidering the hiring decision.",
+        "Swarvek shakes his head. 'No bonus for you.'",
+        "Boss: 'Maybe you try different job? Like... sitting?'",
+        "Swarvek's seen enough. Back to square one.",
+        "The boss built empire. You can't even climb ladder."
+    ],
+    derek: [
+        "Derek's tape measure says: 'Zero progress made.'",
+        "Site manager's clipboard: 'Performance - UNACCEPTABLE'",
+        "Derek measured twice. You failed three times.",
+        "Site manager: 'This goes in your permanent record.'",
+        "Derek's assessment: 'Needs complete retraining.'",
+        "The site manager has filed an incident report.",
+        "Derek: 'I've seen scaffolding more stable than you.'",
+        "Site manager's note: 'Do not assign to real projects.'",
+        "Derek's shaking his head. That's never good.",
+        "The site manager expected professional work. This isn't it."
+    ],
+    michel: [
+        "Michel: 'Even my drill has better consistency than you.'",
+        "The electrician's diagnosis: 'Total system failure.'",
+        "Michel could rewire a house in the time you wasted.",
+        "Electrician's report: 'Dangerously incompetent.'",
+        "Michel: 'My apprentice does better, and he's 16.'",
+        "The electrician's seen short circuits with more potential.",
+        "Michel's power tools are more reliable than you.",
+        "Electrician: 'This job needs a complete reset. So do you.'",
+        "Michel's drilling holes. Just like your performance.",
+        "The electrician recommends you try different profession."
+    ],
+    greg: [
+        "Greg: 'I've unclogged worse things than your performance.'",
+        "The plumber's verdict: 'Complete blockage. No flow.'",
+        "Greg's plunger has more grip than you do.",
+        "Plumber's assessment: 'This is going down the drain.'",
+        "Greg: 'Even the pipes put up less resistance.'",
+        "The plumber's seen leaks in better condition than this.",
+        "Greg adjusts his glasses. 'Mate, this is embarrassing.'",
+        "Plumber: 'Your technique needs complete flush and restart.'",
+        "Greg's toolkit is more useful than your climbing.",
+        "The plumber recommends you stick to sweeping."
+    ],
+    mario: [
+        "Mario: 'Even wet paint performs better than you.'",
+        "The painter's review: 'Needs many, many more coats.'",
+        "Mario's brush has better precision than your entire attempt.",
+        "Painter: 'This is one masterpiece I won't sign.'",
+        "Mario's teeth are brighter than your climbing future.",
+        "The painter's seen better strokes from beginners.",
+        "Mario: 'Maybe I paint over this embarrassment, yes?'",
+        "Painter's critique: 'No artistic merit. Start over.'",
+        "Mario's whistling stopped. That's how bad it is.",
+        "The painter recommends you try stick figures instead."
+    ]
+};
+
+let resetMessages = ANGLO_POLISH_EDITION ? 
+    (selectedCharacter ? characterResetMessages[selectedCharacter.id] || characterResetMessages.swarvek : characterResetMessages.swarvek)
+: [
+    "Giving up already? Classic.",
+    "Reset button pressed. Dreams crushed.",
+    "Starting over won't change anything.",
+    "You think THIS time will be different?",
+    "Ah yes, the definition of insanity.",
+    "The reset button: For quitters only.",
+    "Back to square one. Where you belong.",
+    "Did you try turning it off and on again?",
+    "Fresh start? More like fresh failure.",
+    "The ladder remembers your shame.",
+    "Reset: The ultimate admission of defeat.",
+    "Zero points. Zero dignity.",
+    "Everyone gets a participation trophy except you.",
+    "Maybe take a break? Forever?",
+    "The ladder has seen you hit this button 47 times.",
+    "Your high score is now a distant memory.",
+    "This is what rock bottom looks like.",
+    "Maybe ladders just aren't your thing.",
+    "Resetting won't erase the embarrassment.",
+    "The ladder whispers: 'They always come back.'"
+];      
+      const msg = resetMessages[Math.floor(Math.random() * resetMessages.length)];
+      showMessage(msg);
+      
+      setTimeout(() => {
+        score = 0;
+        character.y = groundLevel;
+        climbing = false;
+        currentLadderColorIndex = 0;
+        unlockedColors = [0];
+        freezeFrame = false;
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        isResetting = false;
+      }, 2500);
+    }
+  });
+
+  if (galleryBtn) {
+    galleryBtn.addEventListener("click", openGallery);
+  }
+
+
+if (tradeBtn) {
+    tradeBtn.addEventListener("click", () => {
+      console.log('🔨 Work button clicked!');
+      openTradeGame();
+    });
+  }
+
+  if (raceBtn) {
+    raceBtn.addEventListener("click", () => {
+      console.log('🏁 Race button clicked!');
+      openRaceGame();
+    });
+  }
+}
+
+function wireSection(section) {
+  const canvas = section.querySelector("canvas");
+  const muteBtn = section.querySelector(".mute-btn");
+  const resetBtn = section.querySelector(".reset-btn");
+  const galleryBtn = section.querySelector(".gallery-btn");
+  const tradeBtn = section.querySelector(".trade-btn");
+  const raceBtn = section.querySelector(".race-btn");
+  
+  if (!canvas || !muteBtn || !resetBtn) return;
+
+  canvases.push(canvas);
+  canvas.addEventListener("click", climb);
+  setupControls(muteBtn, resetBtn, galleryBtn, tradeBtn, raceBtn);
+}
+
+
+window.addEventListener("DOMContentLoaded", () => {
+  const template = document.querySelector(".game-section");
+  if (!template) return;
+
+  wireSection(template);
+
+  for (let i = 0; i < 2; i++) {
+    const clone = template.cloneNode(true);
+    document.body.appendChild(clone);
+    wireSection(clone);
+  }
+
+  window.addEventListener("scroll", () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+      const clone = template.cloneNode(true);
+      document.body.appendChild(clone);
+      wireSection(clone);
+    }
+  });
+
+  update();
+});
+  </script>
+<script>
+(function() {
+  function playGlassBreakSound() {
+    const glassBreakAudio = new Audio('glass-break-explosion.mp3');
+    glassBreakAudio.volume = 0.7;
+    glassBreakAudio.play().catch(e => console.log('Audio play failed:', e));
+  }
+  
+  function shatterScreen(overlay) {
+    const cols = 8;
+    const rows = 6;
+    const w = window.innerWidth / cols;
+    const h = window.innerHeight / rows;
+    
+    overlay.style.opacity = '0';
+    
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const piece = document.createElement('div');
+        piece.className = 'glass-piece';
+        
+        const x = col * w;
+        const y = row * h;
+        
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const pieceX = x + w / 2;
+        const pieceY = y + h / 2;
+        const angle = Math.atan2(pieceY - centerY, pieceX - centerX);
+        const distance = 500 + Math.random() * 300;
+        const fallX = Math.cos(angle) * distance;
+        const fallY = Math.sin(angle) * distance + Math.random() * 200 + 200;
+        const rotation = (Math.random() - 0.5) * 360;
+        
+        piece.style.cssText = `
+          left: ${x}px;
+          top: ${y}px;
+          width: ${w}px;
+          height: ${h}px;
+          --piece-x: ${-x}px;
+          --piece-y: ${-y}px;
+          --fall-x: ${fallX}px;
+          --fall-y: ${fallY}px;
+          --fall-rot: ${rotation}deg;
+          background: rgba(10, 10, 10, 0.95);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          animation-delay: ${Math.random() * 0.1}s;
+        `;
+        
+        const content = overlay.cloneNode(true);
+        content.style.position = 'absolute';
+        content.style.left = `${-x}px`;
+        content.style.top = `${-y}px`;
+        content.style.width = '100vw';
+        content.style.height = '100vh';
+        content.style.opacity = '1';
+        piece.appendChild(content);
+        
+        document.body.appendChild(piece);
+      }
+    }
+  }
+  
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes glow-pulse {
+      0%, 100% {
+        text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc, 0 0 60px #00ffcc;
+      }
+      50% {
+        text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ffcc, 0 0 90px #00ffcc, 0 0 120px #00ffcc;
+      }
+    }
+    
+    @keyframes underline-slide {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+    
+    .ladder-title-glow {
+      animation: glow-pulse 2s ease-in-out infinite;
+    }
+    
+    .action-word {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .action-word::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, #ff0066, #00ffcc);
+      animation: underline-slide 1.5s ease-out infinite;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  const overlay = document.createElement('div');
+  overlay.id = 'intro-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+  `;
+  
+  overlay.innerHTML = `
+    <div class="ladder-title-glow" style="
+      font-family: 'Press Start 2P', cursive;
+      color: #00ffcc;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      text-align: center;
+      margin-bottom: 2rem;
+    ">LADDER LOOP</div>
+    
+    <div style="
+      font-family: 'Press Start 2P', cursive;
+      color: #ffcc00;
+      font-size: clamp(0.8rem, 2vw, 1.2rem);
+      text-align: center;
+      line-height: 2;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    ">
+      <div style="font-size: clamp(0.6rem, 1.5vw, 0.9rem); color: #00ffcc;">
+        <span class="action-word">Climb</span> the ladder.<br>
+        <span class="action-word">Fall</span> back down.<br>
+        <span class="action-word">Repeat</span> forever.
+      </div>
+    </div>
+    
+    <button style="
+      font-family: 'Press Start 2P', cursive;
+      padding: 1rem 2rem;
+      font-size: clamp(0.7rem, 1.5vw, 1rem);
+      background: rgba(255, 0, 102, 0.2);
+      color: #00ffcc;
+      border: 2px solid #ff0066;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+      transition: all 0.3s;
+      margin-top: 2rem;
+    " onmouseover="this.style.background='rgba(255, 0, 102, 0.4)'; this.style.transform='scale(1.05)';" 
+       onmouseout="this.style.background='rgba(255, 0, 102, 0.2)'; this.style.transform='scale(1)';"
+    >Tap or press Space</button>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  const startBtn = overlay.querySelector('button');
+  let overlayRemoved = false;
+  
+  function removeOverlay() {
+    if (overlayRemoved) return;
+    overlayRemoved = true;
+    
+    try {
+      playGlassBreakSound();
+    } catch(e) {
+      console.log('Audio not supported');
+    }
+    
+    shatterScreen(overlay);
+    
+    setTimeout(() => {
+      overlay.remove();
+      document.querySelectorAll('.glass-piece').forEach(p => p.remove());
+      style.remove();
+      if (window.ANGLO_POLISH_EDITION) {
+        showCharacterSelect();
+      }
+    }, 1200);
+  }
+  
+  startBtn.addEventListener('click', removeOverlay);
+  
+  document.addEventListener('keydown', function(e) {
+    if (!overlayRemoved) removeOverlay();
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!overlayRemoved) removeOverlay();
+  });
+})();
+</script>
+<script>
+(function() {
+  const SECTIONS_BEFORE_LOOP = 3;
+  let isLooping = false;
+  
+  window.addEventListener('scroll', () => {
+    if (isLooping) return;
+    
+    const sections = document.querySelectorAll('.game-section');
+    const windowBottom = window.scrollY + window.innerHeight;
+    
+    if (sections.length >= SECTIONS_BEFORE_LOOP) {
+      const lastSection = sections[sections.length - 1];
+      const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
+      
+      if (windowBottom >= lastSectionBottom - 100) {
+        isLooping = true;
+        window.scrollTo(0, 0);
+        setTimeout(() => {
+          isLooping = false;
+        }, 100);
+      }
+    }
+  }, { passive: true });
+})();
+</script>
+<script>
+(function() {
+  const screenWidth = window.screen.width;
+  let scale = 1;
+  
+  if (screenWidth >= 5120) scale = 4.5;
+  else if (screenWidth >= 3840) scale = 3.5;
+  else if (screenWidth >= 2560) scale = 2.5;
+  else if (screenWidth >= 1920) scale = 1.75;
+  
+  window.gameScale = scale;
+  window.groundLevel = 420 * scale;
+  
+  window.addEventListener('load', () => {
+    document.querySelectorAll('canvas').forEach(canvas => {
+      canvas.width = 400 * scale;
+      canvas.height = 450 * scale;
+    });
+    
+    character.x = 187 * scale;
+    character.y = 420 * scale;
+    character.width = 30 * scale;
+    character.height = 30 * scale;
+    
+    speed = 4 * scale;
+  });
+  
+  window.update = function() {
+    const groundLevel = window.groundLevel || 420;
+    
+    canvases.forEach(canvas => {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawLadder(ctx, canvas);
+      drawCharacter(ctx);
+      drawBenchedCube(ctx, canvas);  // <-- ADD THIS LINE
+      drawScore(ctx);
+    });
+
+    if (!freezeFrame) {
+      if (climbing) {
+        character.y -= speed;
+        if (character.y <= 0) {
+          climbing = false;
+          score++;
+          const unlocked = checkColorUnlock(score);
+          if (!unlocked && score % 5 === 0) showFunnyMessage();
+        }
+      } else {
+        character.y += speed;
+        if (character.y >= groundLevel) character.y = groundLevel;
+      }
+    }
+    requestAnimationFrame(update);
+  };
+  
+  window.climb = function() {
+    const groundLevel = window.groundLevel || 420;
+    if (!climbing && character.y >= groundLevel && !freezeFrame) {
+      climbing = true;
+      if (audioEnabled) {
+        audioEl.currentTime = 0;
+        audioEl.play().catch(() => {});
+      }
+    }
+  };
+  
+  window.drawLadder = function(ctx, canvas) {
+    const s = window.gameScale || 1;
+    const currentColor = ladderColors[currentLadderColorIndex];
+    
+    if (currentColor.isRainbow) {
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, "#ff0066");
+      gradient.addColorStop(0.2, "#ff9900");
+      gradient.addColorStop(0.4, "#ffcc00");
+      gradient.addColorStop(0.6, "#00ff66");
+      gradient.addColorStop(0.8, "#00ccff");
+      gradient.addColorStop(1, "#b200ff");
+      ctx.strokeStyle = gradient;
+    } else {
+      ctx.strokeStyle = currentColor.color;
+    }
+    
+    ctx.lineWidth = 6 * s;
+    ctx.beginPath();
+    ctx.moveTo(150 * s, 0);
+    ctx.lineTo(150 * s, canvas.height);
+    ctx.moveTo(250 * s, 0);
+    ctx.lineTo(250 * s, canvas.height);
+    ctx.stroke();
+    
+    for (let i = 0; i < canvas.height; i += (40 * s)) {
+      ctx.beginPath();
+      ctx.moveTo(150 * s, i);
+      ctx.lineTo(250 * s, i);
+      ctx.stroke();
+    }
+  };
+  
+    
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('canvas').forEach(canvas => {
+      if (canvas.width === 400) {
+        canvas.width = 400 * scale;
+        canvas.height = 450 * scale;
+      }
+    });
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+
+<script>
+// Complete Mobile Character Selection - HACK VERSION
+(function() {
+  console.log('Mobile script loading, window width:', window.innerWidth);
+  
+  if (window.innerWidth <= 768) {
+    console.log('Mobile mode activated');
+    
+    const observer = new MutationObserver(() => {
+      const overlay = document.getElementById('characterSelect');
+      const grid = document.getElementById('characterGrid');
+      
+      if (overlay && grid && grid.children.length > 0) {
+        console.log('Creating mobile UI...');
+        observer.disconnect();
+        
+        let currentIndex = 0;
+        const cards = Array.from(grid.children);
+        console.log('Cards found:', cards.length);
+        
+        // Completely restructure the overlay
+        overlay.style.padding = '1rem';
+        overlay.style.display = 'flex';
+        overlay.style.flexDirection = 'column';
+        overlay.style.justifyContent = 'space-between';
+        overlay.style.alignItems = 'center';
+        
+        // Title adjustments
+        const title = overlay.querySelector('.character-select-title');
+        const subtitle = overlay.querySelector('.character-select-subtitle');
+        if (title) {
+          title.style.fontSize = '1.2rem';
+          title.style.marginBottom = '0.5rem';
+        }
+        if (subtitle) {
+          subtitle.style.fontSize = '0.6rem';
+          subtitle.style.marginBottom = '1rem';
+        }
+        
+        // Hide original grid but keep it in DOM
+        grid.style.position = 'absolute';
+        grid.style.left = '-9999px';
+        grid.style.visibility = 'hidden';
+        
+        // Create new container
+        const container = document.createElement('div');
+        container.style.flex = '1';
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+        container.style.alignItems = 'center';
+        container.style.justifyContent = 'center';
+        container.style.width = '100%';
+        container.style.maxWidth = '400px';
+        container.style.position = 'relative';
+        
+        // Create card display area
+        const cardContainer = document.createElement('div');
+        cardContainer.style.width = '100%';
+        cardContainer.style.background = 'rgba(255, 0, 102, 0.1)';
+        cardContainer.style.border = '2px solid #ff0066';
+        cardContainer.style.borderRadius = '10px';
+        cardContainer.style.padding = '2rem 1rem';
+        cardContainer.style.display = 'flex';
+        cardContainer.style.flexDirection = 'column';
+        cardContainer.style.alignItems = 'center';
+        cardContainer.style.gap = '1rem';
+        cardContainer.style.minHeight = '300px';
+        cardContainer.style.justifyContent = 'center';
+        
+        // Character preview box
+        const previewBox = document.createElement('div');
+        previewBox.style.width = '150px';
+        previewBox.style.height = '150px';
+        previewBox.style.border = '3px solid #00ffcc';
+        previewBox.style.borderRadius = '10px';
+        previewBox.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.5)';
+        
+        // Character name
+        const nameDisplay = document.createElement('div');
+        nameDisplay.style.color = '#ffcc00';
+        nameDisplay.style.fontSize = '1.2rem';
+        nameDisplay.style.textAlign = 'center';
+        nameDisplay.style.textShadow = '0 0 10px rgba(255, 204, 0, 0.8)';
+        nameDisplay.style.fontFamily = "'Press Start 2P', cursive";
+        
+        // Character role
+        const roleDisplay = document.createElement('div');
+        roleDisplay.style.color = '#00ffcc';
+        roleDisplay.style.fontSize = '0.7rem';
+        roleDisplay.style.textAlign = 'center';
+        roleDisplay.style.fontFamily = "'Press Start 2P', cursive";
+        
+        // Select button
+        const selectBtn = document.createElement('button');
+        selectBtn.className = 'game-btn';
+        selectBtn.textContent = 'SELECT';
+        selectBtn.style.marginTop = '1rem';
+        selectBtn.style.padding = '0.75rem 2rem';
+        selectBtn.style.fontSize = '0.8rem';
+        selectBtn.style.background = 'rgba(0, 255, 204, 0.2)';
+        selectBtn.style.borderColor = '#00ffcc';
+        selectBtn.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.6)';
+        
+        cardContainer.appendChild(previewBox);
+        cardContainer.appendChild(nameDisplay);
+        cardContainer.appendChild(roleDisplay);
+        cardContainer.appendChild(selectBtn);
+        
+        // Navigation controls
+        const navContainer = document.createElement('div');
+        navContainer.style.display = 'flex';
+        navContainer.style.gap = '1rem';
+        navContainer.style.marginTop = '1.5rem';
+        navContainer.style.width = '100%';
+        navContainer.style.justifyContent = 'center';
+        
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'game-btn';
+        prevBtn.innerHTML = '◀';
+        prevBtn.style.padding = '1rem 1.5rem';
+        prevBtn.style.fontSize = '1rem';
+        
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'game-btn';
+        nextBtn.innerHTML = '▶';
+        nextBtn.style.padding = '1rem 1.5rem';
+        nextBtn.style.fontSize = '1rem';
+        
+        navContainer.appendChild(prevBtn);
+        navContainer.appendChild(nextBtn);
+        
+        // Indicator dots
+        const dotsContainer = document.createElement('div');
+        dotsContainer.style.display = 'flex';
+        dotsContainer.style.gap = '0.5rem';
+        dotsContainer.style.marginTop = '1rem';
+        dotsContainer.style.justifyContent = 'center';
+        
+        const dots = cards.map((_, i) => {
+          const dot = document.createElement('div');
+          dot.style.width = '10px';
+          dot.style.height = '10px';
+          dot.style.borderRadius = '50%';
+          dot.style.background = 'rgba(255, 0, 102, 0.3)';
+          dot.style.border = '2px solid #ff0066';
+          dot.style.cursor = 'pointer';
+          dot.style.transition = 'all 0.3s';
+          dot.onclick = () => goToCharacter(i);
+          dotsContainer.appendChild(dot);
+          return dot;
+        });
+        
+        container.appendChild(cardContainer);
+        container.appendChild(navContainer);
+        container.appendChild(dotsContainer);
+        
+        // Insert after subtitle
+        if (subtitle) {
+          subtitle.parentNode.insertBefore(container, subtitle.nextSibling);
+        } else if (title) {
+          title.parentNode.insertBefore(container, title.nextSibling);
+        }
+        
+        function updateDisplay() {
+          const char = cards[currentIndex];
+          const preview = char.querySelector('.character-preview');
+          const name = char.querySelector('.character-card-name');
+          const role = char.querySelector('.character-card-role');
+          
+          if (preview) {
+            previewBox.innerHTML = preview.innerHTML;
+            previewBox.style.background = preview.style.background;
+            previewBox.style.overflow = 'hidden';
+            
+            const img = previewBox.querySelector('img');
+            if (img) {
+              img.style.width = '100%';
+              img.style.height = '100%';
+              img.style.objectFit = 'cover';
+              img.style.display = 'block';
+            }
+          }
+          if (name) nameDisplay.textContent = name.textContent;
+          if (role) roleDisplay.textContent = role.textContent;
+          
+          dots.forEach((dot, i) => {
+            if (i === currentIndex) {
+              dot.style.background = '#00ffcc';
+              dot.style.borderColor = '#00ffcc';
+              dot.style.boxShadow = '0 0 10px rgba(0, 255, 204, 0.8)';
+            } else {
+              dot.style.background = 'rgba(255, 0, 102, 0.3)';
+              dot.style.borderColor = '#ff0066';
+              dot.style.boxShadow = 'none';
+            }
+          });
+        }
+        
+        function goToCharacter(index) {
+          currentIndex = index;
+          updateDisplay();
+        }
+        
+        prevBtn.onclick = () => {
+          currentIndex--;
+          if (currentIndex < 0) currentIndex = cards.length - 1;
+          updateDisplay();
+        };
+        
+        nextBtn.onclick = () => {
+          currentIndex++;
+          if (currentIndex >= cards.length) currentIndex = 0;
+          updateDisplay();
+        };
+        
+       // THE HACK: Bypass everything and directly set the character
+function selectCharacter() {
+  const currentCard = cards[currentIndex];
+  const charName = currentCard.querySelector('.character-card-name').textContent;
+  console.log('🔥 HACK: Directly selecting:', charName);
+  
+  // Find the character object
+  const char = angloPolishCharacters.find(c => c.name === charName);
+  
+  if (char) {
+    // DIRECTLY modify the global variables
+    selectedCharacter = char;
+    showDefaultCharacter = false;
+    
+    // FORCE CLOSE THE OVERLAY
+    overlay.classList.remove('active');
+    overlay.style.display = 'none'; // FORCE HIDE IT
+    
+    console.log('🚪 Overlay closed');
+    
+    // Stop Polish audio manually
+    if (polishAudioInterval) {
+      clearInterval(polishAudioInterval);
+      polishAudioInterval = null;
+    }
+    if (polishAudio) {
+      polishAudio.pause();
+      polishAudio.currentTime = 0;
+    }
+    
+    // WAIT FOR CANVASES TO EXIST
+    let checkCount = 0;
+    const waitForCanvas = setInterval(() => {
+      checkCount++;
+      console.log(`⏳ Check #${checkCount}: canvases.length =`, canvases.length);
+      
+      if (canvases && canvases.length > 0) {
+        clearInterval(waitForCanvas);
+        
+        console.log('✅ Canvas found! Drawing character...');
+        
+        // Show message manually
+        messageBox.innerText = `Now playing as ${char.name}!`;
+        messageBox.style.display = "block";
+        freezeFrame = true;
+        setTimeout(() => {
+          messageBox.style.display = "none";
+          freezeFrame = false;
+        }, 2500);
+        
+        // Force redraw manually
+        canvases.forEach(canvas => {
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawLadder(ctx, canvas);
+          drawCharacter(ctx);
+          drawBenchedCube(ctx, canvas);
+          drawScore(ctx);
+        });
+        
+        console.log('🔥 HACK COMPLETE! Character:', selectedCharacter);
+      }
+      
+      if (checkCount > 50) {
+        clearInterval(waitForCanvas);
+        console.error('❌ Timeout: Canvas never appeared after 50 checks!');
+      }
+    }, 100);
+  }
+}        
+        selectBtn.onclick = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          selectCharacter();
+        };
+        
+        selectBtn.addEventListener('touchend', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          selectCharacter();
+        }, { passive: false });
+        
+        // Swipe support
+        let touchStartX = 0;
+        cardContainer.addEventListener('touchstart', (e) => {
+          touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+        
+        cardContainer.addEventListener('touchend', (e) => {
+          const touchEndX = e.changedTouches[0].clientX;
+          const diff = touchStartX - touchEndX;
+          
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+              currentIndex++;
+              if (currentIndex >= cards.length) currentIndex = 0;
+            } else {
+              currentIndex--;
+              if (currentIndex < 0) currentIndex = cards.length - 1;
+            }
+            updateDisplay();
+          }
+        }, { passive: true });
+        
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+          if (overlay.classList.contains('active')) {
+            if (e.key === 'ArrowLeft') {
+              currentIndex--;
+              if (currentIndex < 0) currentIndex = cards.length - 1;
+              updateDisplay();
+            } else if (e.key === 'ArrowRight') {
+              currentIndex++;
+              if (currentIndex >= cards.length) currentIndex = 0;
+              updateDisplay();
+            } else if (e.key === 'Enter') {
+              selectBtn.click();
+            }
+          }
+        });
+        
+        updateDisplay();
+        console.log('Mobile UI setup complete');
+      }
+    });
+    
+    observer.observe(document.body, { childList: true, subtree: true });
+  } else {
+    console.log('Desktop mode - mobile script skipped');
+  }
+})();
+</script><script>
+// Style "EDITION" to look special
+(function() {
+  const observer = new MutationObserver(() => {
+    const title = document.querySelector('.character-select-title');
+    if (title && !title.innerHTML.includes('<span')) {
+      title.innerHTML = `ANGLO POLISH BUILDERS<br><span style="font-size: 0.4em; color: #ff0066; text-shadow: 0 0 10px rgba(255, 0, 102, 0.8); letter-spacing: 0.3em; display: block; margin-top: 0.5rem;">EDITION</span>`;
+      observer.disconnect();
+    }
+  });
+  
+  observer.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
+
+<script>
+// Race Menu Music - 5 second playback + Mute Controls
+(function() {
+  let raceMenuMusic = new Audio('race-menu.mp3');
+  raceMenuMusic.volume = 0.5;
+  let musicTimeout = null;
+  let raceMusicMuted = false;
+  
+  // CREATE GLOBAL VARIABLE for SFX mute state
+  window.raceSFXMuted = false;
+  
+  // Override the original openRaceGame function
+  const originalOpenRaceGame = window.openRaceGame;
+  window.openRaceGame = function() {
+    // Call original function
+    originalOpenRaceGame();
+    
+    // Play music for 5 seconds (unless muted)
+    if (!raceMusicMuted) {
+      raceMenuMusic.currentTime = 0;
+      raceMenuMusic.play().catch(e => console.log('Race music failed:', e));
+    }
+    
+    if (musicTimeout) clearTimeout(musicTimeout);
+    musicTimeout = setTimeout(() => {
+      raceMenuMusic.pause();
+      raceMenuMusic.currentTime = 0;
+    }, 20000);
+    
+    // Add mute buttons after canvas is created
+    setTimeout(() => {
+      const canvas = document.getElementById('raceCanvas');
+      if (!canvas) return;
+      
+      const wrapper = canvas.parentElement;
+      
+      // Check if buttons already exist
+      if (wrapper.querySelector('.race-music-btn')) return;
+      
+      // Music mute button (top left) - CONTROLS MP3 ONLY
+      const musicBtn = document.createElement('button');
+      musicBtn.className = 'game-btn race-music-btn';
+      musicBtn.innerHTML = raceMusicMuted ? '🔇' : '🎵';
+      musicBtn.title = 'Toggle Race Menu Music';
+      musicBtn.style.cssText = `
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 10;
+        padding: 0.6rem 0.8rem;
+        font-size: 1.2rem;
+        min-width: 44px;
+      `;
+      
+      // Sound effects mute button - CONTROLS SFX ONLY
+      const sfxBtn = document.createElement('button');
+      sfxBtn.className = 'game-btn race-sfx-btn';
+      sfxBtn.innerHTML = window.raceSFXMuted ? '🔇' : '🔊';
+      sfxBtn.title = 'Toggle Race Sound Effects';
+      sfxBtn.style.cssText = `
+        position: absolute;
+        top: 10px;
+        left: 70px;
+        z-index: 10;
+        padding: 0.6rem 0.8rem;
+        font-size: 1.2rem;
+        min-width: 44px;
+      `;
+      
+      // Music button - ONLY controls race-menu.mp3
+      musicBtn.onclick = (e) => {
+        e.stopPropagation();
+        raceMusicMuted = !raceMusicMuted;
+        
+        if (raceMusicMuted) {
+          raceMenuMusic.pause();
+          musicBtn.innerHTML = '🔇';
+        } else {
+          raceMenuMusic.currentTime = 0;
+          raceMenuMusic.play().catch(e => console.log('Music play failed:', e));
+          musicBtn.innerHTML = '🎵';
+        }
+      };
+      
+    // SFX button - ONLY controls race sound effects
+sfxBtn.onclick = (e) => {
+  e.stopPropagation();
+  window.raceSFXMuted = !window.raceSFXMuted;
+  
+  sfxBtn.innerHTML = window.raceSFXMuted ? '🔇' : '🔊';
+  
+  console.log('Race SFX muted:', window.raceSFXMuted); // Debug log
+  
+  // Restart engine sound if unmuting and race is active
+  if (!window.raceSFXMuted && raceGameActive) {
+    startEngineSound();
+  }
+};
+
+wrapper.appendChild(musicBtn);
+wrapper.appendChild(sfxBtn);
+
+}, 100);
+};  
+  // Override the original closeRaceGame function
+  const originalCloseRaceGame = window.closeRaceGame;
+  window.closeRaceGame = function() {
+    // Stop music
+    if (musicTimeout) clearTimeout(musicTimeout);
+    raceMenuMusic.pause();
+    raceMenuMusic.currentTime = 0;
+    
+    // Call original function
+    originalCloseRaceGame();
+  };
+})();
+</script>
+
+
+</body>
+</html></parameter>
