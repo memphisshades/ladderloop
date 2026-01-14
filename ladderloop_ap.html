@@ -4660,7 +4660,7 @@ wrapper.appendChild(sfxBtn);
 
 
 <script>
-// Mode Selector Dropdown - Mobile Click-Based Fix
+// Mode Selector - Two Simple Buttons
 (function() {
   // Glass shatter effect function
   function shatterEffect(callback) {
@@ -4742,109 +4742,91 @@ wrapper.appendChild(sfxBtn);
   }
   
   window.addEventListener('load', function() {
-    const isMobile = window.innerWidth <= 768;
-    
     setTimeout(function() {
       
-      if (isMobile) {
-        // MOBILE: Create custom button-based selector
-        const mobileContainer = document.createElement('div');
-        mobileContainer.id = 'modeSelectorContainer';
-        mobileContainer.style.cssText = `
-          position: fixed;
-          top: -100px;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 10002;
-          background: rgba(10, 10, 10, 0.95);
-          border: 2px solid #00ffcc;
-          border-top: none;
-          border-radius: 0 0 10px 10px;
-          padding: 1rem;
-          box-shadow: 0 4px 20px rgba(0, 255, 204, 0.5);
-          backdrop-filter: blur(10px);
-          transition: top 0.3s ease;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        `;
+      // Create container with 2 buttons
+      const container = document.createElement('div');
+      container.id = 'modeSelectorContainer';
+      container.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10002;
+        background: rgba(10, 10, 10, 0.95);
+        border: 2px solid #00ffcc;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 4px 20px rgba(0, 255, 204, 0.5);
+        backdrop-filter: blur(10px);
+        display: flex;
+        gap: 0.5rem;
+      `;
+      
+      const angloBtn = document.createElement('button');
+      angloBtn.textContent = 'Anglo Polish';
+      angloBtn.id = 'angloBtn';
+      angloBtn.style.cssText = `
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.6rem;
+        padding: 0.6rem 1rem;
+        background: rgba(0, 255, 204, 0.3);
+        color: #00ffcc;
+        border: 2px solid #00ffcc;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(0, 255, 204, 0.6);
+        min-height: 44px;
+        touch-action: manipulation;
+      `;
+      
+      const classicBtn = document.createElement('button');
+      classicBtn.textContent = 'Classic';
+      classicBtn.id = 'classicBtn';
+      classicBtn.style.cssText = `
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.6rem;
+        padding: 0.6rem 1rem;
+        background: rgba(255, 0, 102, 0.12);
+        color: #00ffcc;
+        border: 2px solid #ff0066;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(255, 0, 102, 0.35);
+        min-height: 44px;
+        touch-action: manipulation;
+      `;
+      
+      // Classic Mode Button
+      classicBtn.onclick = function() {
+        console.log('🔴 Classic button clicked');
         
-        const angloBtn = document.createElement('button');
-        angloBtn.textContent = 'Anglo Polish Edition';
-        angloBtn.className = 'game-btn';
-        angloBtn.style.cssText = `
-          font-size: 0.55rem;
-          padding: 0.75rem 1rem;
-          background: rgba(0, 255, 204, 0.2);
-          border-color: #00ffcc;
-        `;
+        // Update button styles
+        classicBtn.style.background = 'rgba(0, 255, 204, 0.3)';
+        classicBtn.style.borderColor = '#00ffcc';
+        classicBtn.style.boxShadow = '0 0 15px rgba(0, 255, 204, 0.6)';
         
-        const classicBtn = document.createElement('button');
-        classicBtn.textContent = 'Classic Mode';
-        classicBtn.className = 'game-btn';
-        classicBtn.style.cssText = `
-          font-size: 0.55rem;
-          padding: 0.75rem 1rem;
-        `;
+        angloBtn.style.background = 'rgba(255, 0, 102, 0.12)';
+        angloBtn.style.borderColor = '#ff0066';
+        angloBtn.style.boxShadow = '0 0 10px rgba(255, 0, 102, 0.35)';
         
-        mobileContainer.appendChild(angloBtn);
-        mobileContainer.appendChild(classicBtn);
+        // Switch to classic
+        window.selectedCharacter = null;
+        window.showDefaultCharacter = true;
+        window.ANGLO_POLISH_EDITION = false;
         
-        const toggleBtn = document.createElement('button');
-        toggleBtn.innerHTML = '⚙️';
-        toggleBtn.style.cssText = `
-          position: fixed;
-          top: 10px;
-          right: 10px;
-          z-index: 10003;
-          background: rgba(0, 255, 204, 0.2);
-          color: #00ffcc;
-          border: 2px solid #00ffcc;
-          border-radius: 50%;
-          width: 44px;
-          height: 44px;
-          font-size: 1.2rem;
-          cursor: pointer;
-          box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
-          font-family: Arial, sans-serif;
-        `;
+        if (typeof stopPolishAudioLoop === 'function') stopPolishAudioLoop();
         
-        let isOpen = false;
-        toggleBtn.onclick = function() {
-          isOpen = !isOpen;
-          mobileContainer.style.top = isOpen ? '0' : '-100px';
-          toggleBtn.style.background = isOpen ? 'rgba(255, 0, 102, 0.2)' : 'rgba(0, 255, 204, 0.2)';
-          toggleBtn.style.borderColor = isOpen ? '#ff0066' : '#00ffcc';
-        };
+        document.querySelectorAll('.trade-btn, .race-btn, .gallery-btn').forEach(btn => {
+          btn.style.display = 'none';
+        });
         
-        // Classic Mode Button Click
-        classicBtn.onclick = function() {
-          console.log('Classic button clicked');
-          mobileContainer.style.top = '-100px';
-          toggleBtn.style.background = 'rgba(0, 255, 204, 0.2)';
-          toggleBtn.style.borderColor = '#00ffcc';
-          
-          // Update button styles
-          classicBtn.style.background = 'rgba(0, 255, 204, 0.2)';
-          classicBtn.style.borderColor = '#00ffcc';
-          angloBtn.style.background = 'rgba(255, 0, 102, 0.12)';
-          angloBtn.style.borderColor = '#ff0066';
-          
-          // Switch to classic
-          window.selectedCharacter = null;
-          window.showDefaultCharacter = true;
-          window.ANGLO_POLISH_EDITION = false;
-          
-          if (typeof stopPolishAudioLoop === 'function') stopPolishAudioLoop();
-          
-          document.querySelectorAll('.trade-btn, .race-btn, .gallery-btn').forEach(btn => {
-            btn.style.display = 'none';
-          });
-          
-          const cs = document.getElementById('characterSelect');
-          if (cs) cs.classList.remove('active');
-          
-          setTimeout(() => {
+        const cs = document.getElementById('characterSelect');
+        if (cs) cs.classList.remove('active');
+        
+        setTimeout(() => {
+          if (typeof canvases !== 'undefined') {
             canvases.forEach(c => {
               const ctx = c.getContext('2d');
               ctx.clearRect(0, 0, c.width, c.height);
@@ -4852,40 +4834,50 @@ wrapper.appendChild(sfxBtn);
               drawCharacter(ctx);
               drawScore(ctx);
             });
-          }, 50);
-          
-          showMessage("Classic Mode Activated!");
-        };
+          }
+        }, 50);
         
-        // Anglo Polish Button Click
-        angloBtn.onclick = function() {
-          console.log('Anglo Polish button clicked');
-          mobileContainer.style.top = '-100px';
-          toggleBtn.style.background = 'rgba(0, 255, 204, 0.2)';
-          toggleBtn.style.borderColor = '#00ffcc';
+        if (typeof showMessage === 'function') {
+          showMessage("Classic Mode Activated!");
+        }
+      };
+      
+      // Anglo Polish Button
+      angloBtn.onclick = function() {
+        console.log('🟢 Anglo Polish button clicked');
+        
+        // Update button styles
+        angloBtn.style.background = 'rgba(0, 255, 204, 0.3)';
+        angloBtn.style.borderColor = '#00ffcc';
+        angloBtn.style.boxShadow = '0 0 15px rgba(0, 255, 204, 0.6)';
+        
+        classicBtn.style.background = 'rgba(255, 0, 102, 0.12)';
+        classicBtn.style.borderColor = '#ff0066';
+        classicBtn.style.boxShadow = '0 0 10px rgba(255, 0, 102, 0.35)';
+        
+        shatterEffect(() => {
+          window.ANGLO_POLISH_EDITION = true;
+          window.selectedCharacter = null;
+          window.showDefaultCharacter = true;
           
-          // Update button styles
-          angloBtn.style.background = 'rgba(0, 255, 204, 0.2)';
-          angloBtn.style.borderColor = '#00ffcc';
-          classicBtn.style.background = 'rgba(255, 0, 102, 0.12)';
-          classicBtn.style.borderColor = '#ff0066';
+          document.querySelectorAll('.trade-btn, .gallery-btn').forEach(btn => {
+            btn.style.display = 'inline-block';
+          });
           
-          shatterEffect(() => {
-            window.ANGLO_POLISH_EDITION = true;
-            window.selectedCharacter = null;
-            window.showDefaultCharacter = true;
-            
-            document.querySelectorAll('.trade-btn, .gallery-btn').forEach(btn => {
+          if (window.innerWidth > 768) {
+            document.querySelectorAll('.race-btn').forEach(btn => {
               btn.style.display = 'inline-block';
             });
+          }
+          
+          const cs = document.getElementById('characterSelect');
+          if (cs) {
+            cs.classList.add('active');
+            if (typeof startPolishAudioLoop === 'function') startPolishAudioLoop();
             
-            const cs = document.getElementById('characterSelect');
-            if (cs) {
-              cs.classList.add('active');
-              if (typeof startPolishAudioLoop === 'function') startPolishAudioLoop();
-              
-              setTimeout(() => {
-                const cards = cs.querySelectorAll('.character-card');
+            setTimeout(() => {
+              const cards = cs.querySelectorAll('.character-card');
+              if (typeof angloPolishCharacters !== 'undefined') {
                 cards.forEach((card, index) => {
                   const char = angloPolishCharacters[index];
                   if (!char) return;
@@ -4900,132 +4892,11 @@ wrapper.appendChild(sfxBtn);
                     cs.classList.remove('active');
                     if (typeof stopPolishAudioLoop === 'function') stopPolishAudioLoop();
                     
-                    showMessage(`Now playing as ${char.name}!`);
-                    
-                    canvases.forEach(canvas => {
-                      const ctx = canvas.getContext("2d");
-                      ctx.clearRect(0, 0, canvas.width, canvas.height);
-                      drawLadder(ctx, canvas);
-                      drawCharacter(ctx);
-                      drawBenchedCube(ctx, canvas);
-                      drawScore(ctx);
-                    });
-                  };
-                });
-              }, 100);
-            }
-          });
-        };
-        
-        document.body.appendChild(toggleBtn);
-        document.body.appendChild(mobileContainer);
-        
-      } else {
-        // DESKTOP: Use dropdown selector (original working code)
-        const container = document.createElement('div');
-        container.id = 'modeSelectorContainer';
-        container.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          z-index: 10002;
-          background: rgba(10, 10, 10, 0.95);
-          border: 2px solid #00ffcc;
-          border-top: none;
-          border-radius: 0 0 10px 10px;
-          padding: 0.5rem 1.5rem;
-          box-shadow: 0 4px 20px rgba(0, 255, 204, 0.5);
-          backdrop-filter: blur(10px);
-        `;
-        
-        const selector = document.createElement('select');
-        selector.id = 'gameModeSelector';
-        selector.style.cssText = `
-          font-family: 'Press Start 2P', cursive;
-          font-size: 0.7rem;
-          background: rgba(0, 0, 0, 0.8);
-          color: #00ffcc;
-          border: 2px solid #ff0066;
-          border-radius: 5px;
-          padding: 0.5rem 1rem;
-          cursor: pointer;
-          outline: none;
-          box-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
-          min-width: 200px;
-        `;
-        
-        selector.innerHTML = `
-          <option value="anglo">Anglo Polish Edition</option>
-          <option value="classic">Classic Mode</option>
-        `;
-        
-        selector.value = 'anglo';
-        
-        selector.onchange = function() {
-          if (this.value === 'classic') {
-            window.selectedCharacter = null;
-            window.showDefaultCharacter = true;
-            window.ANGLO_POLISH_EDITION = false;
-            
-            if (typeof stopPolishAudioLoop === 'function') stopPolishAudioLoop();
-            
-            document.querySelectorAll('.trade-btn, .race-btn, .gallery-btn').forEach(btn => {
-              btn.style.display = 'none';
-            });
-            
-            const cs = document.getElementById('characterSelect');
-            if (cs) cs.classList.remove('active');
-            
-            setTimeout(() => {
-              canvases.forEach(c => {
-                const ctx = c.getContext('2d');
-                ctx.clearRect(0, 0, c.width, c.height);
-                drawLadder(ctx, c);
-                drawCharacter(ctx);
-                drawScore(ctx);
-              });
-            }, 50);
-            
-            showMessage("Classic Mode Activated!");
-            
-          } else {
-            shatterEffect(() => {
-              window.ANGLO_POLISH_EDITION = true;
-              window.selectedCharacter = null;
-              window.showDefaultCharacter = true;
-              
-              document.querySelectorAll('.trade-btn, .gallery-btn').forEach(btn => {
-                btn.style.display = 'inline-block';
-              });
-              
-              document.querySelectorAll('.race-btn').forEach(btn => {
-                btn.style.display = 'inline-block';
-              });
-              
-              const cs = document.getElementById('characterSelect');
-              if (cs) {
-                cs.classList.add('active');
-                if (typeof startPolishAudioLoop === 'function') startPolishAudioLoop();
-                
-                setTimeout(() => {
-                  const cards = cs.querySelectorAll('.character-card');
-                  cards.forEach((card, index) => {
-                    const char = angloPolishCharacters[index];
-                    if (!char) return;
-                    
-                    const newCard = card.cloneNode(true);
-                    card.parentNode.replaceChild(newCard, card);
-                    
-                    newCard.onclick = function() {
-                      window.selectedCharacter = char;
-                      window.showDefaultCharacter = false;
-                      
-                      cs.classList.remove('active');
-                      if (typeof stopPolishAudioLoop === 'function') stopPolishAudioLoop();
-                      
+                    if (typeof showMessage === 'function') {
                       showMessage(`Now playing as ${char.name}!`);
-                      
+                    }
+                    
+                    if (typeof canvases !== 'undefined') {
                       canvases.forEach(canvas => {
                         const ctx = canvas.getContext("2d");
                         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -5034,30 +4905,44 @@ wrapper.appendChild(sfxBtn);
                         drawBenchedCube(ctx, canvas);
                         drawScore(ctx);
                       });
-                    };
-                  });
-                }, 100);
+                    }
+                  };
+                });
               }
-            });
+            }, 100);
           }
-        };
-        
-        selector.onmouseenter = function() {
-          this.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.8)';
-        };
-        selector.onmouseleave = function() {
-          this.style.boxShadow = '0 0 10px rgba(255, 0, 102, 0.5)';
-        };
-        
-        container.appendChild(selector);
-        document.body.appendChild(container);
-      }
+        });
+      };
+      
+      // Hover effects
+      angloBtn.onmouseenter = function() {
+        if (this.style.borderColor !== 'rgb(0, 255, 204)') {
+          this.style.transform = 'translateY(-2px)';
+        }
+      };
+      angloBtn.onmouseleave = function() {
+        this.style.transform = 'translateY(0)';
+      };
+      
+      classicBtn.onmouseenter = function() {
+        if (this.style.borderColor !== 'rgb(0, 255, 204)') {
+          this.style.transform = 'translateY(-2px)';
+        }
+      };
+      classicBtn.onmouseleave = function() {
+        this.style.transform = 'translateY(0)';
+      };
+      
+      container.appendChild(angloBtn);
+      container.appendChild(classicBtn);
+      document.body.appendChild(container);
+      
+      console.log('✅ Mode buttons created');
       
     }, 2000);
   });
 })();
 </script>
-
   
 
   
