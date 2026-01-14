@@ -1,4 +1,4 @@
-<!-- Site updated: redirect to ladderloop_ap.html -->
+<!-- Site updated 1456: redirect to ladderloop_ap.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -4660,7 +4660,7 @@ wrapper.appendChild(sfxBtn);
 
 
 <script>
-// Mode Selector Dropdown - Mobile Friendly Version
+// Mode Selector Dropdown - Mobile Friendly with Toggle
 (function() {
   // Glass shatter effect function
   function shatterEffect(callback) {
@@ -4747,11 +4747,7 @@ wrapper.appendChild(sfxBtn);
   
   // Wait for everything to load
   window.addEventListener('load', function() {
-    // Only show on desktop
-    if (window.innerWidth <= 768) {
-      console.log('Mobile detected - mode selector hidden');
-      return; // Don't create dropdown on mobile
-    }
+    const isMobile = window.innerWidth <= 768;
     
     // Wait for intro to finish
     setTimeout(function() {
@@ -4760,7 +4756,7 @@ wrapper.appendChild(sfxBtn);
       container.id = 'modeSelectorContainer';
       container.style.cssText = `
         position: fixed;
-        top: 0;
+        top: ${isMobile ? '-50px' : '0'};
         left: 50%;
         transform: translateX(-50%);
         z-index: 10002;
@@ -4771,13 +4767,14 @@ wrapper.appendChild(sfxBtn);
         padding: 0.5rem 1.5rem;
         box-shadow: 0 4px 20px rgba(0, 255, 204, 0.5);
         backdrop-filter: blur(10px);
+        transition: top 0.3s ease;
       `;
       
       // Create select
       const selector = document.createElement('select');
       selector.style.cssText = `
         font-family: 'Press Start 2P', cursive;
-        font-size: 0.7rem;
+        font-size: ${isMobile ? '0.55rem' : '0.7rem'};
         background: rgba(0, 0, 0, 0.8);
         color: #00ffcc;
         border: 2px solid #ff0066;
@@ -4786,7 +4783,7 @@ wrapper.appendChild(sfxBtn);
         cursor: pointer;
         outline: none;
         box-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
-        min-width: 200px;
+        min-width: ${isMobile ? '150px' : '200px'};
       `;
       
       selector.innerHTML = `
@@ -4796,8 +4793,50 @@ wrapper.appendChild(sfxBtn);
       
       selector.value = 'anglo';
       
+      // Create toggle button for mobile
+      if (isMobile) {
+        const toggleBtn = document.createElement('button');
+        toggleBtn.innerHTML = '⚙️';
+        toggleBtn.style.cssText = `
+          position: fixed;
+          top: 10px;
+          right: 10px;
+          z-index: 10003;
+          background: rgba(0, 255, 204, 0.2);
+          color: #00ffcc;
+          border: 2px solid #00ffcc;
+          border-radius: 50%;
+          width: 44px;
+          height: 44px;
+          font-size: 1.2rem;
+          cursor: pointer;
+          box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+          font-family: Arial, sans-serif;
+        `;
+        
+        let isOpen = false;
+        toggleBtn.onclick = function() {
+          isOpen = !isOpen;
+          container.style.top = isOpen ? '0' : '-50px';
+          toggleBtn.style.background = isOpen ? 'rgba(255, 0, 102, 0.2)' : 'rgba(0, 255, 204, 0.2)';
+          toggleBtn.style.borderColor = isOpen ? '#ff0066' : '#00ffcc';
+        };
+        
+        document.body.appendChild(toggleBtn);
+      }
+      
       // Handle changes
       selector.onchange = function() {
+        // Close mobile dropdown after selection
+        if (isMobile) {
+          container.style.top = '-50px';
+          const toggleBtn = document.querySelector('[style*="z-index: 10003"]');
+          if (toggleBtn) {
+            toggleBtn.style.background = 'rgba(0, 255, 204, 0.2)';
+            toggleBtn.style.borderColor = '#00ffcc';
+          }
+        }
+        
         if (this.value === 'classic') {
           // Switch to classic
           if (typeof selectedCharacter !== 'undefined') {
@@ -4922,33 +4961,25 @@ wrapper.appendChild(sfxBtn);
         }
       };
       
-      // Hover effect
-      selector.onmouseenter = function() {
-        this.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.8)';
-      };
-      selector.onmouseleave = function() {
-        this.style.boxShadow = '0 0 10px rgba(255, 0, 102, 0.5)';
-      };
+      // Hover effect (desktop only)
+      if (!isMobile) {
+        selector.onmouseenter = function() {
+          this.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.8)';
+        };
+        selector.onmouseleave = function() {
+          this.style.boxShadow = '0 0 10px rgba(255, 0, 102, 0.5)';
+        };
+      }
       
       container.appendChild(selector);
       document.body.appendChild(container);
       
     }, 2000); // Wait 2 seconds after page load for intro to finish
   });
-  
-  // Handle window resize - hide/show dropdown
-  window.addEventListener('resize', function() {
-    const container = document.getElementById('modeSelectorContainer');
-    if (container) {
-      if (window.innerWidth <= 768) {
-        container.style.display = 'none';
-      } else {
-        container.style.display = 'block';
-      }
-    }
-  });
 })();
 </script>
+
+  
 
   
 </body>
