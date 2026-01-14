@@ -4660,7 +4660,7 @@ wrapper.appendChild(sfxBtn);
 
 
 <script>
-// Mode Selector Dropdown - Mobile Friendly with Toggle - FIXED
+// Mode Selector Dropdown - Mobile Fix with Multiple Event Listeners
 (function() {
   // Glass shatter effect function
   function shatterEffect(callback) {
@@ -4743,7 +4743,7 @@ wrapper.appendChild(sfxBtn);
   
   // Switch to Classic Mode function
   function switchToClassic() {
-    console.log('🔴 Switching to CLASSIC mode');
+    console.log('🔴 SWITCHING TO CLASSIC MODE');
     
     if (typeof selectedCharacter !== 'undefined') {
       selectedCharacter = null;
@@ -4774,6 +4774,7 @@ wrapper.appendChild(sfxBtn);
           if (typeof drawScore === 'function') drawScore(ctx);
         });
       }
+      console.log('✅ Classic mode canvas redrawn');
     }, 100);
     
     if (typeof showMessage === 'function') {
@@ -4783,7 +4784,7 @@ wrapper.appendChild(sfxBtn);
   
   // Switch to Anglo Polish function
   function switchToAngloPolish() {
-    console.log('🟢 Switching to ANGLO POLISH mode');
+    console.log('🟢 SWITCHING TO ANGLO POLISH MODE');
     
     shatterEffect(() => {
       window.ANGLO_POLISH_EDITION = true;
@@ -4933,25 +4934,47 @@ wrapper.appendChild(sfxBtn);
         document.body.appendChild(toggleBtn);
       }
       
-      // MAIN CHANGE HANDLER - Works on both mobile and desktop
-      selector.addEventListener('change', function(e) {
-        console.log('🔄 Mode selector changed to:', this.value);
+      // HANDLE MODE CHANGE - Multiple event listeners for mobile compatibility
+      function handleModeChange() {
+        const selectedValue = selector.value;
+        console.log('📱 handleModeChange called, value:', selectedValue);
         
         // Close mobile dropdown after selection
         if (isMobile) {
-          container.style.top = '-50px';
-          const toggleBtn = document.querySelector('[style*="z-index: 10003"]');
-          if (toggleBtn) {
-            toggleBtn.style.background = 'rgba(0, 255, 204, 0.2)';
-            toggleBtn.style.borderColor = '#00ffcc';
-          }
+          setTimeout(() => {
+            container.style.top = '-50px';
+            const toggleBtn = document.querySelector('[style*="z-index: 10003"]');
+            if (toggleBtn) {
+              toggleBtn.style.background = 'rgba(0, 255, 204, 0.2)';
+              toggleBtn.style.borderColor = '#00ffcc';
+            }
+          }, 100);
         }
         
-        if (this.value === 'classic') {
+        if (selectedValue === 'classic') {
           switchToClassic();
         } else {
           switchToAngloPolish();
         }
+      }
+      
+      // Add multiple event listeners for better mobile support
+      selector.addEventListener('change', function(e) {
+        console.log('🔄 Change event fired');
+        handleModeChange();
+      });
+      
+      selector.addEventListener('input', function(e) {
+        console.log('⌨️ Input event fired');
+        handleModeChange();
+      });
+      
+      // For mobile Safari/iOS
+      selector.addEventListener('blur', function(e) {
+        console.log('👁️ Blur event fired');
+        setTimeout(() => {
+          handleModeChange();
+        }, 50);
       });
       
       if (!isMobile) {
@@ -4965,6 +4988,8 @@ wrapper.appendChild(sfxBtn);
       
       container.appendChild(selector);
       document.body.appendChild(container);
+      
+      console.log('✅ Mode selector created, isMobile:', isMobile);
       
     }, 2000);
   });
