@@ -4659,8 +4659,8 @@ wrapper.appendChild(sfxBtn);
 </script>
 
 
-  <script>
-// Mode Selector Dropdown - Simple Working Version with Glass Shatter
+<script>
+// Mode Selector Dropdown - Mobile Friendly Version
 (function() {
   // Glass shatter effect function
   function shatterEffect(callback) {
@@ -4747,10 +4747,17 @@ wrapper.appendChild(sfxBtn);
   
   // Wait for everything to load
   window.addEventListener('load', function() {
+    // Only show on desktop
+    if (window.innerWidth <= 768) {
+      console.log('Mobile detected - mode selector hidden');
+      return; // Don't create dropdown on mobile
+    }
+    
     // Wait for intro to finish
     setTimeout(function() {
       // Create container
       const container = document.createElement('div');
+      container.id = 'modeSelectorContainer';
       container.style.cssText = `
         position: fixed;
         top: 0;
@@ -4793,16 +4800,20 @@ wrapper.appendChild(sfxBtn);
       selector.onchange = function() {
         if (this.value === 'classic') {
           // Switch to classic
+          if (typeof selectedCharacter !== 'undefined') {
+            selectedCharacter = null;
+            showDefaultCharacter = true;
+          }
           window.selectedCharacter = null;
           window.showDefaultCharacter = true;
-          selectedCharacter = null;
-          showDefaultCharacter = true;
           
           // Turn OFF Anglo Polish Edition globally
           window.ANGLO_POLISH_EDITION = false;
           
           // Stop audio
-          if (window.stopPolishAudioLoop) stopPolishAudioLoop();
+          if (typeof stopPolishAudioLoop === 'function') {
+            stopPolishAudioLoop();
+          }
           
           // Hide buttons
           document.querySelectorAll('.trade-btn, .race-btn, .gallery-btn').forEach(btn => {
@@ -4814,15 +4825,19 @@ wrapper.appendChild(sfxBtn);
           if (cs) cs.classList.remove('active');
           
           // Redraw canvas with classic yellow cube
-          canvases.forEach(c => {
-            const ctx = c.getContext('2d');
-            ctx.clearRect(0, 0, c.width, c.height);
-            drawLadder(ctx, c);
-            drawCharacter(ctx);
-            drawScore(ctx);
-          });
+          if (typeof canvases !== 'undefined' && canvases.length > 0) {
+            canvases.forEach(c => {
+              const ctx = c.getContext('2d');
+              ctx.clearRect(0, 0, c.width, c.height);
+              if (typeof drawLadder === 'function') drawLadder(ctx, c);
+              if (typeof drawCharacter === 'function') drawCharacter(ctx);
+              if (typeof drawScore === 'function') drawScore(ctx);
+            });
+          }
           
-          showMessage("Classic Mode Activated!");
+          if (typeof showMessage === 'function') {
+            showMessage("Classic Mode Activated!");
+          }
           
         } else {
           // Switch to Anglo Polish WITH GLASS SHATTER
@@ -4831,10 +4846,12 @@ wrapper.appendChild(sfxBtn);
             window.ANGLO_POLISH_EDITION = true;
             
             // Reset character selection
+            if (typeof selectedCharacter !== 'undefined') {
+              selectedCharacter = null;
+              showDefaultCharacter = true;
+            }
             window.selectedCharacter = null;
             window.showDefaultCharacter = true;
-            selectedCharacter = null;
-            showDefaultCharacter = true;
             
             // Show buttons
             document.querySelectorAll('.trade-btn, .gallery-btn').forEach(btn => {
@@ -4851,42 +4868,54 @@ wrapper.appendChild(sfxBtn);
             const cs = document.getElementById('characterSelect');
             if (cs) {
               cs.classList.add('active');
-              if (window.startPolishAudioLoop) startPolishAudioLoop();
+              if (typeof startPolishAudioLoop === 'function') {
+                startPolishAudioLoop();
+              }
               
               // FIX: Re-attach character card click handlers to update window references
               setTimeout(() => {
                 const cards = cs.querySelectorAll('.character-card');
-                cards.forEach((card, index) => {
-                  const char = angloPolishCharacters[index];
-                  if (!char) return;
-                  
-                  // Remove old listeners by cloning
-                  const newCard = card.cloneNode(true);
-                  card.parentNode.replaceChild(newCard, card);
-                  
-                  // Add new click handler with proper window updates
-                  newCard.addEventListener('click', () => {
-                    selectedCharacter = char;
-                    showDefaultCharacter = false;
-                    window.selectedCharacter = char; // UPDATE WINDOW
-                    window.showDefaultCharacter = false; // UPDATE WINDOW
+                if (typeof angloPolishCharacters !== 'undefined') {
+                  cards.forEach((card, index) => {
+                    const char = angloPolishCharacters[index];
+                    if (!char) return;
                     
-                    cs.classList.remove('active');
-                    if (window.stopPolishAudioLoop) stopPolishAudioLoop();
+                    // Remove old listeners by cloning
+                    const newCard = card.cloneNode(true);
+                    card.parentNode.replaceChild(newCard, card);
                     
-                    showMessage(`Now playing as ${char.name}!`);
-                    
-                    // Force redraw with character sprite
-                    canvases.forEach(canvas => {
-                      const ctx = canvas.getContext("2d");
-                      ctx.clearRect(0, 0, canvas.width, canvas.height);
-                      drawLadder(ctx, canvas);
-                      drawCharacter(ctx);
-                      drawBenchedCube(ctx, canvas);
-                      drawScore(ctx);
+                    // Add new click handler with proper window updates
+                    newCard.addEventListener('click', () => {
+                      if (typeof selectedCharacter !== 'undefined') {
+                        selectedCharacter = char;
+                        showDefaultCharacter = false;
+                      }
+                      window.selectedCharacter = char;
+                      window.showDefaultCharacter = false;
+                      
+                      cs.classList.remove('active');
+                      if (typeof stopPolishAudioLoop === 'function') {
+                        stopPolishAudioLoop();
+                      }
+                      
+                      if (typeof showMessage === 'function') {
+                        showMessage(`Now playing as ${char.name}!`);
+                      }
+                      
+                      // Force redraw with character sprite
+                      if (typeof canvases !== 'undefined' && canvases.length > 0) {
+                        canvases.forEach(canvas => {
+                          const ctx = canvas.getContext("2d");
+                          ctx.clearRect(0, 0, canvas.width, canvas.height);
+                          if (typeof drawLadder === 'function') drawLadder(ctx, canvas);
+                          if (typeof drawCharacter === 'function') drawCharacter(ctx);
+                          if (typeof drawBenchedCube === 'function') drawBenchedCube(ctx, canvas);
+                          if (typeof drawScore === 'function') drawScore(ctx);
+                        });
+                      }
                     });
                   });
-                });
+                }
               }, 100);
             }
           });
@@ -4905,6 +4934,18 @@ wrapper.appendChild(sfxBtn);
       document.body.appendChild(container);
       
     }, 2000); // Wait 2 seconds after page load for intro to finish
+  });
+  
+  // Handle window resize - hide/show dropdown
+  window.addEventListener('resize', function() {
+    const container = document.getElementById('modeSelectorContainer');
+    if (container) {
+      if (window.innerWidth <= 768) {
+        container.style.display = 'none';
+      } else {
+        container.style.display = 'block';
+      }
+    }
   });
 })();
 </script>
