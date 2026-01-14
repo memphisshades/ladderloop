@@ -1,4 +1,4 @@
-<!-- Site updated 1613: redirect to ladderloop_ap.html -->
+<!-- Site updated 1631: redirect to ladderloop_ap.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -4660,7 +4660,7 @@ wrapper.appendChild(sfxBtn);
 
 
 <script>
-// Mode Selector Dropdown - Mobile Fix with Multiple Event Listeners
+// Mode Selector Dropdown - Mobile Classic Mode Force Fix
 (function() {
   // Glass shatter effect function
   function shatterEffect(callback) {
@@ -4741,41 +4741,83 @@ wrapper.appendChild(sfxBtn);
     }, 50);
   }
   
-  // Switch to Classic Mode function
-  function switchToClassic() {
-    console.log('🔴 SWITCHING TO CLASSIC MODE');
+  // FORCE Classic Mode - Nuclear option
+  function forceClassicMode() {
+    console.log('🔴💥 FORCE CLASSIC MODE - NUCLEAR OPTION');
     
-    if (typeof selectedCharacter !== 'undefined') {
-      selectedCharacter = null;
-      showDefaultCharacter = true;
+    // Set ALL variables to classic
+    window.ANGLO_POLISH_EDITION = false;
+    if (typeof ANGLO_POLISH_EDITION !== 'undefined') {
+      ANGLO_POLISH_EDITION = false;
     }
+    
     window.selectedCharacter = null;
     window.showDefaultCharacter = true;
-    window.ANGLO_POLISH_EDITION = false;
+    if (typeof selectedCharacter !== 'undefined') {
+      selectedCharacter = null;
+    }
+    if (typeof showDefaultCharacter !== 'undefined') {
+      showDefaultCharacter = true;
+    }
     
+    // Stop all audio
+    if (window.polishAudioInterval) {
+      clearInterval(window.polishAudioInterval);
+      window.polishAudioInterval = null;
+    }
+    if (window.polishAudio) {
+      window.polishAudio.pause();
+      window.polishAudio.currentTime = 0;
+    }
     if (typeof stopPolishAudioLoop === 'function') {
       stopPolishAudioLoop();
     }
     
+    // Hide ALL Anglo Polish buttons
     document.querySelectorAll('.trade-btn, .race-btn, .gallery-btn').forEach(btn => {
       btn.style.display = 'none';
+      btn.style.visibility = 'hidden';
     });
     
+    // Close character select HARD
     const cs = document.getElementById('characterSelect');
-    if (cs) cs.classList.remove('active');
+    if (cs) {
+      cs.classList.remove('active');
+      cs.style.display = 'none';
+    }
     
-    setTimeout(() => {
-      if (typeof canvases !== 'undefined' && canvases.length > 0) {
-        canvases.forEach(c => {
+    // Force redraw multiple times
+    function forceRedraw() {
+      if (typeof canvases !== 'undefined' && window.canvases && window.canvases.length > 0) {
+        window.canvases.forEach(c => {
           const ctx = c.getContext('2d');
           ctx.clearRect(0, 0, c.width, c.height);
-          if (typeof drawLadder === 'function') drawLadder(ctx, c);
-          if (typeof drawCharacter === 'function') drawCharacter(ctx);
-          if (typeof drawScore === 'function') drawScore(ctx);
+          
+          // Draw ladder
+          if (typeof drawLadder === 'function') {
+            drawLadder(ctx, c);
+          }
+          
+          // Force yellow cube
+          ctx.fillStyle = "#ffcc00";
+          if (typeof character !== 'undefined' && character) {
+            ctx.fillRect(character.x, character.y, character.width, character.height);
+          }
+          
+          // Draw score
+          if (typeof drawScore === 'function') {
+            drawScore(ctx);
+          }
         });
+        console.log('✅ Classic mode forced redraw complete');
       }
-      console.log('✅ Classic mode canvas redrawn');
-    }, 100);
+    }
+    
+    // Redraw immediately and after delays
+    forceRedraw();
+    setTimeout(forceRedraw, 100);
+    setTimeout(forceRedraw, 300);
+    setTimeout(forceRedraw, 500);
     
     if (typeof showMessage === 'function') {
       showMessage("Classic Mode Activated!");
@@ -4798,16 +4840,19 @@ wrapper.appendChild(sfxBtn);
       
       document.querySelectorAll('.trade-btn, .gallery-btn').forEach(btn => {
         btn.style.display = 'inline-block';
+        btn.style.visibility = 'visible';
       });
       
       if (window.innerWidth > 768) {
         document.querySelectorAll('.race-btn').forEach(btn => {
           btn.style.display = 'inline-block';
+          btn.style.visibility = 'visible';
         });
       }
       
       const cs = document.getElementById('characterSelect');
       if (cs) {
+        cs.style.display = 'flex';
         cs.classList.add('active');
         if (typeof startPolishAudioLoop === 'function') {
           startPolishAudioLoop();
@@ -4934,7 +4979,7 @@ wrapper.appendChild(sfxBtn);
         document.body.appendChild(toggleBtn);
       }
       
-      // HANDLE MODE CHANGE - Multiple event listeners for mobile compatibility
+      // HANDLE MODE CHANGE - Use FORCE for classic mode
       function handleModeChange() {
         const selectedValue = selector.value;
         console.log('📱 handleModeChange called, value:', selectedValue);
@@ -4952,29 +4997,17 @@ wrapper.appendChild(sfxBtn);
         }
         
         if (selectedValue === 'classic') {
-          switchToClassic();
+          forceClassicMode(); // Use FORCE function
         } else {
           switchToAngloPolish();
         }
       }
       
       // Add multiple event listeners for better mobile support
-      selector.addEventListener('change', function(e) {
-        console.log('🔄 Change event fired');
-        handleModeChange();
-      });
-      
-      selector.addEventListener('input', function(e) {
-        console.log('⌨️ Input event fired');
-        handleModeChange();
-      });
-      
-      // For mobile Safari/iOS
+      selector.addEventListener('change', handleModeChange);
+      selector.addEventListener('input', handleModeChange);
       selector.addEventListener('blur', function(e) {
-        console.log('👁️ Blur event fired');
-        setTimeout(() => {
-          handleModeChange();
-        }, 50);
+        setTimeout(handleModeChange, 50);
       });
       
       if (!isMobile) {
