@@ -589,7 +589,7 @@
   <button class="game-btn mute-btn">🔊</button>
   <button class="game-btn reset-btn">↻</button>
   <button class="game-btn trade-btn">🔨 </button>
-  <!-- <button class="game-btn race-btn">🏁 </button> -->
+   <button class="game-btn race-btn">🏁 </button> 
   <button class="game-btn gallery-btn">🎨</button>
 </div>
       </div>
@@ -4631,6 +4631,32 @@ wrapper.appendChild(sfxBtn);
 })();
 </script>
 
+  <script>
+// Show Race button on desktop only
+(function() {
+  const isMobile = window.innerWidth <= 768;
+  
+  if (isMobile) {
+    // Hide all race buttons on mobile
+    document.querySelectorAll('.race-btn').forEach(btn => {
+      btn.style.display = 'none';
+    });
+  } else {
+    // Show race button on desktop
+    document.querySelectorAll('.race-btn').forEach(btn => {
+      btn.style.display = 'inline-block';
+    });
+  }
+  
+  // Re-check on window resize
+  window.addEventListener('resize', () => {
+    const isMobileNow = window.innerWidth <= 768;
+    document.querySelectorAll('.race-btn').forEach(btn => {
+      btn.style.display = isMobileNow ? 'none' : 'inline-block';
+    });
+  });
+})();
+</script>
 
 </body>
 </html></parameter>
