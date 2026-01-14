@@ -4658,5 +4658,257 @@ wrapper.appendChild(sfxBtn);
 })();
 </script>
 
+
+  <script>
+// Mode Selector Dropdown - Simple Working Version with Glass Shatter
+(function() {
+  // Glass shatter effect function
+  function shatterEffect(callback) {
+    const isMobile = window.innerWidth <= 768;
+    const cols = isMobile ? 4 : 8;
+    const rows = isMobile ? 3 : 6;
+    const w = window.innerWidth / cols;
+    const h = window.innerHeight / rows;
+    const animationDuration = isMobile ? 0.6 : 1.0;
+    
+    // Create overlay to shatter
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 10, 0.95);
+      z-index: 10001;
+      pointer-events: none;
+    `;
+    document.body.appendChild(overlay);
+    
+    // Create glass pieces
+    setTimeout(() => {
+      overlay.style.opacity = '0';
+      
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const piece = document.createElement('div');
+          
+          const x = col * w;
+          const y = row * h;
+          
+          const centerX = window.innerWidth / 2;
+          const centerY = window.innerHeight / 2;
+          const pieceX = x + w / 2;
+          const pieceY = y + h / 2;
+          const angle = Math.atan2(pieceY - centerY, pieceX - centerX);
+          const distance = isMobile ? 300 : 500 + Math.random() * 300;
+          const fallX = Math.cos(angle) * distance;
+          const fallY = Math.sin(angle) * distance + (isMobile ? 100 : Math.random() * 200 + 200);
+          const rotation = (Math.random() - 0.5) * 360;
+          
+          piece.style.cssText = `
+            position: fixed;
+            left: ${x}px;
+            top: ${y}px;
+            width: ${w}px;
+            height: ${h}px;
+            background: rgba(10, 10, 10, 0.95);
+            ${isMobile ? '' : 'backdrop-filter: blur(10px);'}
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: piece-fall ${animationDuration}s ease-in forwards;
+            animation-delay: ${Math.random() * 0.1}s;
+            --fall-x: ${fallX}px;
+            --fall-y: ${fallY}px;
+            --fall-rot: ${rotation}deg;
+            z-index: 10001;
+            overflow: hidden;
+          `;
+          
+          document.body.appendChild(piece);
+        }
+      }
+      
+      // Play sound if available
+      try {
+        const glassBreakAudio = new Audio('glass-break-explosion.mp3');
+        glassBreakAudio.volume = 0.7;
+        glassBreakAudio.play().catch(e => console.log('Audio play failed:', e));
+      } catch(e) {}
+      
+      // Clean up and callback
+      const cleanupTime = isMobile ? 700 : 1200;
+      setTimeout(() => {
+        overlay.remove();
+        document.querySelectorAll('[style*="piece-fall"]').forEach(p => p.remove());
+        if (callback) callback();
+      }, cleanupTime);
+    }, 50);
+  }
+  
+  // Wait for everything to load
+  window.addEventListener('load', function() {
+    // Wait for intro to finish
+    setTimeout(function() {
+      // Create container
+      const container = document.createElement('div');
+      container.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10002;
+        background: rgba(10, 10, 10, 0.95);
+        border: 2px solid #00ffcc;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        padding: 0.5rem 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 255, 204, 0.5);
+        backdrop-filter: blur(10px);
+      `;
+      
+      // Create select
+      const selector = document.createElement('select');
+      selector.style.cssText = `
+        font-family: 'Press Start 2P', cursive;
+        font-size: 0.7rem;
+        background: rgba(0, 0, 0, 0.8);
+        color: #00ffcc;
+        border: 2px solid #ff0066;
+        border-radius: 5px;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        outline: none;
+        box-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
+        min-width: 200px;
+      `;
+      
+      selector.innerHTML = `
+        <option value="anglo">Anglo Polish Edition</option>
+        <option value="classic">Classic Mode</option>
+      `;
+      
+      selector.value = 'anglo';
+      
+      // Handle changes
+      selector.onchange = function() {
+        if (this.value === 'classic') {
+          // Switch to classic
+          window.selectedCharacter = null;
+          window.showDefaultCharacter = true;
+          selectedCharacter = null;
+          showDefaultCharacter = true;
+          
+          // Turn OFF Anglo Polish Edition globally
+          window.ANGLO_POLISH_EDITION = false;
+          
+          // Stop audio
+          if (window.stopPolishAudioLoop) stopPolishAudioLoop();
+          
+          // Hide buttons
+          document.querySelectorAll('.trade-btn, .race-btn, .gallery-btn').forEach(btn => {
+            btn.style.display = 'none';
+          });
+          
+          // Close character select
+          const cs = document.getElementById('characterSelect');
+          if (cs) cs.classList.remove('active');
+          
+          // Redraw canvas with classic yellow cube
+          canvases.forEach(c => {
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, c.width, c.height);
+            drawLadder(ctx, c);
+            drawCharacter(ctx);
+            drawScore(ctx);
+          });
+          
+          showMessage("Classic Mode Activated!");
+          
+        } else {
+          // Switch to Anglo Polish WITH GLASS SHATTER
+          shatterEffect(() => {
+            // Turn ON Anglo Polish Edition globally
+            window.ANGLO_POLISH_EDITION = true;
+            
+            // Reset character selection
+            window.selectedCharacter = null;
+            window.showDefaultCharacter = true;
+            selectedCharacter = null;
+            showDefaultCharacter = true;
+            
+            // Show buttons
+            document.querySelectorAll('.trade-btn, .gallery-btn').forEach(btn => {
+              btn.style.display = 'inline-block';
+            });
+            
+            if (window.innerWidth > 768) {
+              document.querySelectorAll('.race-btn').forEach(btn => {
+                btn.style.display = 'inline-block';
+              });
+            }
+            
+            // Show character select and attach fixed click handlers
+            const cs = document.getElementById('characterSelect');
+            if (cs) {
+              cs.classList.add('active');
+              if (window.startPolishAudioLoop) startPolishAudioLoop();
+              
+              // FIX: Re-attach character card click handlers to update window references
+              setTimeout(() => {
+                const cards = cs.querySelectorAll('.character-card');
+                cards.forEach((card, index) => {
+                  const char = angloPolishCharacters[index];
+                  if (!char) return;
+                  
+                  // Remove old listeners by cloning
+                  const newCard = card.cloneNode(true);
+                  card.parentNode.replaceChild(newCard, card);
+                  
+                  // Add new click handler with proper window updates
+                  newCard.addEventListener('click', () => {
+                    selectedCharacter = char;
+                    showDefaultCharacter = false;
+                    window.selectedCharacter = char; // UPDATE WINDOW
+                    window.showDefaultCharacter = false; // UPDATE WINDOW
+                    
+                    cs.classList.remove('active');
+                    if (window.stopPolishAudioLoop) stopPolishAudioLoop();
+                    
+                    showMessage(`Now playing as ${char.name}!`);
+                    
+                    // Force redraw with character sprite
+                    canvases.forEach(canvas => {
+                      const ctx = canvas.getContext("2d");
+                      ctx.clearRect(0, 0, canvas.width, canvas.height);
+                      drawLadder(ctx, canvas);
+                      drawCharacter(ctx);
+                      drawBenchedCube(ctx, canvas);
+                      drawScore(ctx);
+                    });
+                  });
+                });
+              }, 100);
+            }
+          });
+        }
+      };
+      
+      // Hover effect
+      selector.onmouseenter = function() {
+        this.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.8)';
+      };
+      selector.onmouseleave = function() {
+        this.style.boxShadow = '0 0 10px rgba(255, 0, 102, 0.5)';
+      };
+      
+      container.appendChild(selector);
+      document.body.appendChild(container);
+      
+    }, 2000); // Wait 2 seconds after page load for intro to finish
+  });
+})();
+</script>
+
+  
 </body>
 </html></parameter>
