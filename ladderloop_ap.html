@@ -1,4 +1,4 @@
-<!-- Site updated 1638: redirect to ladderloop_ap.html -->
+<!-- Site updated 0053: redirect to ladderloop_ap.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -592,6 +592,8 @@
    <button class="game-btn race-btn">🏁 </button> 
   <button class="game-btn gallery-btn">🎨</button>
 </div>
+
+
       </div>
     </div>
   </section>
@@ -678,7 +680,15 @@
         name: "Greg",
         role: "Plumber",
         color: "#00ff66"
+      },
+{
+        id: "tobin",
+        name: "James",
+        role: "Apprentice",
+        color: "#00ff66"
       }
+
+
     ];
 
     let selectedCharacter = null; // Will be set after character selection
@@ -897,6 +907,18 @@ const characterMessages = {
     "The painter's masterpiece vs your disaster. Quite the contrast.",
     "Mario's wondering if he should paint over this embarrassment.",
     "The painter's teeth are brighter than your future."
+  ],
+tobin: [
+    "James wrote this code. James has failed it.",
+"The apprentice has fallen. Unfortunately, he’s also the programmer.",
+"The coder has been defeated by his own mechanics.",
+"Resetting… James swears this worked earlier.",
+"James knows why this happened. He’s not proud.",
+"The game is watching its creator fail.",
+"Bug or feature? James says it’s fine.",
+"James implemented this. James regrets it.",
+"The apprentice is learning the hard way.",
+"The programmer does not get special treatment."
   ]
 };
 
@@ -957,21 +979,22 @@ const funnyMessages = ANGLO_POLISH_EDITION ?
     return;
   }
   
-  // After character selection in Anglo Polish Edition
-  if (currentSelectedCharacter && currentSelectedCharacter.id === "swarvek") {
-    drawSwarvekSprite(ctx, character.x, character.y, character.width);
-  } else if (currentSelectedCharacter && currentSelectedCharacter.id === "michel") {
-    drawMichelSprite(ctx, character.x, character.y, character.width);
-  } else if (currentSelectedCharacter && currentSelectedCharacter.id === "greg") {
-    drawGregSprite(ctx, character.x, character.y, character.width);
-  } else if (currentSelectedCharacter && currentSelectedCharacter.id === "mario") {
-    drawMarioSprite(ctx, character.x, character.y, character.width);
-  } else if (currentSelectedCharacter && currentSelectedCharacter.id === "derek") {
-    drawDerekSprite(ctx, character.x, character.y, character.width);
-  } else if (currentSelectedCharacter) {
-    ctx.fillStyle = currentSelectedCharacter.color;
-    ctx.fillRect(character.x, character.y, character.width, character.height);
-  }
+ if (currentSelectedCharacter && currentSelectedCharacter.id === "swarvek") {
+  drawSwarvekSprite(ctx, character.x, character.y, character.width);
+} else if (currentSelectedCharacter && currentSelectedCharacter.id === "michel") {
+  drawMichelSprite(ctx, character.x, character.y, character.width);
+} else if (currentSelectedCharacter && currentSelectedCharacter.id === "greg") {
+  drawGregSprite(ctx, character.x, character.y, character.width);
+} else if (currentSelectedCharacter && currentSelectedCharacter.id === "mario") {
+  drawMarioSprite(ctx, character.x, character.y, character.width);
+} else if (currentSelectedCharacter && currentSelectedCharacter.id === "derek") {
+  drawDerekSprite(ctx, character.x, character.y, character.width);
+} else if (currentSelectedCharacter && currentSelectedCharacter.id === "tobin") {
+  drawJamesSprite(ctx, character.x, character.y, character.width);
+} else if (currentSelectedCharacter) {
+  ctx.fillStyle = currentSelectedCharacter.color;
+  ctx.fillRect(character.x, character.y, character.width, character.height);
+}
 }
 
 
@@ -1169,6 +1192,109 @@ if (dust3 < 25) {
   ctx.fillRect(x + w * 1.50, y + h * 0.48 + dust3, w * 0.02, h * 0.02);
 }
 }
+
+function drawJamesSprite(ctx, x, y, size) {
+  const w = size;
+  const h = size;
+
+  /* ===== BODY ===== */
+  ctx.fillStyle = '#e53935'; // red shirt
+  ctx.fillRect(x + w*0.2, y + h*0.4, w*0.6, h*0.55);
+
+  /* ===== ARMS ===== */
+  ctx.fillStyle = '#f4c49c'; // skin
+  ctx.fillRect(x - w*0.05, y + h*0.45, w*0.25, h*0.1);  // left arm
+  ctx.fillRect(x + w*0.8, y + h*0.45, w*0.25, h*0.1);   // right arm
+
+  /* ===== HEAD ===== */
+  ctx.fillStyle = '#f4c49c';
+  ctx.fillRect(x + w*0.25, y + h*0.05, w*0.5, h*0.35);
+
+  /* ===== HAIR ===== */
+  ctx.fillStyle = '#121212';
+  ctx.fillRect(x + w*0.25, y - h*0.02, w*0.5, h*0.1);
+  ctx.fillStyle = '#444';
+  ctx.fillRect(x + w*0.28, y - h*0.08, w*0.1, h*0.08);
+  ctx.fillRect(x + w*0.45, y - h*0.1, w*0.1, h*0.1);
+  ctx.fillRect(x + w*0.62, y - h*0.08, w*0.1, h*0.08);
+
+  /* ===== EYES ===== */
+  ctx.fillStyle = '#3399ff';
+  ctx.fillRect(x + w*0.32, y + h*0.18, w*0.1, h*0.06);
+  ctx.fillRect(x + w*0.58, y + h*0.18, w*0.1, h*0.06);
+
+  ctx.fillStyle = '#000';
+  ctx.fillRect(x + w*0.36, y + h*0.20, w*0.04, h*0.03);
+  ctx.fillRect(x + w*0.62, y + h*0.20, w*0.04, h*0.03);
+
+  /* ===== BEARD ===== */
+  ctx.fillStyle = '#5d4037';
+  ctx.fillRect(x + w*0.27, y + h*0.28, w*0.46, h*0.12);
+
+  /* ===== SMILE ===== */
+  ctx.fillStyle = '#000';
+  ctx.fillRect(x + w*0.38, y + h*0.34, w*0.24, h*0.03);
+
+  /* ===== RIGHT HAND: VDU/COMPUTER ===== */
+  // monitor frame
+  ctx.fillStyle = '#222';
+  ctx.fillRect(x + w*1.0, y + h*0.38, w*0.35, h*0.25);
+
+  // glowing screen
+  const screenPulse = (Math.sin(Date.now()/300) + 1) * 0.5;
+  ctx.fillStyle = `rgba(51,153,255,${0.6 + 0.4*screenPulse})`;
+  ctx.fillRect(x + w*1.02, y + h*0.40, w*0.31, h*0.21);
+
+  // stand
+  ctx.fillStyle = '#444';
+  ctx.fillRect(x + w*1.14, y + h*0.63, w*0.1, h*0.05);
+
+  // power LED
+  ctx.fillStyle = '#00FF00';
+  ctx.beginPath();
+  ctx.arc(x + w*1.30, y + h*0.60, w*0.02, 0, Math.PI*2);
+  ctx.fill();
+
+  /* ===== LEFT HAND: CHAINSAW (flipped left) ===== */
+  // handle grip
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(x - w*0.15, y + h*0.46, w*0.08, h*0.05);
+
+  // motor housing (orange)
+  ctx.fillStyle = '#ff6600';
+  ctx.fillRect(x - w*0.29, y + h*0.44, w*0.14, h*0.08);
+
+  // blade pointing left
+  ctx.fillStyle = '#ccc';
+  ctx.fillRect(x - w*0.54, y + h*0.46, w*0.25, h*0.05);
+
+  // animated teeth
+  const sawTime = Date.now() / 100;
+  const offset = Math.floor(sawTime % 5);
+  ctx.fillStyle = '#999';
+  for (let i = 0; i < 8; i++) {
+    const toothX = x - w*0.53 + (i+offset)*w*0.03;
+    ctx.beginPath();
+    ctx.moveTo(toothX, y + h*0.51);
+    ctx.lineTo(toothX + w*0.02, y + h*0.46);
+    ctx.lineTo(toothX + w*0.04, y + h*0.51);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // exhaust smoke puff
+  const smoke = (Date.now()/200) % 20;
+  ctx.fillStyle = 'rgba(200,200,200,0.5)';
+  if (smoke < 15) {
+    ctx.beginPath();
+    ctx.arc(x - w*0.20, y + h*0.42 - smoke*0.01*h, w*0.03, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+
+
+
+
 
 
 function drawGregSprite(ctx, x, y, size) {
@@ -1578,21 +1704,22 @@ function drawScore(ctx) {
   const spriteY = 50 * s; // Move sprite to top half
   
   // Draw the animated sprite at the top
-  if (ANGLO_POLISH_EDITION && charData.id === "swarvek") {
-    drawSwarvekSprite(ctx, spriteX, spriteY, charSize);
-  } else if (ANGLO_POLISH_EDITION && charData.id === "michel") {
-    drawMichelSprite(ctx, spriteX, spriteY, charSize);
-  } else if (ANGLO_POLISH_EDITION && charData.id === "greg") {
-    drawGregSprite(ctx, spriteX, spriteY, charSize);
-  } else if (ANGLO_POLISH_EDITION && charData.id === "mario") {
-    drawMarioSprite(ctx, spriteX, spriteY, charSize);
-  } else if (ANGLO_POLISH_EDITION && charData.id === "derek") {
-    drawDerekSprite(ctx, spriteX, spriteY, charSize);
-  } else {
-    ctx.fillStyle = charData.color;
-    ctx.fillRect(spriteX, spriteY, charSize, charSize);
-  }
-  
+if (ANGLO_POLISH_EDITION && charData.id === "swarvek") {
+  drawSwarvekSprite(ctx, spriteX, spriteY, charSize);
+} else if (ANGLO_POLISH_EDITION && charData.id === "michel") {
+  drawMichelSprite(ctx, spriteX, spriteY, charSize);
+} else if (ANGLO_POLISH_EDITION && charData.id === "greg") {
+  drawGregSprite(ctx, spriteX, spriteY, charSize);
+} else if (ANGLO_POLISH_EDITION && charData.id === "mario") {
+  drawMarioSprite(ctx, spriteX, spriteY, charSize);
+} else if (ANGLO_POLISH_EDITION && charData.id === "derek") {
+  drawDerekSprite(ctx, spriteX, spriteY, charSize);
+} else if (ANGLO_POLISH_EDITION && charData.id === "tobin") {
+  drawJamesSprite(ctx, spriteX, spriteY, charSize);
+} else {
+  ctx.fillStyle = charData.color;
+  ctx.fillRect(spriteX, spriteY, charSize, charSize);
+}  
   // Draw the photo below the sprite
   if (ANGLO_POLISH_EDITION && charData.id && charData.image) {
     const imgSize = 200 * s;
@@ -3704,7 +3831,19 @@ const characterResetMessages = {
         "Painter's critique: 'No artistic merit. Start over.'",
         "Mario's whistling stopped. That's how bad it is.",
         "The painter recommends you try stick figures instead."
-    ]
+    ],
+tobin: [
+    "James: 'I coded this. Why are you failing it?'",
+    "The programmer just facepalmed. Hard.",
+    "James says: 'This isn't a bug, it's a feature... right?'",
+    "The apprentice developer is reconsidering his life choices.",
+    "James: 'I tested this. You must be doing something wrong.'",
+    "The boss blames James... but you get the blame too.",
+    "James' debugger just crashed, just like you.",
+    "The coder is watching. And silently judging.",
+    "James is already drafting a patch for your failures.",
+    "The programmer doesn’t accept excuses. Only results."
+]
 };
 
 let resetMessages = ANGLO_POLISH_EDITION ? 
@@ -4657,9 +4796,437 @@ wrapper.appendChild(sfxBtn);
   });
 })();
 </script>
+<script>
+(function () {
 
+  /************************************************************
+   * UTIL FUNCTIONS
+   ************************************************************/
+  function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
 
+  function isClassicActive() {
+    if (window.selectedCharacter && window.selectedCharacter.id === "cube") return true;
+    if (window.showDefaultCharacter === true) return true;
+    return window.ANGLO_POLISH_EDITION !== true;
+  }
+
+  function isAngloActive() {
+    return !isClassicActive();
+  }
+
+  /************************************************************
+   * TOGGLE BUTTON
+   ************************************************************/
+  let toggleBtn = null;
+
+  function updateToggleLabel() {
+    if (!toggleBtn) return;
+    toggleBtn.textContent = isClassicActive()
+      ? "🔨 Anglo Polish"
+      : "🎮 Classic Mode";
+  }
+
+  let started = false;
+  const waitStart = setInterval(() => {
+    if (!document.getElementById("intro-overlay") && !started) {
+      started = true;
+      clearInterval(waitStart);
+      createToggle();
+      updateToggleLabel();
+      updateButtonVisibility();
+    }
+  }, 300);
+
+  function createToggle() {
+    toggleBtn = document.createElement("button");
+    toggleBtn.className = "game-btn edition-toggle-btn";
+
+    toggleBtn.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.85rem;
+      color: #fff;
+      background: rgba(255,0,102,0.85);
+      border: 2px solid #ff0066;
+      border-radius: 6px;
+      box-shadow: 0 0 20px rgba(255,0,102,0.5);
+      cursor: pointer;
+    `;
+
+    toggleBtn.onclick = switchEdition;
+    document.body.appendChild(toggleBtn);
+  }
   
+  // Expose toggle button for external visibility control
+  window.getToggleButton = function() {
+    return toggleBtn;
+  };
+
+  /************************************************************
+   * MESSAGE PROVIDERS - Using main game messages
+   ************************************************************/
+  window.getResetMessages = function () {
+    if (isClassicActive()) {
+      return pick([
+        "Giving up already? Classic.",
+        "Reset button pressed. Dreams crushed.",
+        "Starting over won't change anything.",
+        "You think THIS time will be different?",
+        "Ah yes, the definition of insanity.",
+        "The reset button: For quitters only.",
+        "Back to square one. Where you belong.",
+        "Did you try turning it off and on again?",
+        "Fresh start? More like fresh failure.",
+        "The ladder remembers your shame.",
+        "Reset: The ultimate admission of defeat.",
+        "Zero points. Zero dignity.",
+        "Everyone gets a participation trophy except you.",
+        "Maybe take a break? Forever?",
+        "The ladder has seen you hit this button 47 times.",
+        "Your high score is now a distant memory.",
+        "This is what rock bottom looks like.",
+        "Maybe ladders just aren't your thing.",
+        "Resetting won't erase the embarrassment.",
+        "The ladder whispers: 'They always come back.'"
+      ]);
+    }
+
+    // Use the full characterResetMessages from main game
+const characterResetMessages = {
+  swarvek: [
+    "Swarvek: 'In Poland, we don't reset. We finish job.'",
+    "The boss expected better. Much better.",
+    "Swarvek's spirit level is disappointed in you.",
+    "Boss man's verdict: 'Not Anglo Polish standard.'",
+    "Swarvek: 'My grandmother has better work ethic.'",
+    "The boss is reconsidering the hiring decision.",
+    "Swarvek shakes his head. 'No bonus for you.'",
+    "Boss: 'Maybe you try different job? Like... sitting?'",
+    "Swarvek's seen enough. Back to square one.",
+    "The boss built empire. You can't even climb ladder."
+  ],
+  derek: [
+    "Derek's tape measure says: 'Zero progress made.'",
+    "Site manager's clipboard: 'Performance - UNACCEPTABLE'",
+    "Derek measured twice. You failed three times.",
+    "Site manager: 'This goes in your permanent record.'",
+    "Derek's assessment: 'Needs complete retraining.'",
+    "The site manager has filed an incident report.",
+    "Derek: 'I've seen scaffolding more stable than you.'",
+    "Site manager's note: 'Do not assign to real projects.'",
+    "Derek's shaking his head. That's never good.",
+    "The site manager expected professional work. This isn't it."
+  ],
+  michel: [
+    "Michel: 'Even my drill has better consistency than you.'",
+    "The electrician's diagnosis: 'Total system failure.'",
+    "Michel could rewire a house in the time you wasted.",
+    "Electrician's report: 'Dangerously incompetent.'",
+    "Michel: 'My apprentice does better, and he's 16.'",
+    "The electrician's seen short circuits with more potential.",
+    "Michel's power tools are more reliable than you.",
+    "Electrician: 'This job needs a complete reset. So do you.'",
+    "Michel's drilling holes. Just like your performance.",
+    "The electrician recommends you try different profession."
+  ],
+  greg: [
+    "Greg: 'I've unclogged worse things than your performance.'",
+    "The plumber's verdict: 'Complete blockage. No flow.'",
+    "Greg's plunger has more grip than you do.",
+    "Plumber's assessment: 'This is going down the drain.'",
+    "Greg: 'Even the pipes put up less resistance.'",
+    "The plumber's seen leaks in better condition than this.",
+    "Greg adjusts his glasses. 'Mate, this is embarrassing.'",
+    "Plumber: 'Your technique needs complete flush and restart.'",
+    "Greg's toolkit is more useful than your climbing.",
+    "The plumber recommends you stick to sweeping."
+  ],
+  mario: [
+    "Mario: 'Even wet paint performs better than you.'",
+    "The painter's review: 'Needs many, many more coats.'",
+    "Mario's brush has better precision than your entire attempt.",
+    "Painter: 'This is one masterpiece I won't sign.'",
+    "Mario's teeth are brighter than your climbing future.",
+    "The painter's seen better strokes from beginners.",
+    "Mario: 'Maybe I paint over this embarrassment, yes?'",
+    "Painter's critique: 'No artistic merit. Start over.'",
+    "Mario's whistling stopped. That's how bad it is.",
+    "The painter recommends you try stick figures instead."
+  ],
+  tobin: [
+    "James wrote this code. James has failed it.",
+    "The apprentice has fallen. Unfortunately, he's also the programmer.",
+    "James tested this. Just not successfully.",
+    "Resetting… James swears this worked on his machine.",
+    "The coder has been defeated by his own mechanics.",
+    "Bug or feature? James says it's fine.",
+    "James knows why this happened. He's avoiding eye contact.",
+    "The game watches its creator fail. Again.",
+    "James implemented this section personally. Regrettably.",
+    "The programmer does not get special treatment."
+  ]
+};
+
+
+    return pick(characterResetMessages[selectedCharacter.id] || characterResetMessages.swarvek);
+  };
+
+  window.getFunnyMessages = function () {
+    if (isClassicActive()) {
+      return pick([
+        "Follow us on Instagram: @ladderloopgame (it won't help your score)",
+        "Gravity: still undefeated since 1687",
+        "You fell. We're shocked.",
+        "Achievement Unlocked: Hit the ground",
+        "The ladder is judging you silently",
+        "Physics: 1, You: 0",
+        "Down you go, champ",
+        "Classic ladder moment",
+        "Maybe try climbing up instead?",
+        "The floor misses you",
+        "Falling with style... if style meant failure",
+        "Oops, you did it again",
+        "At least you're consistent at falling",
+        "The ladder remembers this",
+        "Gravity always wins in the end"
+      ]);
+    }
+
+ // Use the full characterMessages from main game
+const characterMessages = {
+  swarvek: [
+    "Swarvek says: 'In my day, we climbed faster!'",
+    "The boss is watching. He's not impressed.",
+    "Swarvek built this company from scratch. You can't even climb a ladder.",
+    "Boss man expects results, not excuses.",
+    "Swarvek's spirit level is more balanced than you.",
+    "The boss has seen it all. This? Not impressive.",
+    "Swarvek: 'My grandmother climbs better than this.'",
+    "You're making the boss reconsider his hiring policy.",
+    "Swarvek's thinking about docking your pay.",
+    "The boss doesn't accept 'almost' - he accepts results."
+  ],
+  derek: [
+    "Derek measured twice. You still fell once.",
+    "The site manager has standards. You're not meeting them.",
+    "Derek's clipboard just got another mark against you.",
+    "Site manager's note: 'Needs improvement. Lots of it.'",
+    "Derek's tape measure is more accurate than your climbing.",
+    "The site manager has seen enough. Take a break.",
+    "Derek's shaking his head. That's never good.",
+    "Site manager's report: 'Unacceptable performance.'",
+    "Derek's measuring your failure in real-time.",
+    "The site manager expected better from you."
+  ],
+  michel: [
+    "Michel wired this perfectly. Your climbing? Not so much.",
+    "The electrician's work is flawless. Yours? Questionable.",
+    "Michel could wire a building faster than you climb.",
+    "Even the wiring has better connections than your climbing.",
+    "Michel's drill has more torque than your performance.",
+    "The electrician finished his job. You're still trying.",
+    "Michel's watching between drilling. He's not impressed.",
+    "The electrician's precision vs your falling. No contest.",
+    "Michel says: 'This job needs rewiring. So does your technique.'",
+    "Even power tools are more reliable than you."
+  ],
+  greg: [
+    "Greg fixed the pipes. Can you fix your climbing?",
+    "The plumber's seen worse blockages than your performance.",
+    "Greg's plunger has more suction than your grip.",
+    "Plumber's assessment: 'This is going down the drain.'",
+    "Greg could unclog a drain faster than you climb.",
+    "The plumber's shaking his head behind his glasses.",
+    "Greg's seen pipes in better shape than your climbing.",
+    "Plumber's diagnosis: 'Complete system failure.'",
+    "Greg's toolkit is more useful than your climbing skills.",
+    "The plumber's patching leaks. You're creating them."
+  ],
+  mario: [
+    "Mario's seen better brushstrokes than your climbing.",
+    "The painter could finish a mural faster than you climb.",
+    "Mario's paint job is smoother than your technique.",
+    "Painter's review: 'Needs another coat... and another try.'",
+    "Mario's brush has better precision than your climbing.",
+    "The painter's whistling. It's not a compliment.",
+    "Mario says: 'Even wet paint dries faster than you climb.'",
+    "The painter's masterpiece vs your disaster. Quite the contrast.",
+    "Mario's wondering if he should paint over this embarrassment.",
+    "The painter's teeth are brighter than your future."
+  ],
+  tobin: [
+    "James says: 'I coded this bit. Why are you struggling?'",
+    "The apprentice watches nervously. He wrote the rules.",
+    "James is confident in the mechanics. Less so in the outcome.",
+    "The coder assures you this section is fair.",
+    "James is already thinking about a balance patch.",
+    "The game runs exactly as James intended. That's the problem.",
+    "James mutters something about edge cases.",
+    "The apprentice insists this is a skill issue.",
+    "James is silently testing his own level design.",
+    "The programmer is learning from your mistakes."
+  ]
+};
+
+    return pick(characterMessages[selectedCharacter.id] || characterMessages.swarvek);
+  };
+  /************************************************************
+   * ANGLO UI BUTTON VISIBILITY
+   ************************************************************/
+  function updateButtonVisibility() {
+    document
+      .querySelectorAll(".gallery-btn, .trade-btn, .race-btn")
+      .forEach(btn => {
+        btn.style.display = isAngloActive() ? "inline-block" : "none";
+      });
+  }
+
+  window.updateButtonVisibility = updateButtonVisibility;
+
+  /************************************************************
+   * SWITCH EDITION
+   ************************************************************/
+  function switchEdition() {
+    window.ANGLO_POLISH_EDITION = !window.ANGLO_POLISH_EDITION;
+
+    score = 0;
+    climbing = false;
+
+    if (!window.ANGLO_POLISH_EDITION) {
+      selectedCharacter = null;
+      showDefaultCharacter = true;
+    }
+
+    updateToggleLabel();
+    updateButtonVisibility();
+
+    if (window.ANGLO_POLISH_EDITION) {
+      showMessage("🔨 ANGLO POLISH EDITION\nSelect your character");
+      setTimeout(showCharacterSelect, 100);
+    } else {
+      showMessage("🎮 CLASSIC MODE\nPress Space or Tap");
+    }
+  }
+
+  /************************************************************
+   * MESSAGE SANITIZER — NO BLEED
+   ************************************************************/
+  const CLASSIC_RESET = [
+    "Giving up already? Classic.",
+    "Reset button pressed. Dreams crushed.",
+    "Starting over won't change anything.",
+    "You think THIS time will be different?",
+    "Ah yes, the definition of insanity.",
+    "The reset button: For quitters only.",
+    "Back to square one. Where you belong.",
+    "Did you try turning it off and on again?",
+    "Fresh start? More like fresh failure.",
+    "The ladder remembers your shame.",
+    "Reset: The ultimate admission of defeat.",
+    "Zero points. Zero dignity.",
+    "Everyone gets a participation trophy except you.",
+    "Maybe take a break? Forever?",
+    "The ladder has seen you hit this button 47 times.",
+    "Your high score is now a distant memory.",
+    "This is what rock bottom looks like.",
+    "Maybe ladders just aren't your thing.",
+    "Resetting won't erase the embarrassment.",
+    "The ladder whispers: 'They always come back.'"
+  ];
+
+  const CLASSIC_FUNNY = [
+    "Follow us on Instagram: @ladderloopgame (it won't help your score)",
+    "Gravity: still undefeated since 1687",
+    "You fell. We're shocked.",
+    "Achievement Unlocked: Hit the ground",
+    "The ladder is judging you silently",
+    "Physics: 1, You: 0",
+    "Down you go, champ",
+    "Classic ladder moment",
+    "Maybe try climbing up instead?",
+    "The floor misses you",
+    "Falling with style... if style meant failure",
+    "Oops, you did it again",
+    "At least you're consistent at falling",
+    "The ladder remembers this",
+    "Gravity always wins in the end"
+  ];
+
+  function looksAnglo(text) {
+    return /swarvek|derek|michel|greg|mario|boss|poland|measured|clipboard|plumber|electrician/i.test(text);
+  }
+
+  const originalShowMessage = window.showMessage;
+
+  if (typeof originalShowMessage === "function") {
+    window.showMessage = function (msg, ...rest) {
+      if (isClassicActive() && typeof msg === "string" && looksAnglo(msg)) {
+        const replacement =
+          /reset|again|start|over|bottom|fell/i.test(msg)
+            ? pick(CLASSIC_RESET)
+            : pick(CLASSIC_FUNNY);
+
+        return originalShowMessage.call(this, replacement, ...rest);
+      }
+      return originalShowMessage.call(this, msg, ...rest);
+    };
+  }
+
+})();
+</script>
+
+
+<script>
+// Toggle Button Visibility Manager - Hides button in special modes
+(function() {
+  function isInSpecialMode() {
+    // Check if gallery is active
+    const galleryOverlay = document.getElementById('galleryOverlay');
+    if (galleryOverlay && galleryOverlay.classList.contains('active')) {
+      return true;
+    }
+    
+    // Check if trade game is active
+    const tradeOverlay = document.getElementById('tradeGameOverlay');
+    if (tradeOverlay && tradeOverlay.classList.contains('active')) {
+      return true;
+    }
+    
+    // Check if race game is active
+    const raceOverlay = document.getElementById('raceGameOverlay');
+    if (raceOverlay && raceOverlay.classList.contains('active')) {
+      return true;
+    }
+    
+    // Check if character select is active
+    const charSelect = document.getElementById('characterSelect');
+    if (charSelect && charSelect.classList.contains('active')) {
+      return true;
+    }
+    
+    return false;
+  }
+
+  function updateToggleVisibility() {
+    const toggleBtn = window.getToggleButton ? window.getToggleButton() : null;
+    if (!toggleBtn) return;
+    
+    toggleBtn.style.display = isInSpecialMode() ? 'none' : 'block';
+  }
+
+  // Start monitoring after a short delay to ensure toggle button exists
+  setTimeout(() => {
+    setInterval(updateToggleVisibility, 200);
+  }, 1000);
+})();
+</script>
+  
+
 
   
 </body>
