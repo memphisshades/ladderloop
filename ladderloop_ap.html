@@ -4398,356 +4398,367 @@ window.addEventListener("DOMContentLoaded", () => {
   if (window.innerWidth <= 768) {
     console.log('Mobile mode activated');
     
-    const observer = new MutationObserver(() => {
+    let mobileUIBuilt = false;
+    
+    function buildMobileUI() {
       const overlay = document.getElementById('characterSelect');
       const grid = document.getElementById('characterGrid');
       
-      if (overlay && grid && grid.children.length > 0) {
-        console.log('Creating mobile UI...');
-        observer.disconnect();
-        
-        let currentIndex = 0;
-        const cards = Array.from(grid.children);
-        console.log('Cards found:', cards.length);
-        
-        // Completely restructure the overlay
-        overlay.style.padding = '1rem';
-        overlay.style.display = 'flex';
-        overlay.style.flexDirection = 'column';
-        overlay.style.justifyContent = 'space-between';
-        overlay.style.alignItems = 'center';
-        
-        // Title adjustments
-        const title = overlay.querySelector('.character-select-title');
-        const subtitle = overlay.querySelector('.character-select-subtitle');
-        if (title) {
-          title.style.fontSize = '1.2rem';
-          title.style.marginBottom = '0.5rem';
-        }
-        if (subtitle) {
-          subtitle.style.fontSize = '0.6rem';
-          subtitle.style.marginBottom = '1rem';
-        }
-        
-        // Hide original grid but keep it in DOM
-        grid.style.position = 'absolute';
-        grid.style.left = '-9999px';
-        grid.style.visibility = 'hidden';
-        
-        // Create new container
-        const container = document.createElement('div');
-        container.style.flex = '1';
-        container.style.display = 'flex';
-        container.style.flexDirection = 'column';
-        container.style.alignItems = 'center';
-        container.style.justifyContent = 'center';
-        container.style.width = '100%';
-        container.style.maxWidth = '400px';
-        container.style.position = 'relative';
-        
-        // Create card display area
-        const cardContainer = document.createElement('div');
-        cardContainer.style.width = '100%';
-        cardContainer.style.background = 'rgba(255, 0, 102, 0.1)';
-        cardContainer.style.border = '2px solid #ff0066';
-        cardContainer.style.borderRadius = '10px';
-        cardContainer.style.padding = '2rem 1rem';
-        cardContainer.style.display = 'flex';
-        cardContainer.style.flexDirection = 'column';
-        cardContainer.style.alignItems = 'center';
-        cardContainer.style.gap = '1rem';
-        cardContainer.style.minHeight = '300px';
-        cardContainer.style.justifyContent = 'center';
-        
-        // Character preview box
-        const previewBox = document.createElement('div');
-        previewBox.style.width = '150px';
-        previewBox.style.height = '150px';
-        previewBox.style.border = '3px solid #00ffcc';
-        previewBox.style.borderRadius = '10px';
-        previewBox.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.5)';
-        
-        // Character name
-        const nameDisplay = document.createElement('div');
-        nameDisplay.style.color = '#ffcc00';
-        nameDisplay.style.fontSize = '1.2rem';
-        nameDisplay.style.textAlign = 'center';
-        nameDisplay.style.textShadow = '0 0 10px rgba(255, 204, 0, 0.8)';
-        nameDisplay.style.fontFamily = "'Press Start 2P', cursive";
-        
-        // Character role
-        const roleDisplay = document.createElement('div');
-        roleDisplay.style.color = '#00ffcc';
-        roleDisplay.style.fontSize = '0.7rem';
-        roleDisplay.style.textAlign = 'center';
-        roleDisplay.style.fontFamily = "'Press Start 2P', cursive";
-        
-        // Select button
-        const selectBtn = document.createElement('button');
-        selectBtn.className = 'game-btn';
-        selectBtn.textContent = 'SELECT';
-        selectBtn.style.marginTop = '1rem';
-        selectBtn.style.padding = '0.75rem 2rem';
-        selectBtn.style.fontSize = '0.8rem';
-        selectBtn.style.background = 'rgba(0, 255, 204, 0.2)';
-        selectBtn.style.borderColor = '#00ffcc';
-        selectBtn.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.6)';
-        
-        cardContainer.appendChild(previewBox);
-        cardContainer.appendChild(nameDisplay);
-        cardContainer.appendChild(roleDisplay);
-        cardContainer.appendChild(selectBtn);
-        
-        // Navigation controls
-        const navContainer = document.createElement('div');
-        navContainer.style.display = 'flex';
-        navContainer.style.gap = '1rem';
-        navContainer.style.marginTop = '1.5rem';
-        navContainer.style.width = '100%';
-        navContainer.style.justifyContent = 'center';
-        
-        const prevBtn = document.createElement('button');
-        prevBtn.className = 'game-btn';
-        prevBtn.innerHTML = '◀';
-        prevBtn.style.padding = '1rem 1.5rem';
-        prevBtn.style.fontSize = '1rem';
-        
-        const nextBtn = document.createElement('button');
-        nextBtn.className = 'game-btn';
-        nextBtn.innerHTML = '▶';
-        nextBtn.style.padding = '1rem 1.5rem';
-        nextBtn.style.fontSize = '1rem';
-        
-        navContainer.appendChild(prevBtn);
-        navContainer.appendChild(nextBtn);
-        
-        // Indicator dots
-        const dotsContainer = document.createElement('div');
-        dotsContainer.style.display = 'flex';
-        dotsContainer.style.gap = '0.5rem';
-        dotsContainer.style.marginTop = '1rem';
-        dotsContainer.style.justifyContent = 'center';
-        
-        const dots = cards.map((_, i) => {
-          const dot = document.createElement('div');
-          dot.style.width = '10px';
-          dot.style.height = '10px';
-          dot.style.borderRadius = '50%';
-          dot.style.background = 'rgba(255, 0, 102, 0.3)';
-          dot.style.border = '2px solid #ff0066';
-          dot.style.cursor = 'pointer';
-          dot.style.transition = 'all 0.3s';
-          dot.onclick = () => goToCharacter(i);
-          dotsContainer.appendChild(dot);
-          return dot;
-        });
-        
-        container.appendChild(cardContainer);
-        container.appendChild(navContainer);
-        container.appendChild(dotsContainer);
-        
-        // Insert after subtitle
-        if (subtitle) {
-          subtitle.parentNode.insertBefore(container, subtitle.nextSibling);
-        } else if (title) {
-          title.parentNode.insertBefore(container, title.nextSibling);
-        }
-        
-        function updateDisplay() {
-          const char = cards[currentIndex];
-          const preview = char.querySelector('.character-preview');
-          const name = char.querySelector('.character-card-name');
-          const role = char.querySelector('.character-card-role');
-          
-          if (preview) {
-            previewBox.innerHTML = preview.innerHTML;
-            previewBox.style.background = preview.style.background;
-            previewBox.style.overflow = 'hidden';
-            
-            const img = previewBox.querySelector('img');
-            if (img) {
-              img.style.width = '100%';
-              img.style.height = '100%';
-              img.style.objectFit = 'cover';
-              img.style.display = 'block';
-            }
-          }
-          if (name) nameDisplay.textContent = name.textContent;
-          if (role) roleDisplay.textContent = role.textContent;
-          
-          dots.forEach((dot, i) => {
-            if (i === currentIndex) {
-              dot.style.background = '#00ffcc';
-              dot.style.borderColor = '#00ffcc';
-              dot.style.boxShadow = '0 0 10px rgba(0, 255, 204, 0.8)';
-            } else {
-              dot.style.background = 'rgba(255, 0, 102, 0.3)';
-              dot.style.borderColor = '#ff0066';
-              dot.style.boxShadow = 'none';
-            }
-          });
-        }
-        
-        function goToCharacter(index) {
-          currentIndex = index;
-          updateDisplay();
-        }
-        
-        prevBtn.onclick = () => {
-          currentIndex--;
-          if (currentIndex < 0) currentIndex = cards.length - 1;
-          updateDisplay();
-        };
-        
-        nextBtn.onclick = () => {
-          currentIndex++;
-          if (currentIndex >= cards.length) currentIndex = 0;
-          updateDisplay();
-        };
-        
-       // THE HACK: Bypass everything and directly set the character
-function selectCharacter() {
-  const currentCard = cards[currentIndex];
-  const charName = currentCard.querySelector('.character-card-name').textContent;
-  console.log('🔥 HACK: Directly selecting:', charName);
-  
-  // Find the character object
-  const char = angloPolishCharacters.find(c => c.name === charName);
-  
-  if (char) {
-    // DIRECTLY modify the global variables
-    selectedCharacter = char;
-    showDefaultCharacter = false;
-    
-    // FORCE CLOSE THE OVERLAY
-    overlay.classList.remove('active');
-    overlay.style.display = 'none'; // FORCE HIDE IT
-    
-    console.log('🚪 Overlay closed');
-    
-    // Stop Polish audio manually
-    if (polishAudioInterval) {
-      clearInterval(polishAudioInterval);
-      polishAudioInterval = null;
-    }
-    if (polishAudio) {
-      polishAudio.pause();
-      polishAudio.currentTime = 0;
-    }
-    
-    // WAIT FOR CANVASES TO EXIST
-    let checkCount = 0;
-    const waitForCanvas = setInterval(() => {
-      checkCount++;
-      console.log(`⏳ Check #${checkCount}: canvases.length =`, canvases.length);
+      if (!overlay || !grid || grid.children.length === 0) return;
       
-      if (canvases && canvases.length > 0) {
-        clearInterval(waitForCanvas);
-        
-        console.log('✅ Canvas found! Drawing character...');
-        
-        // Show message manually
-        messageBox.innerText = `Now playing as ${char.name}!`;
-        messageBox.style.display = "block";
-        freezeFrame = true;
-        setTimeout(() => {
-          messageBox.style.display = "none";
-          freezeFrame = false;
-        }, 2500);
-        
-        // Force redraw manually
-        canvases.forEach(canvas => {
-          const ctx = canvas.getContext("2d");
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drawLadder(ctx, canvas);
-          drawCharacter(ctx);
-          drawBenchedCube(ctx, canvas);
-          drawScore(ctx);
-        });
-        
-        console.log('🔥 HACK COMPLETE! Character:', selectedCharacter);
+      // Check if mobile UI already exists - if so, don't rebuild
+      if (overlay.querySelector('.mobile-card-container')) {
+        console.log('Mobile UI already exists, skipping rebuild');
+        return;
       }
       
-      if (checkCount > 50) {
-        clearInterval(waitForCanvas);
-        console.error('❌ Timeout: Canvas never appeared after 50 checks!');
+      console.log('Creating mobile UI...');
+      mobileUIBuilt = true;
+      
+      let currentIndex = 0;
+      const cards = Array.from(grid.children);
+      console.log('Cards found:', cards.length);
+      
+      // Completely restructure the overlay
+      overlay.style.padding = '1rem';
+      overlay.style.display = 'flex';
+      overlay.style.flexDirection = 'column';
+      overlay.style.justifyContent = 'space-between';
+      overlay.style.alignItems = 'center';
+      
+      // Title adjustments
+      const title = overlay.querySelector('.character-select-title');
+      const subtitle = overlay.querySelector('.character-select-subtitle');
+      if (title) {
+        title.style.fontSize = '1.2rem';
+        title.style.marginBottom = '0.5rem';
       }
-    }, 100);
-  }
-}        
-        selectBtn.onclick = (e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          selectCharacter();
-        };
+      if (subtitle) {
+        subtitle.style.fontSize = '0.6rem';
+        subtitle.style.marginBottom = '1rem';
+      }
+      
+      // Hide original grid but keep it in DOM
+      grid.style.position = 'absolute';
+      grid.style.left = '-9999px';
+      grid.style.visibility = 'hidden';
+      
+      // Create new container with identifying class
+      const container = document.createElement('div');
+      container.className = 'mobile-card-container'; // ADD THIS CLASS
+      container.style.flex = '1';
+      container.style.display = 'flex';
+      container.style.flexDirection = 'column';
+      container.style.alignItems = 'center';
+      container.style.justifyContent = 'center';
+      container.style.width = '100%';
+      container.style.maxWidth = '400px';
+      container.style.position = 'relative';
+      
+      // Create card display area
+      const cardContainer = document.createElement('div');
+      cardContainer.style.width = '100%';
+      cardContainer.style.background = 'rgba(255, 0, 102, 0.1)';
+      cardContainer.style.border = '2px solid #ff0066';
+      cardContainer.style.borderRadius = '10px';
+      cardContainer.style.padding = '2rem 1rem';
+      cardContainer.style.display = 'flex';
+      cardContainer.style.flexDirection = 'column';
+      cardContainer.style.alignItems = 'center';
+      cardContainer.style.gap = '1rem';
+      cardContainer.style.minHeight = '300px';
+      cardContainer.style.justifyContent = 'center';
+      
+      // Character preview box
+      const previewBox = document.createElement('div');
+      previewBox.style.width = '150px';
+      previewBox.style.height = '150px';
+      previewBox.style.border = '3px solid #00ffcc';
+      previewBox.style.borderRadius = '10px';
+      previewBox.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.5)';
+      
+      // Character name
+      const nameDisplay = document.createElement('div');
+      nameDisplay.style.color = '#ffcc00';
+      nameDisplay.style.fontSize = '1.2rem';
+      nameDisplay.style.textAlign = 'center';
+      nameDisplay.style.textShadow = '0 0 10px rgba(255, 204, 0, 0.8)';
+      nameDisplay.style.fontFamily = "'Press Start 2P', cursive";
+      
+      // Character role
+      const roleDisplay = document.createElement('div');
+      roleDisplay.style.color = '#00ffcc';
+      roleDisplay.style.fontSize = '0.7rem';
+      roleDisplay.style.textAlign = 'center';
+      roleDisplay.style.fontFamily = "'Press Start 2P', cursive";
+      
+      // Select button
+      const selectBtn = document.createElement('button');
+      selectBtn.className = 'game-btn';
+      selectBtn.textContent = 'SELECT';
+      selectBtn.style.marginTop = '1rem';
+      selectBtn.style.padding = '0.75rem 2rem';
+      selectBtn.style.fontSize = '0.8rem';
+      selectBtn.style.background = 'rgba(0, 255, 204, 0.2)';
+      selectBtn.style.borderColor = '#00ffcc';
+      selectBtn.style.boxShadow = '0 0 20px rgba(0, 255, 204, 0.6)';
+      
+      cardContainer.appendChild(previewBox);
+      cardContainer.appendChild(nameDisplay);
+      cardContainer.appendChild(roleDisplay);
+      cardContainer.appendChild(selectBtn);
+      
+      // Navigation controls
+      const navContainer = document.createElement('div');
+      navContainer.style.display = 'flex';
+      navContainer.style.gap = '1rem';
+      navContainer.style.marginTop = '1.5rem';
+      navContainer.style.width = '100%';
+      navContainer.style.justifyContent = 'center';
+      
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'game-btn';
+      prevBtn.innerHTML = '◀';
+      prevBtn.style.padding = '1rem 1.5rem';
+      prevBtn.style.fontSize = '1rem';
+      
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'game-btn';
+      nextBtn.innerHTML = '▶';
+      nextBtn.style.padding = '1rem 1.5rem';
+      nextBtn.style.fontSize = '1rem';
+      
+      navContainer.appendChild(prevBtn);
+      navContainer.appendChild(nextBtn);
+      
+      // Indicator dots
+      const dotsContainer = document.createElement('div');
+      dotsContainer.style.display = 'flex';
+      dotsContainer.style.gap = '0.5rem';
+      dotsContainer.style.marginTop = '1rem';
+      dotsContainer.style.justifyContent = 'center';
+      
+      const dots = cards.map((_, i) => {
+        const dot = document.createElement('div');
+        dot.style.width = '10px';
+        dot.style.height = '10px';
+        dot.style.borderRadius = '50%';
+        dot.style.background = 'rgba(255, 0, 102, 0.3)';
+        dot.style.border = '2px solid #ff0066';
+        dot.style.cursor = 'pointer';
+        dot.style.transition = 'all 0.3s';
+        dot.onclick = () => goToCharacter(i);
+        dotsContainer.appendChild(dot);
+        return dot;
+      });
+      
+      container.appendChild(cardContainer);
+      container.appendChild(navContainer);
+      container.appendChild(dotsContainer);
+      
+      // Insert after subtitle
+      if (subtitle) {
+        subtitle.parentNode.insertBefore(container, subtitle.nextSibling);
+      } else if (title) {
+        title.parentNode.insertBefore(container, title.nextSibling);
+      }
+      
+      function updateDisplay() {
+        const char = cards[currentIndex];
+        const preview = char.querySelector('.character-preview');
+        const name = char.querySelector('.character-card-name');
+        const role = char.querySelector('.character-card-role');
         
-        selectBtn.addEventListener('touchend', (e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          selectCharacter();
-        }, { passive: false });
-        
-        // Swipe support
-        let touchStartX = 0;
-        cardContainer.addEventListener('touchstart', (e) => {
-          touchStartX = e.touches[0].clientX;
-        }, { passive: true });
-        
-        cardContainer.addEventListener('touchend', (e) => {
-          const touchEndX = e.changedTouches[0].clientX;
-          const diff = touchStartX - touchEndX;
+        if (preview) {
+          previewBox.innerHTML = preview.innerHTML;
+          previewBox.style.background = preview.style.background;
+          previewBox.style.overflow = 'hidden';
           
-          if (Math.abs(diff) > 50) {
-            if (diff > 0) {
-              currentIndex++;
-              if (currentIndex >= cards.length) currentIndex = 0;
-            } else {
-              currentIndex--;
-              if (currentIndex < 0) currentIndex = cards.length - 1;
-            }
-            updateDisplay();
+          const img = previewBox.querySelector('img');
+          if (img) {
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            img.style.display = 'block';
           }
-        }, { passive: true });
+        }
+        if (name) nameDisplay.textContent = name.textContent;
+        if (role) roleDisplay.textContent = role.textContent;
         
-        // Keyboard support
-        document.addEventListener('keydown', (e) => {
-          if (overlay.classList.contains('active')) {
-            if (e.key === 'ArrowLeft') {
-              currentIndex--;
-              if (currentIndex < 0) currentIndex = cards.length - 1;
-              updateDisplay();
-            } else if (e.key === 'ArrowRight') {
-              currentIndex++;
-              if (currentIndex >= cards.length) currentIndex = 0;
-              updateDisplay();
-            } else if (e.key === 'Enter') {
-              selectBtn.click();
-            }
+        dots.forEach((dot, i) => {
+          if (i === currentIndex) {
+            dot.style.background = '#00ffcc';
+            dot.style.borderColor = '#00ffcc';
+            dot.style.boxShadow = '0 0 10px rgba(0, 255, 204, 0.8)';
+          } else {
+            dot.style.background = 'rgba(255, 0, 102, 0.3)';
+            dot.style.borderColor = '#ff0066';
+            dot.style.boxShadow = 'none';
           }
         });
-        
+      }
+      
+      function goToCharacter(index) {
+        currentIndex = index;
         updateDisplay();
-        console.log('Mobile UI setup complete');
+      }
+      
+      prevBtn.onclick = () => {
+        currentIndex--;
+        if (currentIndex < 0) currentIndex = cards.length - 1;
+        updateDisplay();
+      };
+      
+      nextBtn.onclick = () => {
+        currentIndex++;
+        if (currentIndex >= cards.length) currentIndex = 0;
+        updateDisplay();
+      };
+      
+      // THE HACK: Bypass everything and directly set the character
+      function selectCharacter() {
+        const currentCard = cards[currentIndex];
+        const charName = currentCard.querySelector('.character-card-name').textContent;
+        console.log('🔥 HACK: Directly selecting:', charName);
+        
+        // Find the character object
+        const char = angloPolishCharacters.find(c => c.name === charName);
+        
+        if (char) {
+          // DIRECTLY modify the global variables
+          selectedCharacter = char;
+          showDefaultCharacter = false;
+          
+          // FORCE CLOSE THE OVERLAY
+          overlay.classList.remove('active');
+          overlay.style.display = 'none'; // FORCE HIDE IT
+          
+          console.log('🚪 Overlay closed');
+          
+          // Stop Polish audio manually
+          if (polishAudioInterval) {
+            clearInterval(polishAudioInterval);
+            polishAudioInterval = null;
+          }
+          if (polishAudio) {
+            polishAudio.pause();
+            polishAudio.currentTime = 0;
+          }
+          
+          // WAIT FOR CANVASES TO EXIST
+          let checkCount = 0;
+          const waitForCanvas = setInterval(() => {
+            checkCount++;
+            console.log(`⏳ Check #${checkCount}: canvases.length =`, canvases.length);
+            
+            if (canvases && canvases.length > 0) {
+              clearInterval(waitForCanvas);
+              
+              console.log('✅ Canvas found! Drawing character...');
+              
+              // Show message manually
+              messageBox.innerText = `Now playing as ${char.name}!`;
+              messageBox.style.display = "block";
+              freezeFrame = true;
+              setTimeout(() => {
+                messageBox.style.display = "none";
+                freezeFrame = false;
+              }, 2500);
+              
+              // Force redraw manually
+              canvases.forEach(canvas => {
+                const ctx = canvas.getContext("2d");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawLadder(ctx, canvas);
+                drawCharacter(ctx);
+                drawBenchedCube(ctx, canvas);
+                drawScore(ctx);
+              });
+              
+              console.log('🔥 HACK COMPLETE! Character:', selectedCharacter);
+            }
+            
+            if (checkCount > 50) {
+              clearInterval(waitForCanvas);
+              console.error('❌ Timeout: Canvas never appeared after 50 checks!');
+            }
+          }, 100);
+        }
+      }        
+      
+      selectBtn.onclick = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        selectCharacter();
+      };
+      
+      selectBtn.addEventListener('touchend', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        selectCharacter();
+      }, { passive: false });
+      
+      // Swipe support
+      let touchStartX = 0;
+      cardContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+      }, { passive: true });
+      
+      cardContainer.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) {
+            currentIndex++;
+            if (currentIndex >= cards.length) currentIndex = 0;
+          } else {
+            currentIndex--;
+            if (currentIndex < 0) currentIndex = cards.length - 1;
+          }
+          updateDisplay();
+        }
+      }, { passive: true });
+      
+      // Keyboard support
+      document.addEventListener('keydown', (e) => {
+        if (overlay.classList.contains('active')) {
+          if (e.key === 'ArrowLeft') {
+            currentIndex--;
+            if (currentIndex < 0) currentIndex = cards.length - 1;
+            updateDisplay();
+          } else if (e.key === 'ArrowRight') {
+            currentIndex++;
+            if (currentIndex >= cards.length) currentIndex = 0;
+            updateDisplay();
+          } else if (e.key === 'Enter') {
+            selectBtn.click();
+          }
+        }
+      });
+      
+      updateDisplay();
+      console.log('Mobile UI setup complete');
+    }
+    
+    // Watch for character select opening - DON'T disconnect!
+    const observer = new MutationObserver(() => {
+      const overlay = document.getElementById('characterSelect');
+      if (overlay && overlay.classList.contains('active')) {
+        buildMobileUI();
       }
     });
     
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true, 
+      attributes: true, 
+      attributeFilter: ['class'] 
+    });
+    
   } else {
     console.log('Desktop mode - mobile script skipped');
   }
-})();
-</script><script>
-// Style "EDITION" to look special
-(function() {
-  const observer = new MutationObserver(() => {
-    const title = document.querySelector('.character-select-title');
-    if (title && !title.innerHTML.includes('<span')) {
-      title.innerHTML = `ANGLO POLISH BUILDERS<br><span style="font-size: 0.4em; color: #ff0066; text-shadow: 0 0 10px rgba(255, 0, 102, 0.8); letter-spacing: 0.3em; display: block; margin-top: 0.5rem;">EDITION</span>`;
-      observer.disconnect();
-    }
-  });
-  
-  observer.observe(document.body, { childList: true, subtree: true });
 })();
 </script>
 
