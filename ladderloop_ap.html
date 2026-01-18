@@ -1748,17 +1748,34 @@ if (ANGLO_POLISH_EDITION && charData.id === "swarvek") {
 
 
 
-   /* ===== Character Selection ===== */
+  /* ===== Character Selection ===== */
 function showCharacterSelect() {
   const overlay = document.getElementById('characterSelect');
   const grid = document.getElementById('characterGrid');
+  
+  // Clear any existing mobile UI
+  const existingMobileUI = overlay.querySelector('.mobile-card-container');
+  if (existingMobileUI) {
+    existingMobileUI.remove();
+  }
+  
+  // Reset overlay styles for mobile
+  overlay.style.display = '';
+  overlay.style.padding = '';
+  overlay.style.flexDirection = '';
+  overlay.style.justifyContent = '';
+  overlay.style.alignItems = '';
+  
+  // Reset grid visibility
+  grid.style.position = '';
+  grid.style.left = '';
+  grid.style.visibility = '';
   
   grid.innerHTML = '';
   
   angloPolishCharacters.forEach(char => {
     const card = document.createElement('div');
     card.className = 'character-card';
-    
     const imageName = 'images/' + char.id + '.jpg';
     
     card.innerHTML = `
