@@ -1,4 +1,4 @@
-<!-- Site updated 0053: redirect to ladderloop_ap.html -->
+<!-- Site updated 1525 sunday 18 january 2026: redirect to ladderloop_ap.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2096,8 +2096,21 @@ const tradeGames = {
       { name: "Detail Work", progress: 80 },
       { name: "Touch Ups", progress: 100 }
     ]
+  },
+  tobin: {
+    title: "CODE THE GAME",
+    action: "TYPE",
+    emoji: "💻",
+    stages: [
+      { name: "Setup", progress: 20 },
+      { name: "Core Logic", progress: 40 },
+      { name: "Bug Fixes", progress: 60 },
+      { name: "Testing", progress: 80 },
+      { name: "Deploy", progress: 100 }
+    ]
   }
 };
+
 
 function openTradeGame() {
   console.log('Trade game opening...', selectedCharacter, showDefaultCharacter);
@@ -2257,9 +2270,11 @@ function drawTradeScene(ctx, canvas, char, progress) {
   } else if (char.id === "mario") {
     drawMarioSprite(ctx, charX, charY, charSize);
     drawPainting(ctx, canvas, progress);
+  } else if (char.id === "tobin") {
+    drawJamesSprite(ctx, charX, charY, charSize);
+    drawCoding(ctx, canvas, progress);
   }
 }
-
 function drawHouseConstruction(ctx, canvas, progress) {
   const s = window.gameScale || 1;
   const houseX = 200 * s;
@@ -2540,6 +2555,75 @@ function drawPainting(ctx, canvas, progress) {
   ctx.fillRect(brushX - 5 * s, brushY - 20 * s, 18 * s, 25 * s);
 }
 
+
+function drawCoding(ctx, canvas, progress) {
+  const s = window.gameScale || 1;
+  const deskX = 150 * s;
+  const deskY = canvas.height - 150 * s;
+  const deskW = 200 * s;
+  const deskH = 100 * s;
+  
+  // Desk
+  ctx.fillStyle = '#8B4513';
+  ctx.fillRect(deskX, deskY, deskW, deskH);
+  
+  // Monitor base
+  ctx.fillStyle = '#2a2a2a';
+  ctx.fillRect(deskX + 60 * s, deskY - 120 * s, 80 * s, 100 * s);
+  
+  // Monitor screen (glowing)
+  const screenPulse = (Math.sin(Date.now() / 300) + 1) * 0.5;
+  ctx.fillStyle = `rgba(20, 20, 20, ${0.9 + 0.1 * screenPulse})`;
+  ctx.fillRect(deskX + 65 * s, deskY - 115 * s, 70 * s, 90 * s);
+  
+  // Code on screen (progress-based)
+  const lines = Math.floor((progress / 100) * 10);
+  ctx.fillStyle = '#00ff66';
+  ctx.font = `${6 * s}px monospace`;
+  
+  const codeSnippets = [
+    'function draw() {',
+    '  ctx.fillStyle = "#0f0";',
+    '  ctx.fillRect(x, y, w, h);',
+    '  if (progress >= 20) {',
+    '    updateScene();',
+    '  }',
+    '  requestAnimationFrame(draw);',
+    '}',
+    '// Testing...',
+    'console.log("Done!");'
+  ];
+  
+  for (let i = 0; i < lines; i++) {
+    ctx.fillText(codeSnippets[i] || '...', deskX + 68 * s, deskY - 110 * s + (i * 9 * s));
+  }
+  
+  // Keyboard
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(deskX + 40 * s, deskY + 20 * s, 120 * s, 40 * s);
+  
+  // Coffee cup
+  ctx.fillStyle = '#654321';
+  ctx.fillRect(deskX + 10 * s, deskY + 30 * s, 20 * s, 25 * s);
+  // Steam (animated)
+  if (progress < 100) {
+    const steam = (Date.now() / 200) % 20;
+    ctx.fillStyle = 'rgba(200, 200, 200, 0.5)';
+    if (steam < 15) {
+      ctx.fillRect(deskX + 15 * s, deskY + 20 * s - steam, 3 * s, 8 * s);
+      ctx.fillRect(deskX + 20 * s, deskY + 18 * s - steam, 3 * s, 8 * s);
+    }
+  }
+  
+  // Progress indicator - binary/hex values
+  if (progress >= 50) {
+    ctx.fillStyle = '#00ffcc';
+    ctx.font = `${8 * s}px 'Press Start 2P', cursive`;
+    ctx.fillText(`${Math.floor(progress)}%`, deskX + 75 * s, deskY - 130 * s);
+  }
+}
+
+
 function closeTradeGame() {
   tradeGameActive = false;
   
@@ -2747,14 +2831,25 @@ const raceVehicles = {
     maxSpeed: 8.5,
     acceleration: 0.35,
     handling: 0.95
+  },
+  tobin: {  // ADD THIS - you're missing tobin!
+    name: "Dev Mobile",
+    color: "#9933ff",
+    emoji: "💻",
+    maxSpeed: 8,
+    acceleration: 0.32,
+    handling: 0.88
   }
 };
+
 
 function openRaceGame() {
   if (!selectedCharacter || showDefaultCharacter) {
     showMessage("Select a character first!\nPress 🎨 Gallery");
     return;
   }
+
+  console.log('Opening race game for:', selectedCharacter.name);
 
   freezeFrame = true;
   climbing = false;
@@ -2774,12 +2869,11 @@ function openRaceGame() {
   raceOpponents = [];
   raceKeys = {};
   raceFinished = false;
-   raceStartTime = Date.now();
+  raceStartTime = Date.now();
   raceLastLapTime = Date.now();
   raceCheckpoints = [];
   raceDrift = 0;
 
-  
   // Create AI opponents from other characters
   const s = window.gameScale || 1;
   angloPolishCharacters.forEach((char, index) => {
@@ -2789,7 +2883,7 @@ function openRaceGame() {
         character: char,
         vehicle: vehicle,
         x: 120 + (index * 60) * s,
-        y: -100 - (index * 80) * s, // Stagger starting positions
+        y: -100 - (index * 80) * s,
         speed: vehicle.maxSpeed * 0.6 + Math.random() * 2,
         lapDistance: 0,
         currentLap: 1,
@@ -2803,10 +2897,11 @@ function openRaceGame() {
   overlay.innerHTML = `
     <section style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
       <div class="container" style="max-width: 600px;">
-<h2 class="trade-game-title">🏁 POLE POSITION 🏁</h2>        <p class="trade-game-subtitle">${vehicle.name} - ${vehicle.emoji}</p>
+        <h2 class="trade-game-title">🏁 POLE POSITION 🏁</h2>
+        <p class="trade-game-subtitle">${vehicle.name} - ${vehicle.emoji}</p>
         
         <div class="canvas-wrapper" style="position: relative;">
-         <canvas id="raceCanvas" width="${400 * s}" height="${450 * s}"></canvas>
+          <canvas id="raceCanvas" width="400" height="450"></canvas>
           <button class="game-btn" 
                   style="position: absolute; top: 10px; right: 10px; z-index: 10;"
                   onclick="closeRaceGame()">✕</button>
@@ -2843,7 +2938,6 @@ function openRaceGame() {
         <div id="raceBestTime" style="margin-top: 0.5rem; text-align: center; color: #00ff66; font-family: 'Press Start 2P', cursive; font-size: 0.55rem; opacity: 0.8;">
           Best: ${raceBestTime === Infinity ? '--:--' : raceBestTime + 's'}
         </div>
-
         
         <div style="margin-top: 1rem; text-align: center; color: #00ffcc; font-family: 'Press Start 2P', cursive; font-size: 0.55rem;">
           ⬆️ Gas | ⬇️ Brake | ⬅️➡️ Steer | SPACE Boost
@@ -2859,15 +2953,32 @@ function openRaceGame() {
     </section>
   `;
   
-  const canvas = document.getElementById('raceCanvas');
-console.log('Race canvas created:', canvas, 'dimensions:', canvas.width, 'x', canvas.height);  
-  document.addEventListener('keydown', handleRaceKeyDown);
-  document.addEventListener('keyup', handleRaceKeyUp);
-  
+  // IMPORTANT: Wait for DOM to update before accessing canvas
+  setTimeout(() => {
+    const canvas = document.getElementById('raceCanvas');
     
-  startRaceCountdown();
+    if (!canvas) {
+      console.error('❌ Race canvas not found!');
+      return;
+    }
+    
+    console.log('✅ Race canvas found:', canvas);
+    
+    // Set proper canvas dimensions
+    const scale = window.gameScale || 1;
+    canvas.width = 400 * scale;
+    canvas.height = 450 * scale;
+    
+    console.log('Canvas dimensions set to:', canvas.width, 'x', canvas.height);
+    
+    // Add event listeners
+    document.addEventListener('keydown', handleRaceKeyDown);
+    document.addEventListener('keyup', handleRaceKeyUp);
+    
+    // Start countdown which will trigger animation
+    startRaceCountdown();
+  }, 100);
 }
-
 
 function handleRaceKeyDown(e) {
   if (!raceGameActive) return;
@@ -2889,37 +3000,21 @@ function handleRaceKeyUp(e) {
 
 function startRaceCountdown() {
   const countdownEl = document.getElementById('raceCountdown');
-  if (!countdownEl) return;
+  
+  console.log('startRaceCountdown called');
+  console.log('Countdown element:', countdownEl);
+  
+  if (!countdownEl) {
+    console.error('❌ Countdown element not found!');
+    return;
+  }
   
   let count = 3;
   countdownEl.textContent = count;
   
   const interval = setInterval(() => {
     count--;
-    
-    if (count > 0) {
-      countdownEl.textContent = count;
-    } else if (count === 0) {
-      countdownEl.textContent = 'GO!';
-      countdownEl.style.color = '#00ff66';
-      raceStartTime = Date.now();
-      startRaceAnimation();
-    } else {
-      countdownEl.style.display = 'none';
-      clearInterval(interval);
-    }
-  }, 1000);
-}
-
-function startRaceCountdown() {
-  const countdownEl = document.getElementById('raceCountdown');
-  if (!countdownEl) return;
-  
-  let count = 3;
-  countdownEl.textContent = count;
-  
-  const interval = setInterval(() => {
-    count--;
+    console.log('Countdown:', count);
     
     if (count > 0) {
       countdownEl.textContent = count;
@@ -2929,6 +3024,8 @@ function startRaceCountdown() {
       countdownEl.style.color = '#00ff66';
       playRaceStartSound();
       raceStartTime = Date.now();
+      
+      console.log('Starting race animation...');
       startRaceAnimation();
       startEngineSound();
     } else {
@@ -2937,7 +3034,6 @@ function startRaceCountdown() {
     }
   }, 1000);
 }
-
 // ADD ALL THESE SOUND FUNCTIONS HERE:
 
 function playRaceCountdownBeep() {
@@ -3487,18 +3583,19 @@ const vehicle = raceVehicles[selectedCharacter.id];
   ctx.strokeRect(spriteX - 5 * s, spriteY - 5 * s, spriteSize + 10 * s, spriteSize + 10 * s);
   
   // Draw the character sprite
-  if (selectedCharacter.id === "swarvek") {
-    drawSwarvekSprite(ctx, spriteX, spriteY, spriteSize);
-  } else if (selectedCharacter.id === "derek") {
-    drawDerekSprite(ctx, spriteX, spriteY, spriteSize);
-  } else if (selectedCharacter.id === "michel") {
-    drawMichelSprite(ctx, spriteX, spriteY, spriteSize);
-  } else if (selectedCharacter.id === "greg") {
-    drawGregSprite(ctx, spriteX, spriteY, spriteSize);
-  } else if (selectedCharacter.id === "mario") {
-    drawMarioSprite(ctx, spriteX, spriteY, spriteSize);
-  }
-
+if (selectedCharacter.id === "swarvek") {
+  drawSwarvekSprite(ctx, spriteX, spriteY, spriteSize);
+} else if (selectedCharacter.id === "derek") {
+  drawDerekSprite(ctx, spriteX, spriteY, spriteSize);
+} else if (selectedCharacter.id === "michel") {
+  drawMichelSprite(ctx, spriteX, spriteY, spriteSize);
+} else if (selectedCharacter.id === "greg") {
+  drawGregSprite(ctx, spriteX, spriteY, spriteSize);
+} else if (selectedCharacter.id === "mario") {
+  drawMarioSprite(ctx, spriteX, spriteY, spriteSize);
+} else if (selectedCharacter.id === "tobin") {
+  drawJamesSprite(ctx, spriteX, spriteY, spriteSize);
+}
 
 // Draw speedometer in bottom right corner
   const speedoSize = 80 * s;
