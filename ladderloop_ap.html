@@ -4908,28 +4908,31 @@ wrapper.appendChild(sfxBtn);
 })();
 </script>
 
-  <script>
-// Show Race button on desktop only
+<script>
+// Show Race button and handle mobile message
 (function() {
   const isMobile = window.innerWidth <= 768;
+  const isTouchDevice = ('ontouchstart' in window) || 
+                        (navigator.maxTouchPoints > 0) || 
+                        (navigator.msMaxTouchPoints > 0);
   
-  if (isMobile) {
-    // Hide all race buttons on mobile
-    document.querySelectorAll('.race-btn').forEach(btn => {
-      btn.style.display = 'none';
-    });
-  } else {
-    // Show race button on desktop
-    document.querySelectorAll('.race-btn').forEach(btn => {
-      btn.style.display = 'inline-block';
-    });
-  }
+  // Always show race button on all devices
+  document.querySelectorAll('.race-btn').forEach(btn => {
+    btn.style.display = 'inline-block';
+    
+    // Add click handler for mobile/touch devices
+    if (isMobile || isTouchDevice) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showMessage("🏁 POLE POSITION 🏁\n\nThis racing game is available\non desktop only!\n\nPlease visit on a computer\nto play.", 3500);
+      });
+    }
+  });
   
   // Re-check on window resize
   window.addEventListener('resize', () => {
-    const isMobileNow = window.innerWidth <= 768;
     document.querySelectorAll('.race-btn').forEach(btn => {
-      btn.style.display = isMobileNow ? 'none' : 'inline-block';
+      btn.style.display = 'inline-block';
     });
   });
 })();
