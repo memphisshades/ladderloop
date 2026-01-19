@@ -5245,7 +5245,7 @@ const characterMessages = {
     const isMobile = window.innerWidth <= 768;
     const shouldHideRace = isTouchDevice || isMobile;
     
-    document.querySelectorAll(".gallery-btn, .trade-btn").forEach(btn => {
+   document.querySelectorAll(".gallery-btn, .trade-btn, .coming-soon-btn").forEach(btn => {
       btn.style.display = isAngloActive() ? "inline-block" : "none";
     });
     
