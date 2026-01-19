@@ -269,28 +269,30 @@
       opacity: 0.3;
     }
 
-   /* Character Selection Overlay */
-    .character-select-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 10, 10, 0.98);
-      z-index: 10001;
-      display: none;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-      padding: 4rem 2rem 6rem 2rem; /* Extra bottom padding for scroll */
-    }
+  /* Character Selection Overlay */
+.character-select-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.98);
+  z-index: 10001;
+  display: none;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 2rem 1rem 8rem 1rem; /* Changed: more bottom padding */
+}
 
-    .character-select-overlay.active {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start; /* Changed from center to flex-start */
-      min-height: 100vh; /* Allow content to expand beyond viewport */
-    }
+.character-select-overlay.active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  padding-top: max(2rem, env(safe-area-inset-top)); /* iOS safe area */
+  padding-bottom: max(8rem, env(safe-area-inset-bottom) + 8rem);
+}
 
     .character-select-title {
       font-size: clamp(1.5rem, 4vw, 3rem);
@@ -492,10 +494,32 @@
       box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.3);
     }
 
-   @media (max-width: 768px) {
+  @media (max-width: 768px) {
   .character-grid {
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
+    margin-bottom: 2rem; /* ADD THIS */
+  }
+
+  /* ADD ALL OF THESE: */
+  .character-select-overlay {
+    padding: 1rem 1rem 10rem 1rem !important;
+  }
+
+  .character-select-overlay.active {
+    padding-top: max(1rem, env(safe-area-inset-top)) !important;
+    padding-bottom: max(10rem, env(safe-area-inset-bottom) + 10rem) !important;
+  }
+
+  .character-select-title {
+    font-size: 1.2rem !important;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .character-select-subtitle {
+    font-size: 0.7rem !important;
+    margin-bottom: 1rem !important;
   }
 
   .character-card {
