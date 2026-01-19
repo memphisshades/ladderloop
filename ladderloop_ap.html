@@ -2863,6 +2863,17 @@ const raceVehicles = {
 
 
 function openRaceGame() {
+  // Check for touch/mobile devices
+  const isTouchDevice = ('ontouchstart' in window) || 
+                        (navigator.maxTouchPoints > 0) || 
+                        (navigator.msMaxTouchPoints > 0);
+  const isMobile = window.innerWidth <= 768;
+  
+  if (isTouchDevice || isMobile) {
+    showMessage("🏁 POLE POSITION 🏁\n\nThis racing game is available\non desktop only!\n\nPlease visit on a computer\nto play.", 3500);
+    return;
+  }
+  
   if (!selectedCharacter || showDefaultCharacter) {
     showMessage("Select a character first!\nPress 🎨 Gallery");
     return;
