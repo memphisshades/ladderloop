@@ -5373,6 +5373,371 @@ const characterMessages = {
   
 
 
+<script>
+// ===== COMING SOON - POLE POSITION TEASER BUTTON =====
+(function() {
+  let comingSoonAnimationId = null;
+  let previewCars = [];
   
+  // Wait for DOM to load
+  window.addEventListener('DOMContentLoaded', () => {
+    // Find all game-controls containers and add the button
+    document.querySelectorAll('.game-controls').forEach(controls => {
+      // Create the Coming Soon button
+      const comingSoonBtn = document.createElement('button');
+      comingSoonBtn.className = 'game-btn coming-soon-btn';
+      comingSoonBtn.innerHTML = `
+        🏁 SOON
+        <span style="
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: #ff0066;
+          color: #fff;
+          font-size: 0.5rem;
+          padding: 0.2rem 0.4rem;
+          border-radius: 3px;
+          animation: pulse-badge 2s infinite;
+        ">NEW</span>
+      `;
+      comingSoonBtn.style.cssText = `
+        position: relative;
+        background: rgba(255, 204, 0, 0.15);
+        border-color: #ffcc00;
+        opacity: 0.8;
+      `;
+      comingSoonBtn.onclick = openComingSoon;
+      
+      // Insert after gallery button
+      const galleryBtn = controls.querySelector('.gallery-btn');
+      if (galleryBtn) {
+        galleryBtn.parentNode.insertBefore(comingSoonBtn, galleryBtn.nextSibling);
+      } else {
+        controls.appendChild(comingSoonBtn);
+      }
+    });
+    
+    // Add the overlay HTML
+    const overlay = document.createElement('div');
+    overlay.id = 'comingSoonOverlay';
+    overlay.className = 'coming-soon-overlay';
+   overlay.innerHTML = `
+  <div class="coming-soon-content">
+    <h1 class="coming-soon-title">🏁 POLE POSITION 🏁</h1>
+    <p class="coming-soon-subtitle">Racing game coming soon!</p>
+    
+    <div style="
+      border: 3px solid #ff0066;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+      margin: 2rem auto;
+      max-width: 800px;
+      background: #1a1a1a;
+    ">
+      <canvas id="comingSoonCanvas" width="400" height="500" style="
+        width: 100%;
+        height: auto;
+        display: block;
+      "></canvas>
+    </div>        
+        <p style="
+          font-family: 'Press Start 2P', cursive;
+          font-size: 0.7rem;
+          color: #00ffcc;
+          margin-bottom: 2rem;
+          line-height: 1.8;
+        ">
+          The builders are tuning up their vans...<br>
+          Race as your favorite character!<br>
+          <span style="color: #ffcc00;">Swarvek • Derek • Michel • Greg • Mario • James</span>
+        </p>
+        
+        <button class="game-btn" style="
+          background: rgba(255, 0, 102, 0.3);
+          border-color: #ff0066;
+          padding: 1rem 2rem;
+          font-size: 0.8rem;
+        ">Close</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    
+    // Add close button handler
+    overlay.querySelector('button').onclick = closeComingSoon;
+    
+    // Add CSS for overlay and animations
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes pulse-badge {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+      
+      .coming-soon-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 10, 10, 0.98);
+        z-index: 10000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+ overflow-y: auto;  // <-- ADD THIS LINE if it's not there
+      }
+      
+      .coming-soon-overlay.active {
+        display: flex;
+
+      }
+      
+      .coming-soon-content {
+        max-width: 900px;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .coming-soon-title {
+        font-family: 'Press Start 2P', cursive;
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+        color: #00ffcc;
+        text-shadow: 0 0 20px #00ffcc;
+        margin-bottom: 1rem;
+      }
+      
+      .coming-soon-subtitle {
+        font-family: 'Press Start 2P', cursive;
+        font-size: clamp(0.7rem, 2vw, 1rem);
+        color: #ffcc00;
+        margin-bottom: 2rem;
+      }
+    `;
+    document.head.appendChild(style);
+  });
+  
+  function openComingSoon() {
+    const overlay = document.getElementById('comingSoonOverlay');
+    if (!overlay) return;
+    
+    overlay.classList.add('active');
+    
+    // Initialize preview vans with better spacing
+previewCars = [
+  { x: 120, y: 50, color: '#ff9900', emoji: '🚐', speed: 2.5, name: 'Boss Van' },
+  { x: 200, y: 150, color: '#00ccff', emoji: '🚚', speed: 2.8, name: 'Site Truck' },
+  { x: 90, y: 250, color: '#ffcc00', emoji: '⚡', speed: 2.2, name: 'Electric Van' },
+  { x: 250, y: 350, color: '#00ff66', emoji: '🚙', speed: 2.6, name: 'Plumber Van' },
+  { x: 150, y: 450, color: '#ff0066', emoji: '🎨', speed: 3.0, name: 'Painter Wagon' }
+];    
+    startComingSoonAnimation();
+  }
+  
+  function closeComingSoon() {
+    const overlay = document.getElementById('comingSoonOverlay');
+    if (overlay) {
+      overlay.classList.remove('active');
+    }
+    
+    if (comingSoonAnimationId) {
+      cancelAnimationFrame(comingSoonAnimationId);
+      comingSoonAnimationId = null;
+    }
+  }
+  
+  function startComingSoonAnimation() {
+    const canvas = document.getElementById('comingSoonCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    function animate() {
+      if (!document.getElementById('comingSoonOverlay')?.classList.contains('active')) {
+        return;
+      }
+      
+      // Clear canvas
+      ctx.fillStyle = '#2d5016';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw road
+      ctx.fillStyle = '#3a3a3a';
+      ctx.fillRect(80, 0, 240, canvas.height);
+      
+      // Road edges
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([20, 20]);
+      ctx.beginPath();
+      ctx.moveTo(80, 0);
+      ctx.lineTo(80, canvas.height);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(320, 0);
+      ctx.lineTo(320, canvas.height);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Center line
+      const offset = (Date.now() / 15) % 25;
+      ctx.strokeStyle = '#ffcc00';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([15, 10]);
+      ctx.lineDashOffset = -offset;
+      ctx.beginPath();
+      ctx.moveTo(200, 0);
+      ctx.lineTo(200, canvas.height);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+     // Update and draw cars
+previewCars.forEach(car => {
+  // Move car down
+  car.y += car.speed;
+  
+  // Wrap around
+  if (car.y > canvas.height + 60) {
+    car.y = -60;
+    car.x = 100 + Math.random() * 200;
+  }
+  
+  // Draw car - BIGGER SIZE
+  const carW = 48;  // Changed from 32
+  const carH = 72;  // Changed from 48
+  
+  // Shadow
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+  ctx.fillRect(car.x + 4, car.y + carH + 3, carW - 8, 5);
+  
+  // Car body
+  ctx.fillStyle = car.color;
+  ctx.fillRect(car.x + 8, car.y, carW - 16, carH * 0.7);
+  
+  // Roof
+  ctx.fillRect(car.x + 10, car.y + carH * 0.65, carW - 20, carH * 0.25);
+  
+  // Windshield
+  ctx.fillStyle = 'rgba(135, 206, 235, 0.6)';
+  ctx.fillRect(car.x + 13, car.y + carH * 0.73, carW - 26, carH * 0.15);
+  
+  // Headlights
+  ctx.fillStyle = '#ffff00';
+  ctx.fillRect(car.x + 9, car.y + carH * 0.05, 8, 5);
+  ctx.fillRect(car.x + carW - 17, car.y + carH * 0.05, 8, 5);
+  
+  // Wheels
+  ctx.fillStyle = '#1a1a1a';
+  ctx.fillRect(car.x + 3, car.y + carH * 0.15, 9, 14);
+  ctx.fillRect(car.x + carW - 12, car.y + carH * 0.15, 9, 14);
+  ctx.fillRect(car.x + 3, car.y + carH * 0.65, 9, 14);
+  ctx.fillRect(car.x + carW - 12, car.y + carH * 0.65, 9, 14);
+  
+  // Emoji on roof - BIGGER
+  ctx.fillStyle = '#fff';
+  ctx.font = '18px Arial';  // Changed from 12px
+  ctx.textAlign = 'center';
+  ctx.fillText(car.emoji, car.x + carW / 2, car.y + carH * 0.78);
+});      
+      // "COMING SOON" text overlay
+      ctx.fillStyle = 'rgba(10, 10, 10, 0.7)';
+      ctx.fillRect(0, canvas.height / 2 - 30, canvas.width, 60);
+      
+      ctx.fillStyle = '#00ffcc';
+      ctx.font = 'bold 24px "Press Start 2P", cursive';
+      ctx.textAlign = 'center';
+      ctx.shadowColor = 'rgba(0, 255, 204, 0.8)';
+      ctx.shadowBlur = 10;
+      ctx.fillText('COMING SOON', canvas.width / 2, canvas.height / 2);
+      ctx.shadowBlur = 0;
+      
+      comingSoonAnimationId = requestAnimationFrame(animate);
+    }
+    
+    animate();
+  }
+})();
+</script>
+<script>
+// Add music to existing Coming Soon button
+(function() {
+  window.addEventListener('DOMContentLoaded', () => {
+    // Find the existing coming soon button
+    const comingSoonBtns = document.querySelectorAll('.coming-soon-btn');
+    
+    comingSoonBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Play race menu music for 30 seconds
+        if (!window.comingSoonMusic) {
+          window.comingSoonMusic = new Audio('race-menu.mp3');
+          window.comingSoonMusic.volume = 0.5;
+        }
+        
+        if (audioEnabled) {
+          window.comingSoonMusic.currentTime = 0;
+          window.comingSoonMusic.play().catch(e => console.log('Music play failed:', e));
+          
+          // Stop after 30 seconds
+          setTimeout(() => {
+            if (window.comingSoonMusic) {
+              window.comingSoonMusic.pause();
+              window.comingSoonMusic.currentTime = 0;
+            }
+          }, 30000);
+        }
+      });
+    });
+    
+    // Stop music when overlay closes
+    const closeBtn = document.querySelector('#comingSoonOverlay button');
+    if (closeBtn) {
+      const originalClick = closeBtn.onclick;
+      closeBtn.onclick = function() {
+        if (window.comingSoonMusic) {
+          window.comingSoonMusic.pause();
+          window.comingSoonMusic.currentTime = 0;
+        }
+        if (originalClick) originalClick.call(this);
+      };
+    }
+  });
+})();
+</script>
+
+<script>
+// Fix Coming Soon scrolling
+document.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.getElementById('comingSoonOverlay');
+  if (overlay) {
+    overlay.style.overflowY = 'auto';
+    overlay.style.alignItems = 'flex-start';
+  }
+});
+</script>
+
+<script>
+// Simple iOS scrolling fix (preserves desktop centering)
+(function() {
+  window.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.getElementById('comingSoonOverlay');
+    if (!overlay) return;
+    
+    // Just add iOS scrolling support without changing layout
+    overlay.style.webkitOverflowScrolling = 'touch';
+    
+    // Only fix body scroll lock on mobile
+    const observer = new MutationObserver(() => {
+      if (overlay.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    });
+    
+    observer.observe(overlay, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+</script>  
 </body>
 </html></parameter>
