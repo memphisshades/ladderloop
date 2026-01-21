@@ -5672,7 +5672,7 @@ previewCars = [
       ctx.stroke();
       ctx.setLineDash([]);
       
-     // Update and draw cars
+   // Update and draw cars
 previewCars.forEach(car => {
   // Move car down
   car.y += car.speed;
@@ -5683,43 +5683,76 @@ previewCars.forEach(car => {
     car.x = 100 + Math.random() * 200;
   }
   
-  // Draw car - BIGGER SIZE
-  const carW = 48;  // Changed from 32
-  const carH = 72;  // Changed from 48
+  // Draw van - BIGGER, BOXIER DESIGN
+  const carW = 52;  // Even wider for van
+  const carH = 78;  // Taller for van
   
   // Shadow
   ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
   ctx.fillRect(car.x + 4, car.y + carH + 3, carW - 8, 5);
   
-  // Car body
+  // Van body (main cargo area) - BIGGER and BOXIER
   ctx.fillStyle = car.color;
-  ctx.fillRect(car.x + 8, car.y, carW - 16, carH * 0.7);
+  ctx.fillRect(car.x + 6, car.y, carW - 12, carH * 0.75);
   
-  // Roof
-  ctx.fillRect(car.x + 10, car.y + carH * 0.65, carW - 20, carH * 0.25);
+  // Van cab/driver area (smaller front section)
+  ctx.fillStyle = car.color;
+  ctx.fillRect(car.x + 12, car.y + carH * 0.75, carW - 24, carH * 0.25);
   
-  // Windshield
-  ctx.fillStyle = 'rgba(135, 206, 235, 0.6)';
-  ctx.fillRect(car.x + 13, car.y + carH * 0.73, carW - 26, carH * 0.15);
+  // Front windshield (angled)
+  ctx.fillStyle = 'rgba(135, 206, 235, 0.7)';
+  ctx.fillRect(car.x + 14, car.y + carH * 0.78, carW - 28, carH * 0.15);
   
-  // Headlights
+  // Side windows on cargo area
+  ctx.fillStyle = 'rgba(100, 149, 237, 0.5)';
+  ctx.fillRect(car.x + 9, car.y + carH * 0.15, 5, carH * 0.25);
+  ctx.fillRect(car.x + carW - 14, car.y + carH * 0.15, 5, carH * 0.25);
+  
+  // Roof rack (optional - makes it look more commercial)
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+  ctx.fillRect(car.x + 8, car.y - 2, carW - 16, 3);
+  
+  // Headlights at TOP (front of van)
   ctx.fillStyle = '#ffff00';
-  ctx.fillRect(car.x + 9, car.y + carH * 0.05, 8, 5);
-  ctx.fillRect(car.x + carW - 17, car.y + carH * 0.05, 8, 5);
+  ctx.fillRect(car.x + 10, car.y + carH * 0.05, 8, 5);
+  ctx.fillRect(car.x + carW - 18, car.y + carH * 0.05, 8, 5);
   
-  // Wheels
+  // Headlight glow
+  ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
+  ctx.fillRect(car.x + 9, car.y + carH * 0.04, 10, 7);
+  ctx.fillRect(car.x + carW - 19, car.y + carH * 0.04, 10, 7);
+  
+  // Front grille
+  ctx.fillStyle = '#333';
+  ctx.fillRect(car.x + 14, car.y + carH * 0.12, carW - 28, 4);
+  
+  // Wheels (bigger for van)
   ctx.fillStyle = '#1a1a1a';
-  ctx.fillRect(car.x + 3, car.y + carH * 0.15, 9, 14);
-  ctx.fillRect(car.x + carW - 12, car.y + carH * 0.15, 9, 14);
-  ctx.fillRect(car.x + 3, car.y + carH * 0.65, 9, 14);
-  ctx.fillRect(car.x + carW - 12, car.y + carH * 0.65, 9, 14);
+  ctx.fillRect(car.x + 2, car.y + carH * 0.15, 10, 16);
+  ctx.fillRect(car.x + carW - 12, car.y + carH * 0.15, 10, 16);
+  ctx.fillRect(car.x + 2, car.y + carH * 0.68, 10, 16);
+  ctx.fillRect(car.x + carW - 12, car.y + carH * 0.68, 10, 16);
   
-  // Emoji on roof - BIGGER
+  // Wheel highlights
+  ctx.fillStyle = '#555';
+  ctx.fillRect(car.x + 3, car.y + carH * 0.18, 8, 10);
+  ctx.fillRect(car.x + carW - 11, car.y + carH * 0.18, 8, 10);
+  ctx.fillRect(car.x + 3, car.y + carH * 0.71, 8, 10);
+  ctx.fillRect(car.x + carW - 11, car.y + carH * 0.71, 8, 10);
+  
+  // Character name on side of van - BIGGER TEXT
   ctx.fillStyle = '#fff';
-  ctx.font = '18px Arial';  // Changed from 12px
+  ctx.font = 'bold 10px "Press Start 2P", cursive';
   ctx.textAlign = 'center';
-  ctx.fillText(car.emoji, car.x + carW / 2, car.y + carH * 0.78);
-});      
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+  ctx.shadowBlur = 3;
+  ctx.fillText(car.name.toUpperCase(), car.x + carW / 2, car.y + carH * 0.45);
+  ctx.shadowBlur = 0;
+  
+  // Emoji on cargo area (moved up)
+  ctx.font = '20px Arial';  // Bigger emoji
+  ctx.fillText(car.emoji, car.x + carW / 2, car.y + carH * 0.30);
+});
       // "COMING SOON" text overlay
       ctx.fillStyle = 'rgba(10, 10, 10, 0.7)';
       ctx.fillRect(0, canvas.height / 2 - 30, canvas.width, 60);
