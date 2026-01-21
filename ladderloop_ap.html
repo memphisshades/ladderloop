@@ -5756,17 +5756,22 @@ previewCars.forEach(car => {
   ctx.font = '20px Arial';  // Bigger emoji
   ctx.fillText(car.emoji, car.x + carW / 2, car.y + carH * 0.30);
 });
-      // "COMING SOON" text overlay
-      ctx.fillStyle = 'rgba(10, 10, 10, 0.7)';
-      ctx.fillRect(0, canvas.height / 2 - 30, canvas.width, 60);
-      
-      ctx.fillStyle = '#00ffcc';
-      ctx.font = 'bold 24px "Press Start 2P", cursive';
-      ctx.textAlign = 'center';
-      ctx.shadowColor = 'rgba(0, 255, 204, 0.8)';
-      ctx.shadowBlur = 10;
-      ctx.fillText('COMING SOON', canvas.width / 2, canvas.height / 2);
-      ctx.shadowBlur = 0;
+     // "COMING SOON" text overlay - centered
+const bannerY = canvas.height / 2 - 30;
+const bannerHeight = 60;
+
+ctx.fillStyle = 'rgba(10, 10, 10, 0.85)';
+ctx.fillRect(0, bannerY, canvas.width, bannerHeight);
+
+ctx.fillStyle = '#00ffcc';
+ctx.font = 'bold 24px "Press Start 2P", cursive';
+ctx.textAlign = 'center';
+ctx.textBaseline = 'middle';
+ctx.shadowColor = 'rgba(0, 255, 204, 0.8)';
+ctx.shadowBlur = 10;
+ctx.fillText('COMING SOON', canvas.width / 2, bannerY + bannerHeight / 2);
+ctx.shadowBlur = 0;
+ctx.textBaseline = 'alphabetic';
       
       comingSoonAnimationId = requestAnimationFrame(animate);
     }
