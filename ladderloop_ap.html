@@ -346,13 +346,24 @@
       gap: 0;
     }
 
-    /* Centre content vertically when it fits — margin:auto pushes evenly top & bottom */
-    #characterGrid {
-      margin-top: auto;
-      margin-bottom: auto;
+    /* Inner wrapper — constrains content to a sensible size on any screen */
+    .character-select-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1100px;
+      margin: auto; /* centres vertically when content is shorter than viewport */
+      padding: 0.5rem 0 1rem;
     }
-    .character-select-title { margin-top: auto; }
-    .character-select-divider { margin-bottom: 0; }
+
+    /* Remove the old auto-margin hacks — the inner wrapper handles centering now */
+    #characterGrid {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .character-select-title { margin-top: 3rem; }
+    .character-select-divider { margin-bottom: 2rem; }
 
     @media (max-height: 500px) {
       /* Landscape phone — compact everything so it fits without scrolling */
@@ -407,6 +418,29 @@
       max-width: 960px;
       width: 90%;
       padding: 0 1rem;
+    }
+
+    /* Scale up grid and cards for large screens so content fills the space */
+    @media (min-width: 1920px) {
+      .character-select-inner { max-width: 1400px; }
+      .character-grid { max-width: 1280px; gap: 2rem; }
+      .character-preview { width: 160px !important; height: 160px !important; }
+      .character-card { padding: 1.8rem 1.2rem; }
+      .character-card-name { font-size: 1rem !important; }
+      .character-card-role { font-size: 0.65rem !important; }
+      .team-photo-card { max-height: 300px !important; }
+      .team-photo-card img { height: 300px !important; }
+    }
+
+    @media (min-width: 2560px) {
+      .character-select-inner { max-width: 1800px; }
+      .character-grid { max-width: 1600px; gap: 2.5rem; }
+      .character-preview { width: 200px !important; height: 200px !important; }
+      .character-card { padding: 2rem 1.5rem; }
+      .character-card-name { font-size: 1.2rem !important; }
+      .character-card-role { font-size: 0.75rem !important; }
+      .team-photo-card { max-height: 380px !important; }
+      .team-photo-card img { height: 380px !important; }
     }
 
     .team-photo-card {
@@ -898,11 +932,12 @@
       onmouseenter="this.style.color='rgba(255,255,255,0.6)';this.style.borderColor='rgba(255,0,102,0.5)'"
       onmouseleave="this.style.color='rgba(255,255,255,0.25)';this.style.borderColor='rgba(255,255,255,0.15)'">©</div>
 
-    <h1 class="character-select-title">ANGLO POLISH BUILDERS</h1>
-    <p class="character-select-subtitle">SELECT YOUR CHARACTER</p>
-    <div class="character-select-divider"></div>
-    <div class="character-grid" id="characterGrid"></div>
-
+    <div class="character-select-inner">
+      <h1 class="character-select-title">ANGLO POLISH BUILDERS</h1>
+      <p class="character-select-subtitle">SELECT YOUR CHARACTER</p>
+      <div class="character-select-divider"></div>
+      <div class="character-grid" id="characterGrid"></div>
+    </div>
 
   </div>
 
@@ -2469,6 +2504,197 @@
     document.getElementById('galleryOverlay').classList.remove('active');
     if (S.galleryAnimationId) { cancelAnimationFrame(S.galleryAnimationId); S.galleryAnimationId = null; }
   }
+
+  /* ============================================================
+     YMCA DANCE OVERLAY
+     Full disco stage with all 6 builders dancing.
+     Auto-plays ymca.mp4 on open. No UI chrome — just the dance.
+  ============================================================ */
+  function showYMCADance() {
+    const s = document.createElement('style');
+    s.textContent = `
+      @keyframes ymca-fadein     { from{opacity:0} to{opacity:1} }
+      @keyframes ymca-fadeout    { from{opacity:1} to{opacity:0} }
+      @keyframes ymca-disco-pulse{ 0%,100%{opacity:0.3} 50%{opacity:0.6} }
+      @keyframes ymca-spotlight  { 0%{left:-100px} 100%{left:calc(100% - 100px)} }
+      @keyframes ymca-ball-spin  { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    `;
+    document.head.appendChild(s);
+
+    // Audio via hidden video element so .mp4 works
+    const audio = document.createElement('video');
+    audio.src = 'ymca.mp4';
+    audio.style.display = 'none';
+    audio.playsInline = true;
+    audio.loop = true;
+    audio.volume = 0.8;
+    document.body.appendChild(audio);
+
+    // Stage overlay
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `position:fixed;inset:0;z-index:30000;overflow:hidden;
+      background:radial-gradient(ellipse at center,#2a2a2a 0%,#0a0a0a 100%);
+      animation:ymca-fadein 0.4s ease forwards;`;
+
+    // Disco floor
+    const floor = document.createElement('div');
+    floor.style.cssText = `position:absolute;bottom:0;left:0;right:0;height:150px;
+      background:repeating-linear-gradient(90deg,
+        #ff0066 0px,#ff0066 50px,#00ffcc 50px,#00ffcc 100px,
+        #ffcc00 100px,#ffcc00 150px,#00ff66 150px,#00ff66 200px);
+      opacity:0.3;animation:ymca-disco-pulse 2s ease-in-out infinite;`;
+
+    // Spotlight
+    const spotlight = document.createElement('div');
+    spotlight.style.cssText = `position:absolute;top:-50px;left:-100px;
+      width:200px;height:700px;pointer-events:none;
+      background:radial-gradient(ellipse at top,rgba(255,255,255,0.3) 0%,transparent 60%);
+      animation:ymca-spotlight 8s linear infinite;`;
+
+    // Disco ball
+    const ball = document.createElement('div');
+    ball.style.cssText = `position:absolute;top:20px;right:50px;
+      width:60px;height:60px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%,#fff,#ccc,#999);
+      box-shadow:inset -10px -10px 20px rgba(0,0,0,0.3),0 0 30px rgba(255,255,255,0.5);
+      animation:ymca-ball-spin 4s linear infinite;`;
+    const ballShine = document.createElement('div');
+    ballShine.style.cssText = `position:absolute;top:5px;left:10px;width:15px;height:15px;
+      background:rgba(255,255,255,0.8);border-radius:50%;filter:blur(2px);`;
+    ball.appendChild(ballShine);
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕';
+    closeBtn.style.cssText = `position:absolute;top:14px;right:14px;z-index:10;
+      background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.3);
+      color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;
+      font-family:sans-serif;font-size:16px;display:flex;align-items:center;justify-content:center;
+      transition:background 0.2s;`;
+    closeBtn.addEventListener('mouseenter', () => closeBtn.style.background = 'rgba(255,0,102,0.7)');
+    closeBtn.addEventListener('mouseleave', () => closeBtn.style.background = 'rgba(0,0,0,0.6)');
+
+    // Canvas
+    const cv = document.createElement('canvas');
+    cv.style.cssText = `position:absolute;inset:0;width:100%;height:100%;`;
+
+    overlay.appendChild(floor);
+    overlay.appendChild(spotlight);
+    overlay.appendChild(ball);
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(cv);
+    document.body.appendChild(overlay);
+
+    function resizeCv() {
+      cv.width  = overlay.offsetWidth;
+      cv.height = overlay.offsetHeight;
+    }
+    resizeCv();
+    window.addEventListener('resize', resizeCv);
+
+    // Dance poses
+    const POSES = { neutral:0, Y:1, M:2, C:3, A:4, clap:5 };
+    const SEQUENCE = [
+      POSES.neutral, POSES.Y, POSES.neutral, POSES.M, POSES.clap,
+      POSES.C, POSES.neutral, POSES.A, POSES.clap, POSES.Y
+    ];
+    const OFFSETS  = [0, 2, 4, 1, 3, 5]; // stagger per character
+    const COLORS   = {
+      swarvek:'#c9453b', derek:'#aa96da', michel:'#4ecdc4',
+      greg:'#95e1d3', mario:'#f38181', tobin:'#e53935'
+    };
+    const CHAR_IDS   = ['swarvek','derek','michel','greg','mario','tobin'];
+    const CHAR_NAMES = ['Swarvek','Derek','Michel','Greg','Mario','James'];
+    const DRAW_FNS   = {
+      swarvek: drawSwarvekSprite, derek: drawDerekSprite, michel: drawMichelSprite,
+      greg: drawGregSprite, mario: drawMarioSprite, tobin: drawJamesSprite
+    };
+
+    function drawDanceArms(ctx, x, y, w, h, color, pose) {
+      ctx.fillStyle = color;
+      switch(pose) {
+        case POSES.Y:
+          ctx.fillRect(x - w*0.3,  y + h*0.3,  w*0.4,  h*0.15);
+          ctx.fillRect(x + w*0.9,  y + h*0.3,  w*0.4,  h*0.15);
+          break;
+        case POSES.M:
+          ctx.fillRect(x - w*0.1,  y + h*0.2,  w*0.15, h*0.4);
+          ctx.fillRect(x + w*0.95, y + h*0.2,  w*0.15, h*0.4);
+          break;
+        case POSES.C:
+          ctx.fillRect(x - w*0.2,  y + h*0.35, w*0.3,  h*0.15);
+          ctx.fillRect(x + w*0.7,  y + h*0.5,  w*0.4,  h*0.15);
+          break;
+        case POSES.A:
+          ctx.fillRect(x - w*0.2,  y + h*0.25, w*0.35, h*0.15);
+          ctx.fillRect(x + w*0.85, y + h*0.25, w*0.35, h*0.15);
+          break;
+        case POSES.clap:
+          ctx.fillRect(x + w*0.3,  y + h*0.45, w*0.2,  h*0.15);
+          ctx.fillRect(x + w*0.5,  y + h*0.45, w*0.2,  h*0.15);
+          break;
+        default:
+          ctx.fillRect(x - w*0.1,  y + h*0.5,  w*0.4,  h*0.15);
+          ctx.fillRect(x + w*0.7,  y + h*0.5,  w*0.4,  h*0.15);
+      }
+    }
+
+    let animId;
+    const startTime = Date.now();
+
+    function drawFrame() {
+      const ctx2 = cv.getContext('2d');
+      ctx2.clearRect(0, 0, cv.width, cv.height);
+
+      const elapsed  = (Date.now() - startTime) / 1000;
+      const beatIdx  = Math.floor(elapsed * 2.5) % SEQUENCE.length;
+      const n        = CHAR_IDS.length;
+      const size     = Math.min(cv.width / (n + 1), cv.height * 0.38);
+      const spacing  = cv.width / (n + 1);
+      const groundY  = cv.height * 0.62 - size;
+
+      CHAR_IDS.forEach((id, i) => {
+        const x      = spacing * (i + 1) - size * 0.5;
+        const bounce = Math.sin(elapsed * 5 + i) * size * 0.04;
+        const pose   = SEQUENCE[(beatIdx + OFFSETS[i]) % SEQUENCE.length];
+
+        ctx2.save();
+        ctx2.translate(0, bounce);
+        DRAW_FNS[id](ctx2, x, groundY, size);
+        drawDanceArms(ctx2, x, groundY, size, size, COLORS[id], pose);
+        ctx2.restore();
+
+        // Name label
+        ctx2.save();
+        ctx2.fillStyle = '#fff';
+        ctx2.font = `${Math.max(7, Math.floor(size * 0.13))}px "Press Start 2P", cursive`;
+        ctx2.textAlign = 'center';
+        ctx2.shadowColor = 'rgba(0,0,0,0.9)';
+        ctx2.shadowBlur = 6;
+        ctx2.fillText(CHAR_NAMES[i], x + size * 0.5, groundY + size + size * 0.22);
+        ctx2.restore();
+      });
+
+      animId = requestAnimationFrame(drawFrame);
+    }
+    drawFrame();
+
+    // Auto-play music
+    audio.play().catch(() => {});
+
+    // Close
+    function closeYMCA() {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resizeCv);
+      audio.pause();
+      audio.remove();
+      s.remove();
+      overlay.style.animation = 'ymca-fadeout 0.35s ease forwards';
+      setTimeout(() => overlay.remove(), 400);
+    }
+    closeBtn.addEventListener('click', e => { e.stopPropagation(); closeYMCA(); });
+  }
+  window.showYMCADance = showYMCADance;
 
   /* ============================================================
      VAN INTRO
