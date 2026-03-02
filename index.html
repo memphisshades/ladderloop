@@ -81,6 +81,10 @@
     ============================================================ */
 
     /* Animated 80s grid floor — the actual page background */
+    html, body {
+      overflow-anchor: auto; /* let browser auto-compensate scroll when prepending sections above */
+    }
+
     body {
       font-family: 'Press Start 2P', cursive;
       background-color: #08001a;
@@ -663,24 +667,25 @@
       background: rgba(10,10,10,0.98);
       z-index: 10000;
       display: none;
-      align-items: flex-start;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
       padding: 2rem;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding-top: max(4rem, env(safe-area-inset-top));
     }
 
     .coming-soon-overlay.active { display: flex; }
 
-    .coming-soon-content { max-width: 900px; width: 100%; text-align: center; }
+    .coming-soon-content { max-width: 900px; width: 100%; text-align: center; padding-top: 3rem; }
 
     .coming-soon-title {
       font-family: 'Press Start 2P', cursive;
-      font-size: clamp(1.5rem, 4vw, 3rem);
+      font-size: clamp(0.7rem, 4vw, 3rem);
       color: #00ffcc;
       text-shadow: 0 0 20px #00ffcc;
       margin-bottom: 1rem;
+      white-space: nowrap;
     }
 
     .coming-soon-subtitle {
@@ -801,8 +806,10 @@
       top: 0; left: 0; right: 0;
       z-index: 10003;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 3px;
       height: 44px;
       padding: 0 1rem;
       background: linear-gradient(180deg, rgba(5,0,15,0.85) 0%, transparent 100%);
@@ -844,9 +851,24 @@
 
   <!-- Auto-hiding logo header -->
   <header id="site-header">
-    <span class="logo-text">LADDER</span>
-    <span class="logo-text logo-sep">◆</span>
-    <span class="logo-text">LOOP</span>
+    <span id="special-edition-tag" style="
+      font-family:'Press Start 2P',cursive;
+      font-size:clamp(0.35rem,1.2vw,0.5rem);
+      color:#ffcc00;
+      text-shadow:0 0 8px rgba(255,204,0,0.8);
+      letter-spacing:0.1em;
+      opacity:0;
+      transition:opacity 0.4s ease;
+      white-space:nowrap;">LADDER LOOP — SPECIAL EDITION</span>
+    <span id="classic-tag" style="
+      font-family:'Press Start 2P',cursive;
+      font-size:clamp(0.35rem,1.2vw,0.5rem);
+      color:#00ffcc;
+      text-shadow:0 0 8px rgba(0,255,204,0.8);
+      letter-spacing:0.1em;
+      opacity:0;
+      transition:opacity 0.4s ease;
+      white-space:nowrap;">LADDER LOOP — CLASSIC</span>
   </header>
 
   <script>
@@ -878,6 +900,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       const overlay = document.getElementById('characterSelect');
       if (overlay) overlay.addEventListener('scroll', () => onScroll(overlay.scrollTop), { passive: true });
+      const scrollContainer = document.getElementById('scroll-container');
+      if (scrollContainer) scrollContainer.addEventListener('scroll', () => onScroll(scrollContainer.scrollTop), { passive: true });
     });
 
     // Always show header when character select opens
@@ -895,11 +919,9 @@
   })();
   </script>
 
-  <!-- Animated retro grid — fixed layer, pointer-events:none, never touches the canvas loop -->
 
   <!-- ============================================================
-       GAME SECTION TEMPLATE
-       (cloned at runtime to fill the infinite scroll)
+       GAME SECTION
   ============================================================ -->
   <section class="game-section">
     <div class="container">
@@ -932,6 +954,8 @@
       onmouseenter="this.style.color='rgba(255,255,255,0.6)';this.style.borderColor='rgba(255,0,102,0.5)'"
       onmouseleave="this.style.color='rgba(255,255,255,0.25)';this.style.borderColor='rgba(255,255,255,0.15)'">©</div>
 
+    <!-- Special Edition stamp removed — shown in site header instead -->
+
     <div class="character-select-inner">
       <h1 class="character-select-title">ANGLO POLISH BUILDERS</h1>
       <p class="character-select-subtitle">SELECT YOUR CHARACTER</p>
@@ -954,22 +978,24 @@
        COMING SOON OVERLAY
   ============================================================ -->
   <div class="coming-soon-overlay" id="comingSoonOverlay">
+
+    <!-- Credits button — bottom left, same as other screens -->
+    <div onclick="showCredits()" title="?" style="position:fixed;bottom:20px;left:20px;z-index:10002;
+      width:22px;height:22px;border-radius:50%;
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      font-family:'Press Start 2P',cursive;font-size:8px;color:rgba(255,255,255,0.25);
+      transition:all 0.2s;"
+      onmouseenter="this.style.color='rgba(255,255,255,0.6)';this.style.borderColor='rgba(255,0,102,0.5)'"
+      onmouseleave="this.style.color='rgba(255,255,255,0.25)';this.style.borderColor='rgba(255,255,255,0.15)'">©</div>
+
     <div class="coming-soon-content">
       <h1 class="coming-soon-title">🏁 POLE POSITION 🏁</h1>
       <p class="coming-soon-subtitle">Racing game coming soon!</p>
-      <div class="canvas-wrapper" style="margin:2rem auto;">
-        <canvas id="comingSoonCanvas" width="400" height="500"></canvas>
+      <div class="canvas-wrapper gallery-canvas" style="margin:2rem auto;position:relative;">
+        <canvas id="comingSoonCanvas"></canvas>
+        <button id="comingSoonCloseBtn" class="game-btn gallery-close-btn">✕</button>
       </div>
-      <p style="font-family:'Press Start 2P',cursive; font-size:0.7rem; color:#00ffcc;
-                margin-bottom:2rem; line-height:1.8;">
-        The builders are tuning up their vans...<br>
-        Race as your favorite character!<br>
-        <span style="color:#ffcc00;">Swarvek · Derek · Michel · Greg · Mario · James</span>
-      </p>
-      <button class="game-btn" id="comingSoonCloseBtn"
-              style="background:rgba(255,0,102,0.3); border-color:#ff0066; padding:1rem 2rem; font-size:0.8rem;">
-        Close
-      </button>
     </div>
   </div>
 
@@ -1013,9 +1039,15 @@
   document.title = 'Ladder Loop Game';
 
   window.syncPageTitle = function() {
-    document.title = window.ANGLO_POLISH_EDITION && S.selectedCharacter
+    const isSpecial = window.ANGLO_POLISH_EDITION;
+    const isClassic = !window.ANGLO_POLISH_EDITION;
+    document.title = isSpecial && S.selectedCharacter
       ? 'Ladder Loop - Anglo Polish Builders Edition'
       : 'Ladder Loop Game';
+    const specialTag = document.getElementById('special-edition-tag');
+    const classicTag = document.getElementById('classic-tag');
+    if (specialTag) specialTag.style.opacity = isSpecial ? '1' : '0';
+    if (classicTag) classicTag.style.opacity = isClassic ? '1' : '0';
   };
 
   // ---- Characters ----
@@ -2287,35 +2319,34 @@
   let _bgFrame  = 0;
 
   function redrawAll() {
-    // Don't redraw during a screen shatter — keeps the old frame frozen under the smash
     if (window._shatterFreeze) return;
-    // Cull canvases that have been removed from the DOM
     S.canvases = S.canvases.filter(c => document.contains(c));
-    // Only draw canvases visible in the viewport
-    const visible = S.canvases.filter(c => {
-      const r = c.getBoundingClientRect();
-      return r.bottom >= 0 && r.top <= window.innerHeight;
-    });
-    const targets = visible.length > 0 ? visible : S.canvases.slice(0, 1);
-    if (targets.length === 0) return;
+    if (S.canvases.length === 0) return;
 
-    // Ensure offscreen canvas matches target size
-    const ref = targets[0];
+    const ref = S.canvases[0];
     if (!_bgCanvas || _bgCanvas.width !== ref.width || _bgCanvas.height !== ref.height) {
       _bgCanvas = document.createElement('canvas');
       _bgCanvas.width  = ref.width;
       _bgCanvas.height = ref.height;
     }
 
-    // Draw background onto offscreen canvas — throttled to every 3rd frame.
-    // Atmospheric animations at ~20fps are indistinguishable from 60fps.
     _bgFrame++;
     if (_bgFrame % 3 === 0) {
       const bgCtx = _bgCanvas.getContext('2d');
       drawBackground(bgCtx, _bgCanvas);
     }
 
-    targets.forEach(canvas => {
+    // Only draw canvases visible in the scroll container — everything else
+    // exists in the DOM world but doesn't cost draw calls
+    const sc = document.getElementById('scroll-container');
+    const scRect = sc ? sc.getBoundingClientRect() : { top: 0, bottom: window.innerHeight };
+    const targets = S.canvases.filter(c => {
+      const r = c.getBoundingClientRect();
+      return r.bottom >= scRect.top && r.top <= scRect.bottom;
+    });
+    const toDraw = targets.length > 0 ? targets : S.canvases.slice(0, 1);
+
+    toDraw.forEach(canvas => {
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(_bgCanvas, 0, 0);
@@ -2383,6 +2414,13 @@
     requestAnimationFrame(update);
   }
 
+  /* ============================================================
+     GAME ACTIVE STATE — scroll lock + clone dimming
+     While a game is in progress (character is off the ground)
+     we lock the page scroll and dim the cloned sections so the
+     player isn't distracted or accidentally scrolls away.
+     Everything restores the moment the character lands.
+  ============================================================ */
   function climb() {
     if (!S.climbing && S.character.y >= S.groundLevel && !S.freezeFrame) {
       S.climbing = true;
@@ -3043,7 +3081,7 @@
     muteBtn.addEventListener('click', () => {
       S.audioEnabled = !S.audioEnabled;
       muteBtns.forEach(btn => {
-        btn.innerHTML = S.audioEnabled ? '🔊' : '🔇 Muted';
+        btn.innerHTML = S.audioEnabled ? '🔊' : '🔇';
         btn.classList.toggle('active', S.audioEnabled);
       });
       if (!S.audioEnabled) audioEl.pause();
@@ -3074,53 +3112,6 @@
     if (galleryBtn) galleryBtn.addEventListener('click', openGallery);
   }
 
-  /* ============================================================
-     VIRTUAL SCROLL / MEMORY MANAGEMENT
-     Sections are cloned infinitely in both directions as the user
-     scrolls, but we only keep ~5 alive at any time.
-
-     wireSection()  — registers a new section's canvas + buttons
-     unwireSection() — deregisters and removes a section, freeing
-                       its canvas from the redrawAll() loop and
-                       unplugging its buttons from the global arrays
-     pruneOffscreenSections() — called on every scroll event;
-                       removes any section more than 2 viewport
-                       heights away from the visible area.
-
-     Without this, every cloned section would keep its canvas
-     running a full rAF draw loop forever — after a few minutes
-     of scrolling you'd have dozens of canvases eating memory
-     and tanking performance.
-  ============================================================ */
-  function unwireSection(section) {
-    const canvas = section.querySelector('canvas');
-    if (canvas) {
-      // Remove from S.canvases so redrawAll stops drawing it
-      S.canvases = S.canvases.filter(c => c !== canvas);
-      // Remove from button arrays
-      const muteBtn   = section.querySelector('.mute-btn');
-      const resetBtn  = section.querySelector('.reset-btn');
-      const galleryBtn = section.querySelector('.gallery-btn');
-      if (muteBtn)   { const i = muteBtns.indexOf(muteBtn);     if (i > -1) muteBtns.splice(i, 1); }
-      if (resetBtn)  { const i = resetBtns.indexOf(resetBtn);   if (i > -1) resetBtns.splice(i, 1); }
-      if (galleryBtn){ const i = galleryBtns.indexOf(galleryBtn); if (i > -1) galleryBtns.splice(i, 1); }
-    }
-    section.remove();
-  }
-
-  function pruneOffscreenSections() {
-    const sections = Array.from(document.querySelectorAll('.game-section'));
-    const vh = window.innerHeight;
-    const buffer = vh * 2; // keep sections within 2 screens of viewport
-
-    sections.forEach(section => {
-      const rect = section.getBoundingClientRect();
-      if (rect.bottom < -buffer || rect.top > vh + buffer) {
-        unwireSection(section);
-      }
-    });
-  }
-
   function wireSection(section) {
     const canvas    = section.querySelector('canvas');
     const muteBtn   = section.querySelector('.mute-btn');
@@ -3128,13 +3119,6 @@
     const galleryBtn = section.querySelector('.gallery-btn');
     if (!canvas || !muteBtn || !resetBtn) return;
 
-    // Always make sure this section is visible
-    const wrapper = section.querySelector('.canvas-wrapper');
-    if (wrapper) wrapper.style.visibility = '';
-    const controls = section.querySelector('.game-controls');
-    if (controls) controls.style.visibility = '';
-
-    // Scale canvas immediately
     canvas.width  = 400 * S.gameScale;
     canvas.height = 450 * S.gameScale;
 
@@ -3149,32 +3133,22 @@
     if (!template) return;
 
     wireSection(template);
+    if (window.syncPageTitle) window.syncPageTitle();
 
-    // Pre-clone 2 sections so the page is scrollable immediately
+    // Pre-clone two extra sections so first scroll has content
     for (let i = 0; i < 2; i++) {
       const clone = template.cloneNode(true);
       document.body.appendChild(clone);
       wireSection(clone);
     }
 
-    // Infinite scroll — clone more sections in both directions
+    // Infinite scroll — append on approach to bottom
     window.addEventListener('scroll', () => {
-      // Scrolling down — append at bottom
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
         const clone = template.cloneNode(true);
         document.body.appendChild(clone);
         wireSection(clone);
       }
-      // Scrolling up — prepend at top, adjust scroll position so page doesn't jump
-      if (window.scrollY < 300) {
-        const clone = template.cloneNode(true);
-        const firstSection = document.querySelector('.game-section');
-        document.body.insertBefore(clone, firstSection);
-        wireSection(clone);
-        window.scrollBy(0, clone.offsetHeight);
-      }
-      // Remove sections that are far off screen to free memory
-      pruneOffscreenSections();
     });
 
     update();
@@ -3607,12 +3581,13 @@
     });
 
     // Coming Soon preview cars
+    const _cs = S.gameScale;
     S.comingSoonCars = [
-      { x:120, y:50,  color:'#ff9900', emoji:'🚐', speed:2.5, name:'Swarvek' },
-      { x:200, y:150, color:'#00ccff', emoji:'🚚', speed:2.8, name:'Derek'   },
-      { x:90,  y:250, color:'#ffcc00', emoji:'⚡', speed:2.2, name:'Michel'  },
-      { x:250, y:350, color:'#00ff66', emoji:'🚙', speed:2.6, name:'Greg'    },
-      { x:150, y:450, color:'#ff0066', emoji:'🎨', speed:3.0, name:'Mario'   },
+      { x:120*_cs, y:50*_cs,  color:'#ff9900', emoji:'🚐', speed:2.5, name:'Swarvek' },
+      { x:200*_cs, y:150*_cs, color:'#00ccff', emoji:'🚚', speed:2.8, name:'Derek'   },
+      { x:90*_cs,  y:250*_cs, color:'#ffcc00', emoji:'⚡', speed:2.2, name:'Michel'  },
+      { x:250*_cs, y:350*_cs, color:'#00ff66', emoji:'🚙', speed:2.6, name:'Greg'    },
+      { x:150*_cs, y:450*_cs, color:'#ff0066', emoji:'🎨', speed:3.0, name:'Mario'   },
     ];
 
     function openComingSoon() {
@@ -3635,60 +3610,77 @@
       if (window._comingSoonMusic) { window._comingSoonMusic.pause(); window._comingSoonMusic=null; }
       if (S.comingSoonAnimationId) { cancelAnimationFrame(S.comingSoonAnimationId); S.comingSoonAnimationId=null; }
     }
+    window.closeComingSoon = closeComingSoon;
 
     function startComingSoonAnim() {
       const canvas = document.getElementById('comingSoonCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
 
+      function sizeCanvas() {
+        const sc = S.gameScale;
+        canvas.width  = 400 * sc;
+        canvas.height = 500 * sc;
+        // Reinitialise car positions to scaled values when resized
+        const _cs = sc;
+        S.comingSoonCars.forEach((car, i) => {
+          car.x = [120,200,90,250,150][i] * _cs;
+        });
+      }
+      sizeCanvas();
+      window.addEventListener('resize', sizeCanvas);
+
+      const sc = S.gameScale;
+
       function animate() {
         if (!document.getElementById('comingSoonOverlay').classList.contains('active')) return;
+        const sc = S.gameScale;
         ctx.fillStyle='#2d5016'; ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle='#3a3a3a'; ctx.fillRect(80,0,240,canvas.height);
+        ctx.fillStyle='#3a3a3a'; ctx.fillRect(80*sc,0,240*sc,canvas.height);
 
         // Road edges
-        const off=(Date.now()/15)%25;
-        ctx.strokeStyle='#ffcc00'; ctx.lineWidth=2; ctx.setLineDash([15,10]); ctx.lineDashOffset=-off;
-        ctx.beginPath(); ctx.moveTo(200,0); ctx.lineTo(200,canvas.height); ctx.stroke();
+        const off=(Date.now()/15)%(25*sc);
+        ctx.strokeStyle='#ffcc00'; ctx.lineWidth=2*sc; ctx.setLineDash([15*sc,10*sc]); ctx.lineDashOffset=-off;
+        ctx.beginPath(); ctx.moveTo(200*sc,0); ctx.lineTo(200*sc,canvas.height); ctx.stroke();
         ctx.setLineDash([]);
-        ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.setLineDash([20,20]);
-        ctx.beginPath(); ctx.moveTo(80,0); ctx.lineTo(80,canvas.height); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(320,0); ctx.lineTo(320,canvas.height); ctx.stroke();
+        ctx.strokeStyle='#fff'; ctx.lineWidth=2*sc; ctx.setLineDash([20*sc,20*sc]);
+        ctx.beginPath(); ctx.moveTo(80*sc,0); ctx.lineTo(80*sc,canvas.height); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(320*sc,0); ctx.lineTo(320*sc,canvas.height); ctx.stroke();
         ctx.setLineDash([]);
 
         // Vans
         S.comingSoonCars.forEach(car => {
-          car.y += car.speed;
-          if (car.y > canvas.height+60) { car.y=-60; car.x=100+Math.random()*200; }
-          const cw=52, ch=78;
-          ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.fillRect(car.x+4,car.y+ch+3,cw-8,5);
+          car.y += car.speed * sc;
+          if (car.y > canvas.height+60*sc) { car.y=-60*sc; car.x=(100+Math.random()*200)*sc; }
+          const cw=52*sc, ch=78*sc;
+          ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.fillRect(car.x+4*sc,car.y+ch+3*sc,cw-8*sc,5*sc);
           ctx.fillStyle=car.color;
-          ctx.fillRect(car.x+6,car.y,cw-12,ch*0.75);
-          ctx.fillRect(car.x+12,car.y+ch*0.75,cw-24,ch*0.25);
-          ctx.fillStyle='rgba(135,206,235,0.7)'; ctx.fillRect(car.x+14,car.y+ch*0.78,cw-28,ch*0.15);
+          ctx.fillRect(car.x+6*sc,car.y,cw-12*sc,ch*0.75);
+          ctx.fillRect(car.x+12*sc,car.y+ch*0.75,cw-24*sc,ch*0.25);
+          ctx.fillStyle='rgba(135,206,235,0.7)'; ctx.fillRect(car.x+14*sc,car.y+ch*0.78,cw-28*sc,ch*0.15);
           ctx.fillStyle='rgba(100,149,237,0.5)';
-          ctx.fillRect(car.x+9,car.y+ch*0.15,5,ch*0.25);
-          ctx.fillRect(car.x+cw-14,car.y+ch*0.15,5,ch*0.25);
+          ctx.fillRect(car.x+9*sc,car.y+ch*0.15,5*sc,ch*0.25);
+          ctx.fillRect(car.x+cw-14*sc,car.y+ch*0.15,5*sc,ch*0.25);
           ctx.fillStyle='#ffff00';
-          ctx.fillRect(car.x+10,car.y+ch*0.05,8,5); ctx.fillRect(car.x+cw-18,car.y+ch*0.05,8,5);
-          ctx.fillStyle='#333'; ctx.fillRect(car.x+14,car.y+ch*0.12,cw-28,4);
+          ctx.fillRect(car.x+10*sc,car.y+ch*0.05,8*sc,5*sc); ctx.fillRect(car.x+cw-18*sc,car.y+ch*0.05,8*sc,5*sc);
+          ctx.fillStyle='#333'; ctx.fillRect(car.x+14*sc,car.y+ch*0.12,cw-28*sc,4*sc);
           ctx.fillStyle='#1a1a1a';
-          [[car.x+2,car.y+ch*0.15],[car.x+cw-12,car.y+ch*0.15],[car.x+2,car.y+ch*0.68],[car.x+cw-12,car.y+ch*0.68]]
-            .forEach(([wx,wy])=>ctx.fillRect(wx,wy,10,16));
-          ctx.font='bold 10px "Press Start 2P",cursive'; ctx.textAlign='center'; ctx.fillStyle='#fff';
-          ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=3;
+          [[car.x+2*sc,car.y+ch*0.15],[car.x+cw-12*sc,car.y+ch*0.15],[car.x+2*sc,car.y+ch*0.68],[car.x+cw-12*sc,car.y+ch*0.68]]
+            .forEach(([wx,wy])=>ctx.fillRect(wx,wy,10*sc,16*sc));
+          ctx.font=`bold ${10*sc}px "Press Start 2P",cursive`; ctx.textAlign='center'; ctx.fillStyle='#fff';
+          ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=3*sc;
           ctx.fillText(car.name.toUpperCase(), car.x+cw/2, car.y+ch*0.45);
           ctx.shadowBlur=0;
-          ctx.font='20px Arial';
+          ctx.font=`${20*sc}px Arial`;
           ctx.fillText(car.emoji, car.x+cw/2, car.y+ch*0.30);
         });
 
         // Banner
-        const bY=canvas.height/2-30, bH=60;
+        const bY=canvas.height/2-30*sc, bH=60*sc;
         ctx.fillStyle='rgba(10,10,10,0.85)'; ctx.fillRect(0,bY,canvas.width,bH);
-        ctx.fillStyle='#00ffcc'; ctx.font='bold 24px "Press Start 2P",cursive';
+        ctx.fillStyle='#00ffcc'; ctx.font=`bold ${24*sc}px "Press Start 2P",cursive`;
         ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.shadowColor='rgba(0,255,204,0.8)'; ctx.shadowBlur=10;
+        ctx.shadowColor='rgba(0,255,204,0.8)'; ctx.shadowBlur=10*sc;
         ctx.fillText('COMING SOON', canvas.width/2, bY+bH/2);
         ctx.shadowBlur=0; ctx.textBaseline='alphabetic';
 
@@ -3780,6 +3772,7 @@
       // Close gallery if open, but NOT the character select — it must stay visible
       // as the backdrop while the cube drops and the screen shatters over it
       closeGallery();
+      if (window.closeComingSoon) window.closeComingSoon();
 
       if (window.ANGLO_POLISH_EDITION) {
         // Currently Anglo Polish → switching TO Classic
