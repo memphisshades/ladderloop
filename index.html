@@ -1,9 +1,6 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="refresh" content="0; url=ladderloop_ap.html">
   <meta charset="UTF-8">
   <title>Ladder Loop Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,13 +16,12 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.ladderloop.com/">
   <meta property="og:image" content="https://www.ladderloop.com/images/ladder-loop-icon.jpg">
-   <meta property="og:site_name" content="Ladder Loop">
-  
- <!-- Instagram handle for human reference only.
-     Instagram link previews use Open Graph.
-     Official social association is defined in JSON-LD (sameAs). -->
+  <meta property="og:site_name" content="Ladder Loop">
+
+  <!-- Instagram handle for human reference only.
+       Instagram link previews use Open Graph.
+       Official social association is defined in JSON-LD (sameAs). -->
   <meta name="instagram:site" content="@ladderloopgame">
- 
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -35,62 +31,125 @@
   <meta name="twitter:site" content="@ladderloop">
   <meta name="twitter:creator" content="@ladderloop">
 
- 
-  
   <!-- Favicon -->
-<link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-chrome-192x192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/favicon/android-chrome-512x512.png">
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
-<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
-<link rel="shortcut icon" href="/favicon/favicon.ico">
-<link rel="manifest" href="/favicon/site.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/android-chrome-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon/android-chrome-512x512.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
+  <link rel="shortcut icon" href="/favicon/favicon.ico">
+  <link rel="manifest" href="/favicon/site.webmanifest">
 
+  <!-- Single font import (Press Start 2P) -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="canonical" href="https://www.ladderloop.com/">
 
   <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "VideoGame",
-  "name": "Ladder Loop – Endless Climb Arcade Game",
-  "description": "Climb ladders that never end. Fall. Repeat. The loop is life.",
-  "url": "https://www.ladderloop.com/",
-  "image": "https://www.ladderloop.com/images/ladder-loop-icon.jpg",
-  "genre": ["Arcade", "Action"],
-  "publisher": {
-    "@type": "Organization",
-    "name": "Ladder Loop Studios",
-    "sameAs": [
-      "https://www.instagram.com/ladderloopgame/",
-      "https://twitter.com/ladderloop"
-    ]
-  },
-  "author": {
-    "@type": "Person",
-    "name": "James Tobin"
-  },
-  "mainEntityOfPage": "https://www.ladderloop.com/",
-  "datePublished": "2025-12-14",
-  "applicationCategory": "Game"
-}
-</script>
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "Ladder Loop – Endless Climb Arcade Game",
+    "description": "Climb ladders that never end. Fall. Repeat. The loop is life.",
+    "url": "https://www.ladderloop.com/",
+    "image": "https://www.ladderloop.com/images/ladder-loop-icon.jpg",
+    "genre": ["Arcade", "Action"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Ladder Loop Studios",
+      "sameAs": [
+        "https://www.instagram.com/ladderloopgame/",
+        "https://twitter.com/ladderloop"
+      ]
+    },
+    "author": { "@type": "Person", "name": "James Tobin" },
+    "mainEntityOfPage": "https://www.ladderloop.com/",
+    "datePublished": "2025-12-14",
+    "applicationCategory": "Game"
+  }
+  </script>
 
-  
- <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <style>
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* ============================================================
+       RETRO / 80s SITE BACKGROUND SYSTEM
+       Base phosphor gradient — JS overrides with theme tints
+       on unlock but this always looks good as a baseline.
+    ============================================================ */
+
+    /* Animated 80s grid floor — the actual page background */
     body {
       font-family: 'Press Start 2P', cursive;
-      background: #0a0a0a;
+      background-color: #08001a;
+      background-image:
+        /* Phosphor centre glow — warm purple bloom */
+        radial-gradient(
+          ellipse 70% 60% at 50% 38%,
+          rgba(60,0,100,0.7) 0%,
+          rgba(20,0,50,0.5) 45%,
+          transparent 75%
+        ),
+        /* Deep space base */
+        linear-gradient(180deg, #05000f 0%, #08001a 50%, #040010 100%);
       color: #fff;
       overflow-x: hidden;
+      transition: background-color 3s ease;
     }
 
+    /* Horizon glow — the 80s sunset line at the bottom */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        /* Bottom horizon line glow */
+        radial-gradient(
+          ellipse 120% 15% at 50% 100%,
+          rgba(255,0,150,0.25) 0%,
+          transparent 70%
+        ),
+        /* Top edge fade */
+        linear-gradient(
+          180deg,
+          rgba(0,0,0,0.4) 0%,
+          transparent 20%,
+          transparent 75%,
+          rgba(0,0,0,0.3) 100%
+        ),
+        /* Corner vignette */
+        radial-gradient(
+          ellipse 95% 85% at 50% 40%,
+          transparent 35%,
+          rgba(0,0,0,0.45) 75%,
+          rgba(0,0,0,0.8) 100%
+        );
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    /* CRT scanlines — slightly stronger for retro feel */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.18) 0px, transparent 1px,
+        transparent 2px, rgba(0,0,0,0.18) 3px
+      );
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.45;
+    }
+
+
+    /* ============================================================
+       SECTION / CONTAINER
+    ============================================================ */
     section {
       min-height: 100vh;
       padding: 4rem 2rem;
@@ -103,30 +162,27 @@
       border-image: linear-gradient(90deg, transparent, #ff0066, #00ffcc, #ff0066, transparent) 1;
     }
 
-    @media (max-width: 768px) and (orientation: landscape) {
-      section {
-        min-height: auto;
-        padding: 2rem 1rem;
-      }
-    }
-
     .container {
       max-width: 1400px;
       width: 100%;
       margin: 0 auto;
     }
 
+    /* Visually-hidden section title (SEO only) */
     .section-title {
       font-size: clamp(2rem, 5vw, 4rem);
       margin-bottom: 3rem;
       text-align: center;
       color: #00ffcc;
-      text-shadow: 0 0 20px #00ffcc, 0 0 40px rgba(0, 255, 204, 0.5);
+      text-shadow: 0 0 20px #00ffcc, 0 0 40px rgba(0,255,204,0.5);
       position: absolute;
       left: -9999px;
       visibility: hidden;
     }
 
+    /* ============================================================
+       GAME CONTAINER & CANVAS
+    ============================================================ */
     .game-container {
       display: flex;
       flex-direction: column;
@@ -140,9 +196,9 @@
       display: inline-block;
       border: 3px solid #ff0066;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.4);
+      box-shadow: 0 0 20px rgba(255,0,102,0.4);
       padding: 10px;
-      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000000 100%);
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000 100%);
     }
 
     canvas {
@@ -152,45 +208,19 @@
       background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
       border: 2px solid #00ffcc;
       border-radius: 5px;
-      box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+      box-shadow: 0 0 15px rgba(0,255,204,0.3);
       display: block;
     }
 
-    @media (min-width: 1920px) {
-      canvas {
-        max-width: 700px;
-      }
-    }
+    /* Large-screen canvas scaling */
+    @media (min-width: 1920px) { canvas { max-width: 700px; } }
+    @media (min-width: 2560px) { canvas { max-width: 1000px; } }
+    @media (min-width: 3840px) { canvas { max-width: 1400px; } }
+    @media (min-width: 5120px) { canvas { max-width: 1800px; } }
 
-    @media (min-width: 2560px) {
-      canvas {
-        max-width: 1000px;
-      }
-    }
-
-    @media (min-width: 3840px) {
-      canvas {
-        max-width: 1400px;
-      }
-    }
-
-    @media (min-width: 5120px) {
-      canvas {
-        max-width: 1800px;
-      }
-    }
-
-    @media (max-width: 768px) and (orientation: landscape) {
-      canvas {
-        max-width: 300px;
-        max-height: 60vh;
-      }
-      
-      .canvas-wrapper {
-        padding: 5px;
-      }
-    }
-
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
     .game-controls {
       display: flex;
       gap: 1.5rem;
@@ -199,49 +229,78 @@
     }
 
     .game-btn {
-      padding: 1rem 2rem;
-      font-size: 0.9rem;
+      padding: clamp(0.6rem, 2.5vw, 1rem) clamp(1rem, 5vw, 2rem);
+      font-size: clamp(0.55rem, 2.2vw, 0.9rem);
       font-family: 'Press Start 2P', cursive;
-      background: rgba(255, 0, 102, 0.1);
+      background: rgba(255,0,102,0.12);
       color: #00ffcc;
       border: 2px solid #ff0066;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 0 10px rgba(255, 0, 102, 0.3);
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+      box-shadow: 0 0 10px rgba(255,0,102,0.35);
+      white-space: nowrap;
+      min-height: 44px;       /* mobile tap target */
+      touch-action: manipulation;
     }
 
     .game-btn:hover {
-      background: rgba(255, 0, 102, 0.3);
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.6);
+      background: rgba(255,0,102,0.3);
+      box-shadow: 0 0 20px rgba(255,0,102,0.6);
       transform: translateY(-2px);
     }
 
     .game-btn.active {
-      background: rgba(0, 255, 204, 0.3);
+      background: rgba(0,255,204,0.3);
       border-color: #00ffcc;
-      box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
+      box-shadow: 0 0 20px rgba(0,255,204,0.6);
     }
 
+    /* Mute button pulses when sound is ON (prompting the user to notice it) */
     @keyframes mute-pulse {
-      0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 102, 0.3); }
-      50% { box-shadow: 0 0 30px rgba(255, 0, 102, 0.9), 0 0 50px rgba(255, 0, 102, 0.5); }
+      0%, 100% { box-shadow: 0 0 10px rgba(255,0,102,0.3); }
+      50%       { box-shadow: 0 0 30px rgba(255,0,102,0.9), 0 0 50px rgba(255,0,102,0.5); }
     }
-
-    .game-btn.pulse-muted {
-      animation: mute-pulse 1.5s ease-in-out;
-    }
-    
     .game-btn.mute-btn:not(.active) {
-  animation: mute-pulse 1.5s ease-in-out infinite !important;
-}
+      animation: mute-pulse 1.5s ease-in-out infinite;
+    }
 
+    /* Gallery button — cyan flash */
+    @keyframes gallery-flash {
+      0%, 100% { box-shadow: 0 0 10px rgba(0,255,204,0.3); border-color: #ff0066; }
+      50%       { box-shadow: 0 0 25px rgba(0,255,204,0.9), 0 0 45px rgba(0,255,204,0.4); border-color: #00ffcc; }
+    }
+    .game-btn.gallery-btn {
+      animation: gallery-flash 2.2s ease-in-out infinite;
+      animation-delay: 0.4s;
+    }
+
+    /* Reset button — yellow flash */
+    @keyframes reset-flash {
+      0%, 100% { box-shadow: 0 0 10px rgba(255,204,0,0.3); border-color: #ff0066; }
+      50%       { box-shadow: 0 0 25px rgba(255,204,0,0.9), 0 0 45px rgba(255,204,0,0.4); border-color: #ffcc00; color: #ffcc00; }
+    }
+    .game-btn.reset-btn {
+      animation: reset-flash 1.9s ease-in-out infinite;
+      animation-delay: 1.1s;
+    }
+
+    /* Canvas-relative overlay buttons */
+    .gallery-canvas button { backdrop-filter: blur(6px); }
+    .gallery-canvas button:hover { transform: scale(1.08); }
+
+    .gallery-close-btn { position: absolute; top: 8px; right: 8px; padding: 0.6rem 0.8rem; font-size: 0.7rem; z-index: 5; }
+    .gallery-next-btn  { position: absolute; bottom: 8px; right: 8px; padding: 0.6rem 0.8rem; font-size: 0.7rem; z-index: 5; }
+    .gallery-prev-btn  { position: absolute; bottom: 8px; left: 8px;  padding: 0.6rem 0.8rem; font-size: 0.7rem; z-index: 5; }
+
+    /* ============================================================
+       GAME MESSAGE POPUP
+    ============================================================ */
     .game-message {
       position: fixed;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(10, 10, 10, 0.98);
+      background: rgba(10,10,10,0.98);
       color: #ffcc00;
       font-size: 1.2rem;
       padding: 3rem;
@@ -249,107 +308,599 @@
       display: none;
       z-index: 2000;
       text-align: center;
-      box-shadow: 0 0 40px rgba(255, 0, 102, 0.8);
+      box-shadow: 0 0 40px rgba(255,0,102,0.8);
       max-width: 90vw;
       white-space: pre-line;
       border-radius: 10px;
-      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+      text-shadow: 0 0 10px rgba(255,204,0,0.8);
     }
 
-    body::before {
-      content: '';
+    /* ============================================================
+       CHARACTER SELECT OVERLAY
+    ============================================================ */
+    .character-select-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%,   rgba(255,0,102,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0,255,204,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 20% 50%,  rgba(180,0,255,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 60% at 80% 50%,  rgba(0,100,255,0.10) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0015 0%, #05000f 50%, #0a0010 100%);
+      z-index: 10001;
+      display: none;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 2rem 1rem;
+    }
+
+    .character-select-overlay.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: max(1.5rem, env(safe-area-inset-top)) 1rem max(1.5rem, env(safe-area-inset-bottom));
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      gap: 0;
+    }
+
+    /* Inner wrapper — constrains content to a sensible size on any screen */
+    .character-select-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       width: 100%;
-      height: 100%;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.15) 0px,
-        transparent 1px,
-        transparent 2px,
-        rgba(0, 0, 0, 0.15) 3px
-      );
+      max-width: 1100px;
+      margin: auto; /* centres vertically when content is shorter than viewport */
+      padding: 0.5rem 0 1rem;
+    }
+
+    /* Remove the old auto-margin hacks — the inner wrapper handles centering now */
+    #characterGrid {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+    .character-select-title { margin-top: 3rem; }
+    .character-select-divider { margin-bottom: 2rem; }
+
+    @media (max-height: 500px) {
+      /* Landscape phone — compact everything so it fits without scrolling */
+      .character-select-overlay.active {
+        justify-content: flex-start;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+      .character-select-title  { font-size: 0.9rem !important; margin-bottom: 0.25rem !important; margin-top: 2.5rem !important; }
+      .character-select-subtitle { font-size: 0.5rem !important; margin-bottom: 0.5rem !important; }
+      .character-select-divider { margin-bottom: 0.75rem; }
+      .character-grid { gap: 0.5rem; width: 98%; padding: 0 0.25rem; }
+      .character-preview { width: 55px !important; height: 55px !important; }
+      .character-card { padding: 0.5rem 0.4rem !important; gap: 0.3rem !important; }
+      .character-card-name { font-size: 0.45rem !important; }
+      .character-card-role { font-size: 0.35rem !important; }
+      .team-photo-card { max-height: 100px !important; margin-top: 0.25rem; }
+      .team-photo-card img { height: 100px !important; }
+    }
+
+    .character-select-title {
+      font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc, 0 0 60px rgba(0,255,204,0.4), 0 0 100px rgba(0,255,204,0.2);
+      margin-top: 3rem;
+      margin-bottom: 0.6rem;
+      text-align: center;
+      animation: neon-flicker 8s ease-in-out 2s infinite;
+      letter-spacing: 0.05em;
+    }
+
+    .character-select-subtitle {
+      font-size: clamp(0.6rem, 1.5vw, 0.85rem);
+      color: #ff0066;
+      margin-bottom: 0.6rem;
+      text-align: center;
+      letter-spacing: 0.3em;
+    }
+
+    .character-select-divider {
+      width: 50%;
+      max-width: 350px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #ff0066, #00ffcc, #ff0066, transparent);
+      margin-bottom: 2rem;
+    }
+
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      max-width: 960px;
+      width: 90%;
+      padding: 0 1rem;
+    }
+
+    /* Scale up grid and cards for large screens so content fills the space */
+    @media (min-width: 1920px) {
+      .character-select-inner { max-width: 1400px; }
+      .character-grid { max-width: 1280px; gap: 2rem; }
+      .character-preview { width: 160px !important; height: 160px !important; }
+      .character-card { padding: 1.8rem 1.2rem; }
+      .character-card-name { font-size: 1rem !important; }
+      .character-card-role { font-size: 0.65rem !important; }
+      .team-photo-card { max-height: 300px !important; }
+      .team-photo-card img { height: 300px !important; }
+    }
+
+    @media (min-width: 2560px) {
+      .character-select-inner { max-width: 1800px; }
+      .character-grid { max-width: 1600px; gap: 2.5rem; }
+      .character-preview { width: 200px !important; height: 200px !important; }
+      .character-card { padding: 2rem 1.5rem; }
+      .character-card-name { font-size: 1.2rem !important; }
+      .character-card-role { font-size: 0.75rem !important; }
+      .team-photo-card { max-height: 380px !important; }
+      .team-photo-card img { height: 380px !important; }
+    }
+
+    .team-photo-card {
+      grid-column: 1 / -1;
+      border: 2px solid #00ffcc;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,255,204,0.3), inset 0 0 20px rgba(0,255,204,0.04);
+      background: linear-gradient(160deg, rgba(0,255,204,0.05), rgba(0,100,255,0.08));
+      max-height: 220px;
+      position: relative;
+      margin-top: 0.5rem;
+    }
+
+    .team-photo-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      object-position: center 0%;
+      display: block;
+      animation: team-pan 8s ease-in-out infinite;
+    }
+
+    @keyframes team-pan {
+      0%   { object-position: center 0%; }
+      50%  { object-position: center 100%; }
+      100% { object-position: center 0%; }
+    }
+
+    .team-photo-card .team-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.7), transparent);
+      padding: 1rem 1.5rem 0.75rem;
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(0.4rem, 1.2vw, 0.65rem);
+      color: #00ffcc;
+      letter-spacing: 0.15em;
+      text-shadow: 0 0 10px rgba(0,255,204,0.6);
+    }
+
+    @media (min-width: 700px) {
+      .team-photo-card {
+        grid-column: 2 / 4;
+        grid-row: 2;
+        max-height: 260px;
+      }
+      .team-photo-card img { height: 260px; }
+    }
+
+    @media (max-width: 700px) {
+      .character-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        width: 95%;
+        padding: 0 0.5rem;
+      }
+      .character-preview { width: 75px; height: 75px; }
+      .character-card { padding: 0.75rem 0.5rem; gap: 0.5rem; }
+      .character-card-name { font-size: 0.6rem; }
+      .character-card-role { font-size: 0.4rem; }
+      .team-photo-card { grid-column: 1 / -1; max-height: 160px; margin-top: 0.25rem; }
+      .team-photo-card img { height: 160px; }
+    }
+
+    .character-card {
+      border: 2px solid #ff0066;
+      border-radius: 12px;
+      padding: 1.5rem 1rem 1.2rem;
+      cursor: pointer;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+      background: linear-gradient(160deg, rgba(255,0,102,0.07), rgba(120,0,200,0.1));
+      box-shadow: 0 0 18px rgba(255,0,102,0.18), inset 0 0 20px rgba(255,0,102,0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .character-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 60%);
       pointer-events: none;
-      z-index: 9999;
-      opacity: 0.3;
     }
 
+    .character-card:hover {
+      transform: translateY(-10px) scale(1.04);
+      box-shadow: 0 0 35px rgba(255,0,102,0.6), 0 0 70px rgba(255,0,102,0.2), inset 0 0 30px rgba(255,0,102,0.08);
+      border-color: #00ffcc;
+    }
+
+    .character-preview {
+      width: 130px; height: 130px;
+      border: 2px solid rgba(0,255,204,0.6);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 0 14px rgba(0,255,204,0.25);
+    }
+
+    .character-card-name {
+      color: #ffcc00;
+      font-size: 0.85rem;
+      text-align: center;
+      text-shadow: 0 0 8px rgba(255,204,0,0.5);
+      letter-spacing: 0.05em;
+    }
+    .character-card-role {
+      color: #00ffcc;
+      font-size: 0.55rem;
+      text-align: center;
+      letter-spacing: 0.15em;
+      opacity: 0.85;
+    }
+
+    /* ============================================================
+       GALLERY OVERLAY
+    ============================================================ */
+    .gallery-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #0a0a0a;
+      z-index: 5000;
+      display: none;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .gallery-overlay.active {
+      display: block;
+    }
+
+    .gallery-content {
+      width: 100%;
+      display: block;
+    }
+
+    .gallery-slide { display: none; width: 100%; }
+
+    .gallery-slide.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem 4rem;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .character-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .character-name {
+      color: #ffcc00;
+      font-size: 1.2rem;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255,204,0,0.8);
+    }
+
+    .character-status {
+      color: #00ffcc;
+      font-size: clamp(0.55rem, 2.2vw, 0.9rem);
+      padding: 0;
+      width: 200px;
+      background: rgba(0,255,204,0.1);
+      border: 2px solid #00ffcc;
+      border-radius: 6px;
+      height: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      font-family: 'Press Start 2P', cursive;
+      box-shadow: 0 0 10px rgba(0,255,204,0.2);
+    }
+
+    .select-char-btn {
+      min-width: 260px;
+      height: 44px;
+      min-height: 44px;
+      padding: 0 1.5rem !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0 !important;
+      font-size: clamp(0.55rem, 2.2vw, 0.9rem) !important;
+      white-space: nowrap;
+    }
+
+    @keyframes select-flash {
+      0%, 100% { box-shadow: 0 0 10px rgba(255,0,102,0.3); border-color: #ff0066; }
+      50%       { box-shadow: 0 0 28px rgba(255,0,102,1), 0 0 55px rgba(255,0,102,0.5); border-color: #ff66aa; background: rgba(255,0,102,0.25); }
+    }
+    .select-char-btn:not(.active) {
+      animation: select-flash 1.4s ease-in-out infinite;
+    }
+
+
+    /* ============================================================
+       COMING SOON OVERLAY
+    ============================================================ */
+    .coming-soon-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(10,10,10,0.98);
+      z-index: 10000;
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-top: max(4rem, env(safe-area-inset-top));
+    }
+
+    .coming-soon-overlay.active { display: flex; }
+
+    .coming-soon-content { max-width: 900px; width: 100%; text-align: center; }
+
+    .coming-soon-title {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(1.5rem, 4vw, 3rem);
+      color: #00ffcc;
+      text-shadow: 0 0 20px #00ffcc;
+      margin-bottom: 1rem;
+    }
+
+    .coming-soon-subtitle {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(0.7rem, 2vw, 1rem);
+      color: #ffcc00;
+      margin-bottom: 2rem;
+    }
+
+    /* ============================================================
+       GLASS BREAK ANIMATION (intro shatter)
+    ============================================================ */
+    @keyframes piece-fall {
+      0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--fall-x), var(--fall-y)) rotate(var(--fall-rot)); opacity: 0; }
+    }
+
+    .glass-piece {
+      position: fixed;
+      z-index: 9995;
+      background: inherit;
+      overflow: hidden;
+      animation: piece-fall 1s ease-in forwards;
+    }
+
+    .glass-piece::before {
+      content: '';
+      position: absolute;
+      top: var(--piece-y);
+      left: var(--piece-x);
+      width: 100vw; height: 100vh;
+      background: inherit;
+      box-shadow: inset 0 0 30px rgba(255,255,255,0.3);
+    }
+
+    /* ============================================================
+       INTRO OVERLAY ANIMATIONS
+    ============================================================ */
+    @keyframes glow-pulse {
+      0%, 100% { text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc, 0 0 60px #00ffcc; }
+      50%       { text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ffcc, 0 0 90px #00ffcc, 0 0 120px #00ffcc; }
+    }
+
+    @keyframes underline-slide {
+      0%   { width: 0; }
+      100% { width: 100%; }
+    }
+
+    @keyframes neon-flicker {
+      0%,19%,21%,23%,25%,54%,56%,100% { opacity:1; }
+      20%,24%,55% { opacity:0.4; }
+    }
+
+    @keyframes pulse-badge {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.1); }
+    }
+
+    .ladder-title-glow { animation: glow-pulse 2s ease-in-out infinite; }
+
+    .action-word { position: relative; display: inline-block; }
+    .action-word::after {
+      content: '';
+      position: absolute;
+      bottom: -5px; left: 0;
+      height: 3px; width: 100%;
+      background: linear-gradient(90deg, #ff0066, #00ffcc);
+      animation: underline-slide 1.5s ease-out infinite;
+    }
+
+    /* ============================================================
+       RESPONSIVE OVERRIDES
+    ============================================================ */
     @media (max-width: 768px) {
-      section {
-        padding: 3rem 1rem;
-      }
-      
-      .game-btn {
-        padding: 0.8rem 1.5rem;
-        font-size: 0.7rem;
-      }
-    }
-
-    @media (max-width: 768px) and (orientation: landscape) {
-      .game-controls {
+      .character-grid {
+        grid-template-columns: 1fr 1fr;
         gap: 1rem;
       }
-      
-      .game-btn {
-        padding: 0.6rem 1rem;
-        font-size: 0.6rem;
+
+      .character-select-overlay {
+        padding: 1rem;
       }
-      
-      .section-title {
-        margin-bottom: 1rem;
+
+      .character-select-overlay.active {
+        padding-top: max(1rem, env(safe-area-inset-top)) !important;
+        padding-bottom: max(1rem, env(safe-area-inset-bottom)) !important;
       }
+
+      .character-select-title  { font-size: 1.2rem !important; margin-top: 2.5rem !important; margin-bottom: 0.5rem !important; }
+      .character-select-subtitle { font-size: 0.7rem !important; margin-bottom: 1rem !important; }
+      .character-card   { padding: 1rem; }
+      .character-preview { width: 80px; height: 80px; }
+
+      .game-btn    { padding: 0.75rem 1.25rem; font-size: 0.65rem; }
+      .game-controls { gap: 0.75rem; }
+
+      .gallery-close-btn { top: 1rem; right: 1rem; padding: 0.75rem 1rem; font-size: 0.65rem; }
+      .gallery-nav-btn   { padding: 1rem 0.75rem; font-size: 1.2rem; }
+      .gallery-nav-btn.prev { left: 0.5rem; }
+      .gallery-nav-btn.next { right: 0.5rem; }
     }
-    .nav {
+
+    @media (max-width: 480px) {
+      .game-btn    { padding: 0.6rem 1rem; font-size: 0.55rem; }
+      .game-controls { gap: 0.5rem; }
+      section      { padding: 2rem 1rem; }
+
+      .gallery-close-btn { top: 0.5rem; right: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.55rem; }
+      .gallery-nav-btn   { padding: 0.75rem 0.5rem; font-size: 1rem; }
+      .gallery-nav-btn.prev { left: 0.25rem; }
+      .gallery-nav-btn.next { right: 0.25rem; }
+    }
+    /* ============================================================
+       AUTO-HIDING HEADER / LOGO
+    ============================================================ */
+    #site-header {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 2px solid #ff0066;
-      z-index: 1000;
-      padding: 1rem 2rem;
+      top: 0; left: 0; right: 0;
+      z-index: 10003;
       display: flex;
-      justify-content: flex-start;
       align-items: center;
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
-    }
-
-    .nav-logo {
-      font-size: clamp(0.8rem, 2vw, 1.2rem);
-      font-weight: bold;
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
-    }
-
-    .footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(10px);
-      border-top: 2px solid #ff0066;
-      z-index: 1000;
-      padding: 1rem 2rem;
-      display: flex;
       justify-content: center;
-      align-items: center;
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+      height: 44px;
+      padding: 0 1rem;
+      background: linear-gradient(180deg, rgba(5,0,15,0.85) 0%, transparent 100%);
+      pointer-events: none;
+      transform: translateY(-100%);
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      opacity: 0;
     }
 
-    .footer-text {
-      font-size: clamp(0.8rem, 2vw, 1.2rem);
-      font-weight: bold;
-      color: #00ffcc;
-      text-shadow: 0 0 10px #00ffcc;
+    #site-header.visible {
+      transform: translateY(0);
+      opacity: 1;
     }
+
+    #site-header.hidden {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+
+    #site-header .logo-text {
+      font-family: 'Press Start 2P', cursive;
+      font-size: clamp(0.5rem, 2.5vw, 0.75rem);
+      color: #00ffcc;
+      text-shadow: 0 0 12px #00ffcc, 0 0 30px rgba(0,255,204,0.4);
+      letter-spacing: 0.15em;
+      animation: neon-flicker 8s ease-in-out 3s infinite;
+      white-space: nowrap;
+    }
+
+    #site-header .logo-sep {
+      color: #ff0066;
+      margin: 0 0.6em;
+      text-shadow: 0 0 10px #ff0066;
+    }
+
   </style>
 </head>
 <body>
 
-  <!-- Template section (this will be cloned) -->
+  <!-- Auto-hiding logo header -->
+  <header id="site-header">
+    <span class="logo-text">LADDER</span>
+    <span class="logo-text logo-sep">◆</span>
+    <span class="logo-text">LOOP</span>
+  </header>
+
+  <script>
+  (function() {
+    const header = document.getElementById('site-header');
+    let lastY = 0, ticking = false;
+
+    // Show header — called once after intro is dismissed
+    window.showSiteHeader = function() {
+      header.classList.add('visible');
+      header.classList.remove('hidden');
+    };
+
+    function onScroll(y) {
+      if (!header.classList.contains('visible')) return;
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (y > lastY && y > 60) header.classList.add('hidden');
+          else header.classList.remove('hidden');
+          lastY = y;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', () => onScroll(window.scrollY), { passive: true });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('characterSelect');
+      if (overlay) overlay.addEventListener('scroll', () => onScroll(overlay.scrollTop), { passive: true });
+    });
+
+    // Always show header when character select opens
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('characterSelect');
+      if (overlay) {
+        new MutationObserver(() => {
+          if (overlay.classList.contains('active')) {
+            header.classList.remove('hidden');
+            lastY = 0;
+          }
+        }).observe(overlay, { attributes: true, attributeFilter: ['class'] });
+      }
+    });
+  })();
+  </script>
+
+  <!-- Animated retro grid — fixed layer, pointer-events:none, never touches the canvas loop -->
+
+  <!-- ============================================================
+       GAME SECTION TEMPLATE
+       (cloned at runtime to fill the infinite scroll)
+  ============================================================ -->
   <section class="game-section">
     <div class="container">
       <h2 class="section-title">PLAY</h2>
@@ -358,772 +909,3141 @@
           <canvas width="400" height="450"></canvas>
         </div>
         <div class="game-controls">
-          <button class="game-btn mute-btn">🔊 Sound</button>
-          <button class="game-btn reset-btn">↻ Reset</button>
+          <button class="game-btn mute-btn">🔊</button>
+          <button class="game-btn reset-btn">↻</button>
+          <button class="game-btn gallery-btn">🎨</button>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ============================================================
+       CHARACTER SELECT OVERLAY
+  ============================================================ -->
+  <div class="character-select-overlay" id="characterSelect">
+
+    <!-- Credits button — bottom left, same as main screen -->
+    <div onclick="showCredits()" title="?" style="position:fixed;bottom:20px;left:20px;z-index:10002;
+      width:22px;height:22px;border-radius:50%;
+      background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      font-family:'Press Start 2P',cursive;font-size:8px;color:rgba(255,255,255,0.25);
+      transition:all 0.2s;"
+      onmouseenter="this.style.color='rgba(255,255,255,0.6)';this.style.borderColor='rgba(255,0,102,0.5)'"
+      onmouseleave="this.style.color='rgba(255,255,255,0.25)';this.style.borderColor='rgba(255,255,255,0.15)'">©</div>
+
+    <div class="character-select-inner">
+      <h1 class="character-select-title">ANGLO POLISH BUILDERS</h1>
+      <p class="character-select-subtitle">SELECT YOUR CHARACTER</p>
+      <div class="character-select-divider"></div>
+      <div class="character-grid" id="characterGrid"></div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================
+       GALLERY OVERLAY
+  ============================================================ -->
+  <div class="gallery-overlay" id="galleryOverlay"></div>
+
+  <!-- ============================================================
+       TRADE / RACE OVERLAYS
+  ============================================================ -->
+
+  <!-- ============================================================
+       COMING SOON OVERLAY
+  ============================================================ -->
+  <div class="coming-soon-overlay" id="comingSoonOverlay">
+    <div class="coming-soon-content">
+      <h1 class="coming-soon-title">🏁 POLE POSITION 🏁</h1>
+      <p class="coming-soon-subtitle">Racing game coming soon!</p>
+      <div class="canvas-wrapper" style="margin:2rem auto;">
+        <canvas id="comingSoonCanvas" width="400" height="500"></canvas>
+      </div>
+      <p style="font-family:'Press Start 2P',cursive; font-size:0.7rem; color:#00ffcc;
+                margin-bottom:2rem; line-height:1.8;">
+        The builders are tuning up their vans...<br>
+        Race as your favorite character!<br>
+        <span style="color:#ffcc00;">Swarvek · Derek · Michel · Greg · Mario · James</span>
+      </p>
+      <button class="game-btn" id="comingSoonCloseBtn"
+              style="background:rgba(255,0,102,0.3); border-color:#ff0066; padding:1rem 2rem; font-size:0.8rem;">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       FLOATING MESSAGE BOX  +  BACKGROUND AUDIO
+  ============================================================ -->
   <div class="game-message"></div>
   <audio src="https://www.ladderloop.com/media/audio/music.mp4"></audio>
 
+  <!-- ============================================================
+       MAIN SCRIPT
+       Organised into clearly-labelled sections:
+         1. CONFIG       — flags, character data, ladder colours, messages
+         2. STATE        — single mutable state object
+         3. SPRITES      — pixel-art draw functions for each character
+         4. DRAW         — ladder, character, benched cube, score, gallery frame
+         6. GAME LOOP    — update, climb, unlock, messages
+         7. GALLERY      — open / navigate / close character gallery
+         8. CHAR SELECT  — show overlay, switch character
+        11. CONTROLS     — button wiring, section cloning, scroll listener
+        12. SCALE        — responsive HiDPI canvas sizing (runs once on load)
+        13. INTRO        — glass-break splash screen (IIFE, fires immediately)
+        14. MOBILE       — swipe carousel for character select on small screens
+        16. COMING SOON  — teaser overlay + preview animation
+        17. EDITION TOGGLE — Classic ↔ Anglo Polish switch + message sanitiser
+  ============================================================ -->
   <script>
-    /* ===== Shared game state ===== */
-    let canvases = [];
-    let character = { x: 187, y: 420, width: 30, height: 30 };
-    let climbing = false;
-    let score = 0;
-    let speed = 4;
-    let freezeFrame = false;
-    let audioEnabled = false;
-    
-    let currentLadderColorIndex = 0;
-    let unlockedColors = [0];
-    
-    const ladderColors = [
-      { name: "Classic White", color: "#fff", unlockScore: 0 },
-      { name: "Electric Blue", color: "#00ccff", unlockScore: 5 },
-      { name: "Neon Pink", color: "#ff0066", unlockScore: 10 },
-      { name: "Toxic Green", color: "#00ff66", unlockScore: 15 },
-      { name: "Purple Haze", color: "#b200ff", unlockScore: 20 },
-      { name: "Golden Glory", color: "#ffcc00", unlockScore: 25 },
-      { name: "Crimson Rage", color: "#ff3333", unlockScore: 30 },
-      { name: "Cyber Orange", color: "#ff9900", unlockScore: 35 },
-      { name: "Mystic Violet", color: "#9933ff", unlockScore: 40 },
-      { name: "Arctic Cyan", color: "#00ffff", unlockScore: 45 },
-      { name: "Sunset Red", color: "#ff6666", unlockScore: 50 },
-      { name: "Lime Blast", color: "#ccff00", unlockScore: 60 },
-      { name: "Hot Magenta", color: "#ff00ff", unlockScore: 70 },
-      { name: "Ocean Teal", color: "#00cc99", unlockScore: 80 },
-      { name: "Rainbow Prism", color: "#fff", unlockScore: 100, isRainbow: true }
-    ];
+  'use strict';
 
-    const funnyMessages = [
+  /* ============================================================
+     1. CONFIG
+  ============================================================ */
+
+  // Master feature flag — set false to disable the Anglo Polish Edition
+  const ANGLO_POLISH_EDITION = true;
+
+  // Expose for overlay scripts and HTML onerror handlers
+  window.ANGLO_POLISH_EDITION = ANGLO_POLISH_EDITION;
+
+  // Title always starts as Classic — updates when a character is selected or mode switches
+  document.title = 'Ladder Loop Game';
+
+  window.syncPageTitle = function() {
+    document.title = window.ANGLO_POLISH_EDITION && S.selectedCharacter
+      ? 'Ladder Loop - Anglo Polish Builders Edition'
+      : 'Ladder Loop Game';
+  };
+
+  // ---- Characters ----
+  const CHARACTERS = [
+    { id: 'swarvek', name: 'Swarvek', role: 'The Boss',      color: '#ff9900' },
+    { id: 'derek',   name: 'Derek',   role: 'Site Manager',  color: '#00ccff' },
+    { id: 'michel',  name: 'Michel',  role: 'Workman',       color: '#ffcc00' },
+    { id: 'mario',   name: 'Mario',   role: 'Painter',       color: '#ff0066' },
+    { id: 'greg',    name: 'Greg',    role: 'Plumber',       color: '#00ff66' },
+    { id: 'tobin',   name: 'James',   role: 'Apprentice',    color: '#9933ff' },
+  ];
+
+  // ---- Ladder colour unlocks ----
+  const LADDER_COLORS = [
+    { name: 'Classic White',  color: '#fff',     unlockScore: 0   },
+    { name: 'Electric Blue',  color: '#00ccff',  unlockScore: 5   },
+    { name: 'Neon Pink',      color: '#ff0066',  unlockScore: 10  },
+    { name: 'Toxic Green',    color: '#00ff66',  unlockScore: 15  },
+    { name: 'Purple Haze',    color: '#b200ff',  unlockScore: 20  },
+    { name: 'Golden Glory',   color: '#ffcc00',  unlockScore: 25  },
+    { name: 'Crimson Rage',   color: '#ff3333',  unlockScore: 30  },
+    { name: 'Cyber Orange',   color: '#ff9900',  unlockScore: 35  },
+    { name: 'Mystic Violet',  color: '#9933ff',  unlockScore: 40  },
+    { name: 'Arctic Cyan',    color: '#00ffff',  unlockScore: 45  },
+    { name: 'Sunset Red',     color: '#ff6666',  unlockScore: 50  },
+    { name: 'Lime Blast',     color: '#ccff00',  unlockScore: 60  },
+    { name: 'Hot Magenta',    color: '#ff00ff',  unlockScore: 70  },
+    { name: 'Ocean Teal',     color: '#00cc99',  unlockScore: 80  },
+    { name: 'Rainbow Prism',  color: '#fff',     unlockScore: 100, isRainbow: true },
+  ];
+
+  // ---- Background themes (unlock in step with ladder colours) ----
+  const BACKGROUNDS = [
+    { name: 'Deep Space',      unlockScore: 0   },
+    { name: 'Electric Grid',   unlockScore: 5   },
+    { name: 'Lava Lamp',       unlockScore: 10  },
+    { name: 'Matrix Rain',     unlockScore: 15  },
+    { name: 'Northern Lights', unlockScore: 20  },
+    { name: 'Gold Dust',       unlockScore: 25  },
+    { name: 'Crimson Storm',   unlockScore: 30  },
+    { name: 'Cyber City',      unlockScore: 35  },
+    { name: 'Deep Ocean',      unlockScore: 40  },
+    { name: 'Arctic Pulse',    unlockScore: 45  },
+    { name: 'Sunset Blaze',    unlockScore: 50  },
+    { name: 'Toxic Jungle',    unlockScore: 60  },
+    { name: 'Magenta Void',    unlockScore: 70  },
+    { name: 'Ocean Abyss',     unlockScore: 80  },
+    { name: 'Rainbow Prism',   unlockScore: 100 },
+  ];
+
+  // ---- Funny messages (per-character for Anglo Polish, generic for Classic) ----
+  const MESSAGES = {
+    funny: {
+      classic: [
         "Follow us on Instagram: @ladderloopgame (it won't help your score)",
-        "Check our Twitter: @ladderloop (we post pictures of ladders)",
-"We have social media. Why? Nobody knows.",
-"Our Instagram is just ladders. That's it. That's the content.",
-"Twitter: @ladderloop - where we tweet about climbing (and falling)",
-  "Why are you still playing? Seriously?",
-  "Climbing ladders... again...",
-  "You've reached a new score... did you expect a reward?",
-  "Congratulations, you're still here. Impressive.",
-  "Are you stuck in a loop? 'Cause I think you are.",
-  "Climbing ladders for fun? Uh... okay.",
-  "This is the longest you've ever stuck with anything, huh?",
-  "The ladder flips. You climb. You fall. You repeat.",
-  "What should we name our character?",
-  "You must be addicted to this. Do you need help?",
-  "Is this game even fun? Are you sure?",
-  "You just like the music.",
-  "You climb because you must. The ladder is endless. The loop is life.",
-  "Another fall? Who saw that coming...",
-  "Is it even possible to 'win' this?",
-  "Just one more try... yeah, right.",
-  "Don't worry, nobody's judging you... except me.",
-  "Maybe the ladder is trying to tell you something.",
-  "You're not climbing, you're just falling upwards.",
-  "The ladder wins, always. Deal with it.",
-  "You've been falling for longer than most people can hold a job.",
-  "Every time you fall, an angel loses its wings. Sorry, angel.",
-  "Well, that was a spectacular failure.",
-  "Is the ladder just a metaphor for life? Discuss.",
-  "You fell again? Well, what else is new?",
-  "Why does falling feel like the only option?",
-  "You're climbing... but where are you really going?",
-  "The only thing you're getting out of this is a sore thumb.",
-  "Don't worry, the loop's endless... just like your frustration.",
-  "When does this cycle end? Not anytime soon, my friend.",
-  "A ladder without a top... how poetic.",
-  "You're halfway up, and still, no reward in sight.",
-  "The ladder's patience is infinite... but yours might not be.",
-  "You've reached a new score, and somehow, I'm less impressed each time.",
-  "What's at the top? Just more falling.",
-  "Let me guess... you're gonna fall right now.",
-  "One day you'll reach the top... but that day is not today.",
-  "The ladder just doesn't care, does it?",
-  "You should be getting paid for all this climbing... or falling.",
-  "You fell. Again. It's almost like you're playing for that purpose.",
-  "I believe in you... just kidding, I don't.",
-  "You're still trying? You must have a death wish.",
-  "Falling with style... or just falling.",
-  "You've climbed for hours. It feels like days, right?",
-  "Each fall is just another lesson. A lesson you keep ignoring.",
-  "Climbing this ladder is your version of therapy, isn't it?",
-  "Is there a 'just give up' button somewhere?",
-  "Who needs a reset button when you've already reset yourself?",
-  "You fell again? Don't worry, it's the game's fault, not yours.",
-  "Keep climbing... you'll fall again... and again... and again.",
-  "I'm not saying you're bad at this... but you're bad at this.",
-  "Does anyone ever reach the top? Or do we just keep falling forever?",
-  "Does your thumb hurt yet? Because mine does.",
-  "You're just a tiny pixel on a never-ending ladder, huh?",
-  "When will you learn? Just kidding, don't.",
-  "Have you tried... not falling?",
-  "You think you're close to winning... but you're not.",
-  "The ladder has one rule: 'No winners allowed.'",
-  "This is probably the most pointless thing you've done today.",
-  "I bet you can't make it 10 more seconds without falling.",
-  "You're still climbing? There's no top, you know.",
-  "This game was supposed to be fun, right?",
-  "Climbing a ladder is the easy part... it's the falling that gets you.",
-  "Why climb when you can just fall?",
-  "You're not falling... you're just 'adjusting your position.'",
-  "Every time you climb, the ladder laughs at you.",
-  "You fell again? But you had such high hopes!",
-  "I hope you're getting something out of this, because I'm not.",
-  "Each fall is like a little death. Embrace it.",
-  "The game is rigged. The ladder will always win.",
-  "You know what's more fun than climbing? Falling.",
-  "If falling was a sport, you'd be a champion.",
-  "Who needs goals when you have a never-ending ladder?",
-  "You've got a high score. Too bad it doesn't matter.",
-  "I've seen people climb ladders faster than you.",
-  "You climbed one step. You fell several.",
-  "No matter how high you climb, gravity's always waiting.",
-  "If you get to the top, let me know. I'll be waiting for your inevitable fall.",
-  "Are you winning yet? No? Well, keep trying.",
-  "I think you just like the sound of the music, don't you?",
-  "Just fall already, it's inevitable.",
-  "You're climbing a ladder... in a game. Is that life?",
-  "Fall down, get up, repeat. Sound familiar?",
-  "There's no escape from the loop... except maybe the game.",
-  "The ladder is your enemy... and it's winning.",
-  "Congratulations on making it to... the middle of the ladder.",
-  "You just climbed... and then fell. That's impressive, in a way."
-    ];
+        "Gravity: still undefeated since 1687",
+        "You fell. We're shocked.",
+        "Achievement Unlocked: Hit the ground",
+        "The ladder is judging you silently",
+        "Physics: 1, You: 0",
+        "Down you go, champ",
+        "Classic ladder moment",
+        "Maybe try climbing up instead?",
+        "The floor misses you",
+        "Falling with style... if style meant failure",
+        "Oops, you did it again",
+        "At least you're consistent at falling",
+        "The ladder remembers this",
+        "Gravity always wins in the end",
+      ],
+      swarvek: [
+        "Swarvek says: 'In my day, we climbed faster!'",
+        "The boss is watching. He's not impressed.",
+        "Swarvek built this company from scratch. You can't even climb a ladder.",
+        "Boss man expects results, not excuses.",
+        "Swarvek's spirit level is more balanced than you.",
+        "The boss has seen it all. This? Not impressive.",
+        "Swarvek: 'My grandmother climbs better than this.'",
+        "You're making the boss reconsider his hiring policy.",
+        "Swarvek's thinking about docking your pay.",
+        "The boss doesn't accept 'almost' — he accepts results.",
+      ],
+      derek: [
+        "Derek measured twice. You still fell once.",
+        "The site manager has standards. You're not meeting them.",
+        "Derek's clipboard just got another mark against you.",
+        "Site manager's note: 'Needs improvement. Lots of it.'",
+        "Derek's tape measure is more accurate than your climbing.",
+        "The site manager has seen enough. Take a break.",
+        "Derek's shaking his head. That's never good.",
+        "Site manager's report: 'Unacceptable performance.'",
+        "Derek's measuring your failure in real-time.",
+        "The site manager expected better from you.",
+      ],
+      michel: [
+        "Michel wired this perfectly. Your climbing? Not so much.",
+        "The electrician's work is flawless. Yours? Questionable.",
+        "Michel could wire a building faster than you climb.",
+        "Even the wiring has better connections than your climbing.",
+        "Michel's drill has more torque than your performance.",
+        "The electrician finished his job. You're still trying.",
+        "Michel's watching between drilling. He's not impressed.",
+        "Michel says: 'This job needs rewiring. So does your technique.'",
+        "Even power tools are more reliable than you.",
+      ],
+      greg: [
+        "Greg fixed the pipes. Can you fix your climbing?",
+        "The plumber's seen worse blockages than your performance.",
+        "Greg's plunger has more suction than your grip.",
+        "Plumber's assessment: 'This is going down the drain.'",
+        "Greg could unclog a drain faster than you climb.",
+        "The plumber's shaking his head behind his glasses.",
+        "Greg's seen pipes in better shape than your climbing.",
+        "Plumber's diagnosis: 'Complete system failure.'",
+        "Greg's toolkit is more useful than your climbing skills.",
+        "The plumber's patching leaks. You're creating them.",
+      ],
+      mario: [
+        "Mario's seen better brushstrokes than your climbing.",
+        "The painter could finish a mural faster than you climb.",
+        "Mario's paint job is smoother than your technique.",
+        "Painter's review: 'Needs another coat... and another try.'",
+        "Mario's brush has better precision than your climbing.",
+        "The painter's whistling. It's not a compliment.",
+        "Mario says: 'Even wet paint dries faster than you climb.'",
+        "The painter's masterpiece vs your disaster. Quite the contrast.",
+        "Mario's wondering if he should paint over this embarrassment.",
+        "The painter's teeth are brighter than your future.",
+      ],
+      tobin: [
+        "James wrote this code. James has failed it.",
+        "The apprentice has fallen. Unfortunately, he's also the programmer.",
+        "The coder has been defeated by his own mechanics.",
+        "Resetting… James swears this worked earlier.",
+        "James knows why this happened. He's not proud.",
+        "The game is watching its creator fail.",
+        "Bug or feature? James says it's fine.",
+        "James implemented this. James regrets it.",
+        "The apprentice is learning the hard way.",
+        "The programmer does not get special treatment.",
+      ],
+    },
+    reset: {
+      classic: [
+        "Giving up already? Classic.",
+        "Reset button pressed. Dreams crushed.",
+        "Starting over won't change anything.",
+        "You think THIS time will be different?",
+        "Ah yes, the definition of insanity.",
+        "The reset button: For quitters only.",
+        "Back to square one. Where you belong.",
+        "Did you try turning it off and on again?",
+        "Fresh start? More like fresh failure.",
+        "The ladder remembers your shame.",
+        "Reset: The ultimate admission of defeat.",
+        "Zero points. Zero dignity.",
+        "Everyone gets a participation trophy except you.",
+        "Maybe take a break? Forever?",
+        "This is what rock bottom looks like.",
+        "Maybe ladders just aren't your thing.",
+        "Resetting won't erase the embarrassment.",
+        "The ladder whispers: 'They always come back.'",
+      ],
+      swarvek: [
+        "Swarvek: 'In Poland, we don't reset. We finish job.'",
+        "The boss expected better. Much better.",
+        "Swarvek's spirit level is disappointed in you.",
+        "Boss man's verdict: 'Not Anglo Polish standard.'",
+        "Swarvek: 'My grandmother has better work ethic.'",
+        "The boss is reconsidering the hiring decision.",
+        "Swarvek shakes his head. 'No bonus for you.'",
+        "Boss: 'Maybe you try different job? Like... sitting?'",
+        "Swarvek's seen enough. Back to square one.",
+        "The boss built an empire. You can't even climb a ladder.",
+      ],
+      derek: [
+        "Derek's tape measure says: 'Zero progress made.'",
+        "Site manager's clipboard: 'Performance — UNACCEPTABLE'",
+        "Derek measured twice. You failed three times.",
+        "Site manager: 'This goes in your permanent record.'",
+        "Derek's assessment: 'Needs complete retraining.'",
+        "The site manager has filed an incident report.",
+        "Derek: 'I've seen scaffolding more stable than you.'",
+        "Site manager's note: 'Do not assign to real projects.'",
+        "Derek's shaking his head. That's never good.",
+        "The site manager expected professional work. This isn't it.",
+      ],
+      michel: [
+        "Michel: 'Even my drill has better consistency than you.'",
+        "The electrician's diagnosis: 'Total system failure.'",
+        "Michel could rewire a house in the time you wasted.",
+        "Electrician's report: 'Dangerously incompetent.'",
+        "Michel: 'My apprentice does better, and he's 16.'",
+        "Michel's power tools are more reliable than you.",
+        "Electrician: 'This job needs a complete reset. So do you.'",
+        "The electrician recommends you try a different profession.",
+      ],
+      greg: [
+        "Greg: 'I've unclogged worse things than your performance.'",
+        "The plumber's verdict: 'Complete blockage. No flow.'",
+        "Greg's plunger has more grip than you do.",
+        "Plumber's assessment: 'This is going down the drain.'",
+        "Greg: 'Even the pipes put up less resistance.'",
+        "Greg adjusts his glasses. 'Mate, this is embarrassing.'",
+        "Plumber: 'Your technique needs a complete flush and restart.'",
+        "The plumber recommends you stick to sweeping.",
+      ],
+      mario: [
+        "Mario: 'Even wet paint performs better than you.'",
+        "The painter's review: 'Needs many, many more coats.'",
+        "Mario's brush has better precision than your entire attempt.",
+        "Painter: 'This is one masterpiece I won't sign.'",
+        "Mario's teeth are brighter than your climbing future.",
+        "Mario: 'Maybe I paint over this embarrassment, yes?'",
+        "Painter's critique: 'No artistic merit. Start over.'",
+        "Mario's whistling stopped. That's how bad it is.",
+        "The painter recommends you try stick figures instead.",
+      ],
+      tobin: [
+        "James: 'I coded this. Why are you failing it?'",
+        "The programmer just facepalmed. Hard.",
+        "James says: 'This isn't a bug, it's a feature... right?'",
+        "The apprentice developer is reconsidering his life choices.",
+        "James: 'I tested this. You must be doing something wrong.'",
+        "James is already drafting a patch for your failures.",
+        "The coder is watching. And silently judging.",
+        "The programmer doesn't accept excuses. Only results.",
+      ],
+    },
+  };
 
-    const messageBox = document.querySelector('.game-message');
-    const audioEl = document.querySelector('audio');
-    const muteBtns = [];
-    const resetBtns = [];
+  // ---- Trade game definitions ----
 
-    /* ===== Drawing functions ===== */
-    function drawLadder(ctx, canvas) {
-      const currentColor = ladderColors[currentLadderColorIndex];
-      
-      if (currentColor.isRainbow) {
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        gradient.addColorStop(0, "#ff0066");
-        gradient.addColorStop(0.2, "#ff9900");
-        gradient.addColorStop(0.4, "#ffcc00");
-        gradient.addColorStop(0.6, "#00ff66");
-        gradient.addColorStop(0.8, "#00ccff");
-        gradient.addColorStop(1, "#b200ff");
-        ctx.strokeStyle = gradient;
-      } else {
-        ctx.strokeStyle = currentColor.color;
+
+  /* ============================================================
+     2. STATE  — single source of truth
+  ============================================================ */
+  const S = {
+    // Canvas list (populated by wireSection)
+    canvases: [],
+
+    // Character / edition
+    selectedCharacter: null,
+    showDefaultCharacter: true,
+
+    // Core game
+    character: { x: 187, y: 420, width: 30, height: 30 },
+    climbing: false,
+    score: 0,
+    speed: 4,
+    freezeFrame: false,
+    audioEnabled: true,
+    isResetting: false,
+
+    // Ladder colours
+    currentLadderColorIndex: 0,
+    unlockedColors: [0],
+
+    // Gallery
+    galleryAnimationId: null,
+    currentGalleryIndex: 0,
+    galleryCharacters: [],
+
+    // Trade game
+
+    // Race game
+
+    // Polish audio
+    polishAudio: null,
+    polishAudioInterval: null,
+
+    // Scale (set by SCALE module)
+    gameScale: 1,
+    groundLevel: 420,
+
+    // Coming soon animation
+    comingSoonAnimationId: null,
+    comingSoonCars: [],
+  };
+
+  // Expose state accessors needed by legacy-style inline handlers and IIFE scripts
+  window.S = S;
+
+  // Convenience helpers used throughout
+  function pickRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function isAngloActive() {
+    return ANGLO_POLISH_EDITION && !S.showDefaultCharacter && S.selectedCharacter !== null;
+  }
+
+  /* ============================================================
+     3. SPRITES  — pixel-art draw functions
+  ============================================================ */
+
+  function drawSwarvekSprite(ctx, x, y, size) {
+    const w = size, h = size;
+    // Body
+    ctx.fillStyle = '#c9453b';
+    ctx.fillRect(x - w*0.1, y + h*0.35, w*1.2, h*0.65);
+    // Head
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x + w*0.1, y, w*0.8, h*0.4);
+    // Hard hat
+    ctx.fillStyle = '#c9453b';
+    ctx.fillRect(x + w*0.05, y - h*0.25, w*0.9, h*0.3);
+    ctx.fillRect(x, y - h*0.05, w, h*0.1);
+    // Eyes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w*0.25, y + h*0.15, w*0.15, h*0.1);
+    ctx.fillRect(x + w*0.60, y + h*0.15, w*0.15, h*0.1);
+    // Eyebrows
+    ctx.fillStyle = '#5a3a2a';
+    ctx.fillRect(x + w*0.20, y + h*0.10, w*0.25, h*0.08);
+    ctx.fillRect(x + w*0.55, y + h*0.10, w*0.25, h*0.08);
+    // Arms
+    ctx.fillStyle = '#c9453b';
+    ctx.fillRect(x - w*0.15, y + h*0.50, w*0.50, h*0.2);
+    ctx.fillRect(x + w*0.65, y + h*0.50, w*0.50, h*0.2);
+    // Spirit level body
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x - w*0.50, y + h*0.52, w*0.45, h*0.1);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x - w*0.50, y + h*0.52, w*0.05, h*0.1);
+    ctx.fillRect(x - w*0.10, y + h*0.52, w*0.05, h*0.1);
+    // Bubble vial
+    ctx.fillStyle = 'rgba(200,230,255,0.6)';
+    ctx.fillRect(x - w*0.35, y + h*0.54, w*0.15, h*0.06);
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 1;
+    ctx.strokeRect(x - w*0.35, y + h*0.54, w*0.15, h*0.06);
+    // Animated bubble
+    const bubbleOffset = Math.sin(Date.now() / 300) * w * 0.02;
+    ctx.fillStyle = '#FFFF00';
+    ctx.beginPath();
+    ctx.arc(x - w*0.275 + bubbleOffset, y + h*0.57, w*0.03, 0, Math.PI*2);
+    ctx.fill();
+    // Centre mark
+    ctx.fillStyle = '#FF0000';
+    ctx.fillRect(x - w*0.28, y + h*0.545, w*0.01, h*0.05);
+  }
+
+  function drawMichelSprite(ctx, x, y, size) {
+    const w = size, h = size;
+    // Body
+    ctx.fillStyle = '#4ecdc4';
+    ctx.fillRect(x, y + h*0.4, w, h*0.6);
+    // Head
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x + w*0.2, y, w*0.6, h*0.4);
+    // Hair
+    ctx.fillStyle = '#5a3a2a';
+    ctx.fillRect(x + w*0.35, y - h*0.15, w*0.3, h*0.2);
+    // Eyes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w*0.30, y + h*0.15, w*0.12, h*0.1);
+    ctx.fillRect(x + w*0.58, y + h*0.15, w*0.12, h*0.1);
+    // Stubble
+    ctx.fillStyle = 'rgba(42,42,42,0.4)';
+    ctx.fillRect(x + w*0.25, y + h*0.28, w*0.5, h*0.12);
+    // Arms
+    ctx.fillStyle = '#4ecdc4';
+    ctx.fillRect(x - w*0.1, y + h*0.5, w*0.4, h*0.15);
+    ctx.fillRect(x + w*0.7, y + h*0.5, w*0.4, h*0.15);
+    // Power drill body
+    ctx.fillStyle = '#CC0000';
+    ctx.fillRect(x + w*1.05, y + h*0.48, w*0.25, h*0.15);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x + w*1.08, y + h*0.56, w*0.12, h*0.18);
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x + w*1.09, y + h*0.63, w*0.10, h*0.08);
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fillRect(x + w*1.28, y + h*0.51, w*0.08, h*0.09);
+    // Animated drill bit
+    const drillRot = Math.floor((Date.now() / 50) % 4);
+    ctx.fillStyle = '#808080';
+    if (drillRot % 2 === 0) ctx.fillRect(x + w*1.36, y + h*0.545, w*0.12, h*0.02);
+    else                     ctx.fillRect(x + w*1.36, y + h*0.530, w*0.12, h*0.06);
+    ctx.fillStyle = '#404040';
+    ctx.fillRect(x + w*1.46, y + h*0.545, w*0.04, h*0.02);
+    // Power LED
+    ctx.fillStyle = '#00FF00';
+    ctx.beginPath();
+    ctx.arc(x + w*1.12, y + h*0.50, w*0.02, 0, Math.PI*2);
+    ctx.fill();
+    // Dust
+    const dt = Date.now() * 2 / 100;
+    ctx.fillStyle = 'rgba(139,69,19,0.5)';
+    [0, 10, 20].forEach(offset => {
+      const d = (dt + offset) % 30;
+      if (d < 25) ctx.fillRect(x + w*1.48, y + h*0.50 + d, w*0.02, h*0.02);
+    });
+  }
+
+  function drawGregSprite(ctx, x, y, size) {
+    const w = size, h = size;
+    // Body
+    ctx.fillStyle = '#95e1d3';
+    ctx.fillRect(x - w*0.15, y + h*0.35, w*1.3, h*0.65);
+    // Head
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x + w*0.05, y + h*0.05, w*0.9, h*0.4);
+    // Cap
+    ctx.fillStyle = '#6b4423';
+    ctx.fillRect(x + w*0.10, y - h*0.15, w*0.8, h*0.25);
+    ctx.fillRect(x + w*0.05, y - h*0.02, w*0.9, h*0.12);
+    // Glasses frames
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
+    ctx.strokeRect(x + w*0.22, y + h*0.18, w*0.22, h*0.15);
+    ctx.fillStyle = 'rgba(200,230,255,0.3)';
+    ctx.fillRect(x + w*0.22, y + h*0.18, w*0.22, h*0.15);
+    ctx.strokeStyle = '#333';
+    ctx.strokeRect(x + w*0.56, y + h*0.18, w*0.22, h*0.15);
+    ctx.fillStyle = 'rgba(200,230,255,0.3)';
+    ctx.fillRect(x + w*0.56, y + h*0.18, w*0.22, h*0.15);
+    ctx.fillStyle = '#333';
+    ctx.fillRect(x + w*0.44, y + h*0.22, w*0.12, h*0.05);
+    // Eyes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w*0.28, y + h*0.22, w*0.1, h*0.08);
+    ctx.fillRect(x + w*0.62, y + h*0.22, w*0.1, h*0.08);
+    // Arms
+    ctx.fillStyle = '#95e1d3';
+    ctx.fillRect(x - w*0.2, y + h*0.5, w*0.5, h*0.2);
+    ctx.fillRect(x + w*0.7, y + h*0.5, w*0.5, h*0.2);
+    // Plunger handle
+    ctx.fillStyle = '#8B4513';
+    ctx.fillRect(x + w*1.12, y + h*0.15, w*0.08, h*0.50);
+    ctx.fillStyle = '#654321';
+    ctx.fillRect(x + w*1.10, y + h*0.13, w*0.12, h*0.05);
+    ctx.fillRect(x + w*1.11, y + h*0.35, w*0.10, h*0.03);
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fillRect(x + w*1.135, y + h*0.63, w*0.05, h*0.05);
+    // Plunger cup
+    ctx.fillStyle = '#8B0000';
+    ctx.fillRect(x + w*1.06, y + h*0.68, w*0.20, h*0.12);
+    ctx.beginPath();
+    ctx.moveTo(x + w*1.02, y + h*0.80);
+    ctx.lineTo(x + w*1.06, y + h*0.68);
+    ctx.lineTo(x + w*1.26, y + h*0.68);
+    ctx.lineTo(x + w*1.30, y + h*0.80);
+    ctx.fill();
+    ctx.fillStyle = '#4B0000';
+    ctx.fillRect(x + w*1.09, y + h*0.70, w*0.14, h*0.08);
+    ctx.fillStyle = '#6B0000';
+    ctx.fillRect(x + w*1.06, y + h*0.67, w*0.20, h*0.02);
+    // Animated water splashes
+    const pt = Date.now() / 200;
+    const plungeOffset = Math.abs(Math.sin(pt)) * 12;
+    ctx.fillStyle = 'rgba(74,144,226,0.7)';
+    [0, 10, 20, 5].forEach(offset => {
+      const d = (pt * 3 + offset) % 30;
+      if (d < 20 && plungeOffset < 3) {
+        const xOff = [1.00, 1.32, 1.08, 1.24][Math.floor(offset / 5) % 4];
+        ctx.fillRect(x + w*xOff, y + h*0.80 - d, w*0.04, h*0.06);
       }
-      
-      ctx.lineWidth = 6;
+    });
+    ctx.fillStyle = 'rgba(74,144,226,0.8)';
+    ctx.fillRect(x + w*1.10, y + h*0.72, w*0.03, h*0.04);
+    ctx.fillRect(x + w*1.19, y + h*0.74, w*0.03, h*0.04);
+    ctx.fillRect(x + w*1.14, y + h*0.77, w*0.04, h*0.03);
+  }
+
+  function drawMarioSprite(ctx, x, y, size) {
+    const w = size, h = size;
+    const bodyW = w * 0.65;
+    const bodyX = x + (w - bodyW) / 2;
+    const time = Date.now();
+    // Body
+    ctx.fillStyle = '#f38181';
+    ctx.fillRect(bodyX, y + h*0.42, bodyW, h*0.58);
+    ctx.fillRect(bodyX - w*0.14, y + h*0.52, w*0.32, h*0.12);
+    ctx.fillRect(bodyX + bodyW - w*0.18, y + h*0.52, w*0.32, h*0.12);
+    // Head
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x + w*0.26, y + h*0.10, w*0.48, h*0.36);
+    // Blond hair
+    ctx.fillStyle = '#f4d03f';
+    ctx.fillRect(x + w*0.26, y + h*0.02, w*0.48, h*0.14);
+    ctx.fillRect(x + w*0.28, y - h*0.02, w*0.10, h*0.06);
+    ctx.fillRect(x + w*0.40, y - h*0.03, w*0.12, h*0.07);
+    ctx.fillRect(x + w*0.54, y - h*0.02, w*0.10, h*0.06);
+    ctx.fillRect(x + w*0.24, y + h*0.08, w*0.06, h*0.08);
+    ctx.fillRect(x + w*0.70, y + h*0.08, w*0.06, h*0.08);
+    // Wink logic
+    const winkCycle = time % 4000;
+    const isWinking = winkCycle > 3300 && winkCycle < 3550;
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w*0.34, y + h*0.22, w*0.08, h*0.07);
+    if (isWinking) ctx.fillRect(x + w*0.58, y + h*0.25, w*0.08, h*0.02);
+    else           ctx.fillRect(x + w*0.58, y + h*0.22, w*0.08, h*0.07);
+    // Smile + teeth
+    ctx.fillRect(x + w*0.34, y + h*0.34, w*0.32, h*0.04);
+    ctx.fillStyle = '#fff';
+    [0.36, 0.44, 0.52].forEach(tx => ctx.fillRect(x + w*tx, y + h*0.35, w*0.06, h*0.025));
+    // Tooth sparkle
+    if (time % 3000 < 200) {
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(x + w*0.48, y + h*0.335, w*0.015, h*0.015);
+      ctx.fillRect(x + w*0.475, y + h*0.34, w*0.025, h*0.005);
+    }
+    // Paintbrush
+    ctx.fillStyle = '#8B4513';
+    ctx.fillRect(bodyX + bodyW + w*0.10, y + h*0.54, w*0.22, h*0.07);
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fillRect(bodyX + bodyW + w*0.28, y + h*0.52, w*0.07, h*0.11);
+    ctx.fillStyle = '#4169E1';
+    ctx.fillRect(bodyX + bodyW + w*0.35, y + h*0.50, w*0.11, h*0.15);
+    // Dripping paint
+    ctx.fillStyle = '#4169E1';
+    [0, 10, 20].forEach((offset, i) => {
+      const drip = (time / 200 % 30 + offset) * 2;
+      if (drip < 50) ctx.fillRect(bodyX + bodyW + w*(0.39 + i*0.03), y + h*0.68 + drip, w*0.035, h*0.07);
+    });
+  }
+
+  function drawDerekSprite(ctx, x, y, size) {
+    const w = size, h = size;
+    // Body
+    ctx.fillStyle = '#aa96da';
+    ctx.fillRect(x, y + h*0.42, w, h*0.58);
+    ctx.fillRect(x - w*0.12, y + h*0.52, w*0.38, h*0.14);
+    ctx.fillRect(x + w*0.74, y + h*0.52, w*0.38, h*0.14);
+    // Head
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x + w*0.22, y + h*0.05, w*0.56, h*0.38);
+    // Hair
+    ctx.fillStyle = '#5a3a2a';
+    ctx.fillRect(x + w*0.22, y - h*0.05, w*0.56, h*0.14);
+    ctx.fillRect(x + w*0.18, y + h*0.05, w*0.08, h*0.15);
+    ctx.fillRect(x + w*0.74, y + h*0.05, w*0.08, h*0.15);
+    // Eyes
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w*0.30, y + h*0.16, w*0.10, h*0.08);
+    ctx.fillRect(x + w*0.60, y + h*0.16, w*0.10, h*0.08);
+    // Long nose
+    ctx.fillStyle = '#d9a07c';
+    ctx.fillRect(x + w*0.46, y + h*0.16, w*0.14, h*0.30);
+    ctx.fillStyle = '#c9896a';
+    ctx.fillRect(x + w*0.48, y + h*0.40, w*0.10, h*0.06);
+    ctx.fillStyle = '#c18463';
+    ctx.fillRect(x + w*0.44, y + h*0.40, w*0.04, h*0.06);
+    // Animated tape measure
+    const tapeWiggle = Math.sin(Date.now() / 300) * (w * 0.02);
+    ctx.fillStyle = '#FFD700';
+    ctx.fillRect(x - w*0.24, y + h*0.55, w*0.16, h*0.16);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x - w*0.24, y + h*0.61, w*0.16, h*0.03);
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fillRect(x - w*0.10, y + h*0.56, w*0.03, h*0.10);
+    ctx.save();
+    ctx.translate(tapeWiggle, 0);
+    ctx.fillStyle = '#FFEB3B';
+    ctx.fillRect(x - w*0.42, y + h*0.58, w*0.20, h*0.05);
+    ctx.fillStyle = '#000';
+    for (let i = 0; i < 5; i++) ctx.fillRect(x - w*0.40 + i*w*0.04, y + h*0.58, w*0.005, h*0.03);
+    ctx.fillStyle = '#C0C0C0';
+    ctx.fillRect(x - w*0.45, y + h*0.585, w*0.03, h*0.04);
+    ctx.restore();
+  }
+
+  function drawJamesSprite(ctx, x, y, size) {
+    const w = size, h = size;
+    // Body
+    ctx.fillStyle = '#e53935';
+    ctx.fillRect(x + w*0.2, y + h*0.4, w*0.6, h*0.55);
+    // Arms
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x - w*0.05, y + h*0.45, w*0.25, h*0.1);
+    ctx.fillRect(x + w*0.80, y + h*0.45, w*0.25, h*0.1);
+    // Head
+    ctx.fillStyle = '#f4c49c';
+    ctx.fillRect(x + w*0.25, y + h*0.05, w*0.5, h*0.35);
+    // Hair
+    ctx.fillStyle = '#121212';
+    ctx.fillRect(x + w*0.25, y - h*0.02, w*0.5, h*0.1);
+    ctx.fillStyle = '#444';
+    ctx.fillRect(x + w*0.28, y - h*0.08, w*0.1, h*0.08);
+    ctx.fillRect(x + w*0.45, y - h*0.10, w*0.1, h*0.1);
+    ctx.fillRect(x + w*0.62, y - h*0.08, w*0.1, h*0.08);
+    // Eyes
+    ctx.fillStyle = '#3399ff';
+    ctx.fillRect(x + w*0.32, y + h*0.18, w*0.1, h*0.06);
+    ctx.fillRect(x + w*0.58, y + h*0.18, w*0.1, h*0.06);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w*0.36, y + h*0.20, w*0.04, h*0.03);
+    ctx.fillRect(x + w*0.62, y + h*0.20, w*0.04, h*0.03);
+    // Beard
+    ctx.fillStyle = '#5d4037';
+    ctx.fillRect(x + w*0.27, y + h*0.28, w*0.46, h*0.12);
+    // Smile
+    ctx.fillStyle = '#000';
+    ctx.fillRect(x + w*0.38, y + h*0.34, w*0.24, h*0.03);
+    // Monitor (right hand)
+    ctx.fillStyle = '#222';
+    ctx.fillRect(x + w*1.0, y + h*0.38, w*0.35, h*0.25);
+    const pulse = (Math.sin(Date.now() / 300) + 1) * 0.5;
+    ctx.fillStyle = `rgba(51,153,255,${0.6 + 0.4*pulse})`;
+    ctx.fillRect(x + w*1.02, y + h*0.40, w*0.31, h*0.21);
+    ctx.fillStyle = '#444';
+    ctx.fillRect(x + w*1.14, y + h*0.63, w*0.1, h*0.05);
+    ctx.fillStyle = '#00FF00';
+    ctx.beginPath();
+    ctx.arc(x + w*1.30, y + h*0.60, w*0.02, 0, Math.PI*2);
+    ctx.fill();
+    // Chainsaw (left hand)
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(x - w*0.15, y + h*0.46, w*0.08, h*0.05);
+    ctx.fillStyle = '#ff6600';
+    ctx.fillRect(x - w*0.29, y + h*0.44, w*0.14, h*0.08);
+    ctx.fillStyle = '#ccc';
+    ctx.fillRect(x - w*0.54, y + h*0.46, w*0.25, h*0.05);
+    // Animated teeth
+    const sawOffset = Math.floor(Date.now() / 100 % 5);
+    ctx.fillStyle = '#999';
+    for (let i = 0; i < 8; i++) {
+      const tx = x - w*0.53 + (i + sawOffset) * w*0.03;
       ctx.beginPath();
-      ctx.moveTo(150, 0);
-      ctx.lineTo(150, canvas.height);
-      ctx.moveTo(250, 0);
-      ctx.lineTo(250, canvas.height);
+      ctx.moveTo(tx, y + h*0.51);
+      ctx.lineTo(tx + w*0.02, y + h*0.46);
+      ctx.lineTo(tx + w*0.04, y + h*0.51);
+      ctx.closePath();
+      ctx.fill();
+    }
+    // Smoke
+    const smoke = (Date.now() / 200) % 20;
+    ctx.fillStyle = 'rgba(200,200,200,0.5)';
+    if (smoke < 15) {
+      ctx.beginPath();
+      ctx.arc(x - w*0.20, y + h*0.42 - smoke*0.01*h, w*0.03, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+
+  // Dispatcher: draw the correct sprite for a given character object
+  function drawSprite(ctx, charObj, x, y, size) {
+    if (!charObj) {
+      ctx.fillStyle = '#ffcc00';
+      ctx.fillRect(x, y, size, size);
+      return;
+    }
+    switch (charObj.id) {
+      case 'swarvek': drawSwarvekSprite(ctx, x, y, size); break;
+      case 'michel':  drawMichelSprite(ctx, x, y, size);  break;
+      case 'greg':    drawGregSprite(ctx, x, y, size);    break;
+      case 'mario':   drawMarioSprite(ctx, x, y, size);   break;
+      case 'derek':   drawDerekSprite(ctx, x, y, size);   break;
+      case 'tobin':   drawJamesSprite(ctx, x, y, size);   break;
+      default:
+        ctx.fillStyle = charObj.color || '#ffcc00';
+        ctx.fillRect(x, y, size, size);
+    }
+  }
+
+  /* ============================================================
+     4. DRAW  — ladder, character, benched cube, score, gallery
+  ============================================================ */
+
+  /* ============================================================
+     DRAW BACKGROUND  — animated canvas backgrounds, one per theme
+  ============================================================ */
+
+  // Persistent state for backgrounds that need continuity between frames
+  const BG = {
+    stars:      null,   // Deep Space star positions
+    gridOffset: 0,      // Electric Grid scroll
+    blobs:      null,   // Lava Lamp blob positions
+    matrixCols: null,   // Matrix Rain column state
+    auroraT:    0,      // Northern Lights time
+    particles:  null,   // Gold Dust particles
+    rainDrops:  null,   // Crimson Storm drops
+    cityLights: null,   // Cyber City window flicker state
+    bubbles:    null,   // Deep Ocean bubbles
+    arcticT:    0,      // Arctic Pulse time
+    sunsetT:    0,      // Sunset Blaze time
+    jungleVines:null,   // Toxic Jungle drips
+    voidT:      0,      // Magenta Void time
+    abyssT:     0,      // Ocean Abyss time
+    rainbowT:   0,      // Rainbow Prism time
+  };
+
+  function drawBackground(ctx, canvas) {
+    const idx = S.currentLadderColorIndex;
+    const t   = Date.now();
+    const w   = canvas.width;
+    const h   = canvas.height;
+    const s   = S.gameScale;
+
+    switch (idx) {
+
+      // 0 — Deep Space: slow drifting stars
+      case 0: {
+        ctx.fillStyle = '#000008';
+        ctx.fillRect(0, 0, w, h);
+        if (!BG.stars) {
+          BG.stars = Array.from({ length: 80 }, () => ({
+            x: Math.random() * 400, y: Math.random() * 450,
+            r: Math.random() * 1.5 + 0.3,
+            speed: Math.random() * 0.15 + 0.02,
+            twinkle: Math.random() * Math.PI * 2,
+          }));
+        }
+        BG.stars.forEach(star => {
+          star.y += star.speed;
+          if (star.y > 450) { star.y = 0; star.x = Math.random() * 400; }
+          const alpha = 0.4 + 0.6 * Math.abs(Math.sin(t / 1200 + star.twinkle));
+          ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+          ctx.beginPath();
+          ctx.arc(star.x * s, star.y * s, star.r * s, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        break;
+      }
+
+      // 1 — Electric Grid: slow pulsing neon lines
+      case 1: {
+        ctx.fillStyle = '#000a14';
+        ctx.fillRect(0, 0, w, h);
+        BG.gridOffset = (BG.gridOffset + 0.3) % (30 * s);
+        const pulse = 0.15 + 0.1 * Math.sin(t / 800);
+        ctx.strokeStyle = `rgba(0,204,255,${pulse})`;
+        ctx.lineWidth = 1 * s;
+        for (let x = -30*s; x < w + 30*s; x += 30*s) {
+          ctx.beginPath(); ctx.moveTo(x + BG.gridOffset, 0); ctx.lineTo(x + BG.gridOffset, h); ctx.stroke();
+        }
+        for (let y = -30*s; y < h + 30*s; y += 30*s) {
+          ctx.beginPath(); ctx.moveTo(0, y + BG.gridOffset); ctx.lineTo(w, y + BG.gridOffset); ctx.stroke();
+        }
+        // Bright intersections
+        ctx.fillStyle = `rgba(0,255,255,${pulse * 1.5})`;
+        for (let x = -30*s; x < w + 30*s; x += 30*s)
+          for (let y = -30*s; y < h + 30*s; y += 30*s) {
+            ctx.beginPath();
+            ctx.arc(x + BG.gridOffset, y + BG.gridOffset, 1.5*s, 0, Math.PI*2);
+            ctx.fill();
+          }
+        break;
+      }
+
+      // 2 — Lava Lamp: slow rising blobs
+      case 2: {
+        ctx.fillStyle = '#1a0005';
+        ctx.fillRect(0, 0, w, h);
+        if (!BG.blobs) {
+          BG.blobs = Array.from({ length: 6 }, (_, i) => ({
+            x: 60 + i * 55, y: 300 + Math.random() * 150,
+            rx: 25 + Math.random() * 20, ry: 30 + Math.random() * 20,
+            speed: 0.2 + Math.random() * 0.3,
+            phase: Math.random() * Math.PI * 2,
+          }));
+        }
+        BG.blobs.forEach(b => {
+          b.y -= b.speed;
+          b.x += Math.sin(t / 2000 + b.phase) * 0.4;
+          if (b.y < -60) { b.y = 500; b.x = 40 + Math.random() * 320; }
+          const alpha = 0.35 + 0.2 * Math.sin(t / 1500 + b.phase);
+          const g = ctx.createRadialGradient(b.x*s, b.y*s, 0, b.x*s, b.y*s, b.rx*s);
+          g.addColorStop(0, `rgba(255,80,0,${alpha})`);
+          g.addColorStop(1, `rgba(180,0,20,0)`);
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.ellipse(b.x*s, b.y*s, b.rx*s, b.ry*s, 0, 0, Math.PI*2);
+          ctx.fill();
+        });
+        break;
+      }
+
+      // 3 — Matrix Rain: falling green characters
+      case 3: {
+        // Fade rather than clear for trail effect
+        ctx.fillStyle = 'rgba(0,10,0,0.18)';
+        ctx.fillRect(0, 0, w, h);
+        const colW = 14 * s;
+        const cols = Math.floor(w / colW);
+        if (!BG.matrixCols) {
+          BG.matrixCols = Array.from({ length: cols }, () => ({
+            y: Math.random() * -200,
+            speed: 0.8 + Math.random() * 1.2,
+            chars: Array.from({ length: 20 }, () => String.fromCharCode(0x30A0 + Math.random() * 96)),
+          }));
+        }
+        BG.matrixCols.forEach((col, i) => {
+          col.y += col.speed;
+          if (col.y > h / (12*s)) { col.y = Math.random() * -100 / (12*s); }
+          col.chars.forEach((ch, j) => {
+            const alpha = Math.max(0, 1 - j * 0.07);
+            if (j === 0) ctx.fillStyle = `rgba(180,255,180,${alpha})`;
+            else         ctx.fillStyle = `rgba(0,${150 + j*5},0,${alpha})`;
+            ctx.font = `${12*s}px monospace`;
+            ctx.fillText(ch, i * colW, (col.y - j) * 12*s);
+          });
+          // Randomly mutate one char
+          if (Math.random() < 0.05) {
+            const ri = Math.floor(Math.random() * col.chars.length);
+            col.chars[ri] = String.fromCharCode(0x30A0 + Math.random() * 96);
+          }
+        });
+        break;
+      }
+
+      // 4 — Northern Lights: slow aurora shimmer (low-cost version)
+      case 4: {
+        ctx.fillStyle = '#000d08';
+        ctx.fillRect(0, 0, w, h);
+        BG.auroraT = t / 3000;
+        // Draw wide horizontal bands with sinusoidal y-offset — no per-column gradients
+        const bands = [
+          { color: [0, 255, 100],   yBase: 0.22 },
+          { color: [100, 0, 255],   yBase: 0.38 },
+          { color: [0, 200, 255],   yBase: 0.52 },
+        ];
+        // Use one vertical gradient per band (3 total, not hundreds)
+        const steps = Math.ceil(w / (8*s));
+        bands.forEach((band, bi) => {
+          const [r,g,b2] = band.color;
+          for (let xi = 0; xi <= steps; xi++) {
+            const nx = xi / steps;
+            const x  = nx * w;
+            const ny = band.yBase + 0.06 * Math.sin(nx * 5 + BG.auroraT + bi) * Math.cos(nx * 3 - BG.auroraT * 0.6);
+            const bh = 50 * s * (0.6 + 0.4 * Math.sin(nx * 2 + BG.auroraT));
+            const alpha = 0.10 + 0.07 * Math.sin(nx * 4 + BG.auroraT + bi * 1.2);
+            ctx.fillStyle = `rgba(${r},${g},${b2},${alpha})`;
+            ctx.fillRect(x, ny * h, 8*s + 1, bh);
+          }
+        });
+        break;
+      }
+
+      // 5 — Gold Dust: floating particles
+      case 5: {
+        ctx.fillStyle = '#0d0900';
+        ctx.fillRect(0, 0, w, h);
+        if (!BG.particles) {
+          BG.particles = Array.from({ length: 60 }, () => ({
+            x: Math.random() * 400, y: Math.random() * 450,
+            vx: (Math.random() - 0.5) * 0.3, vy: -(Math.random() * 0.4 + 0.1),
+            size: Math.random() * 2 + 0.5,
+            phase: Math.random() * Math.PI * 2,
+          }));
+        }
+        BG.particles.forEach(p => {
+          p.x += p.vx + Math.sin(t / 2000 + p.phase) * 0.2;
+          p.y += p.vy;
+          if (p.y < -5) { p.y = 455; p.x = Math.random() * 400; }
+          const alpha = 0.4 + 0.4 * Math.sin(t / 1000 + p.phase);
+          ctx.fillStyle = `rgba(255,215,0,${alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x*s, p.y*s, p.size*s, 0, Math.PI*2);
+          ctx.fill();
+        });
+        break;
+      }
+
+      // 6 — Crimson Storm: slow diagonal rain streaks
+      case 6: {
+        ctx.fillStyle = '#0d0000';
+        ctx.fillRect(0, 0, w, h);
+        if (!BG.rainDrops) {
+          BG.rainDrops = Array.from({ length: 40 }, () => ({
+            x: Math.random() * 500, y: Math.random() * 450,
+            len: 15 + Math.random() * 25,
+            speed: 1.5 + Math.random() * 1.5,
+            alpha: 0.1 + Math.random() * 0.25,
+          }));
+        }
+        BG.rainDrops.forEach(d => {
+          d.x += d.speed * 0.4; d.y += d.speed;
+          if (d.y > 460) { d.y = -20; d.x = Math.random() * 400; }
+          ctx.strokeStyle = `rgba(200,0,0,${d.alpha})`;
+          ctx.lineWidth = 1 * s;
+          ctx.beginPath();
+          ctx.moveTo(d.x*s, d.y*s);
+          ctx.lineTo((d.x - d.len*0.4)*s, (d.y - d.len)*s);
+          ctx.stroke();
+        });
+        break;
+      }
+
+      // 7 — Cyber City: scrolling skyline silhouette with lit windows
+      case 7: {
+        ctx.fillStyle = '#050510';
+        ctx.fillRect(0, 0, w, h);
+        if (!BG.cityLights) {
+          // Generate building layout once
+          BG.cityLights = { scroll: 0, buildings: [] };
+          let bx = 0;
+          while (bx < 800) {
+            const bw = 20 + Math.random() * 35;
+            const bh = 40 + Math.random() * 180;
+            const windows = [];
+            for (let wy = 8; wy < bh - 8; wy += 14) {
+              for (let wx = 4; wx < bw - 4; wx += 10) {
+                windows.push({ ox: wx, oy: wy, lit: Math.random() > 0.4, flickerPhase: Math.random() * Math.PI * 2 });
+              }
+            }
+            BG.cityLights.buildings.push({ x: bx, w: bw, h: bh, windows });
+            bx += bw + 2 + Math.random() * 8;
+          }
+        }
+        BG.cityLights.scroll = (BG.cityLights.scroll + 0.2) % 400;
+        const sc2 = BG.cityLights.scroll;
+        BG.cityLights.buildings.forEach(b => {
+          const drawX = ((b.x - sc2) % 800 + 800) % 800 - 50;
+          const drawY = h - b.h * s;
+          ctx.fillStyle = '#0a0a1a';
+          ctx.fillRect(drawX, drawY, b.w*s, b.h*s);
+          b.windows.forEach(win => {
+            const flicker = Math.sin(t / 3000 + win.flickerPhase) > 0.92;
+            const isLit = win.lit && !flicker;
+            ctx.fillStyle = isLit ? `rgba(255,200,80,0.7)` : `rgba(30,30,60,0.5)`;
+            ctx.fillRect(drawX + win.ox*s, drawY + win.oy*s, 5*s, 7*s);
+          });
+        });
+        break;
+      }
+
+      // 8 — Deep Ocean: rising bubbles
+      case 8: {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#000a14'); grad.addColorStop(1, '#001428');
+        ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+        if (!BG.bubbles) {
+          BG.bubbles = Array.from({ length: 30 }, () => ({
+            x: Math.random() * 400, y: Math.random() * 450,
+            r: 2 + Math.random() * 6,
+            speed: 0.3 + Math.random() * 0.5,
+            wobble: Math.random() * Math.PI * 2,
+          }));
+        }
+        BG.bubbles.forEach(b => {
+          b.y -= b.speed;
+          b.x += Math.sin(t / 1500 + b.wobble) * 0.4;
+          if (b.y < -10) { b.y = 460; b.x = Math.random() * 400; }
+          const alpha = 0.15 + 0.1 * Math.sin(t / 1000 + b.wobble);
+          ctx.strokeStyle = `rgba(100,200,255,${alpha})`;
+          ctx.lineWidth = 1 * s;
+          ctx.beginPath();
+          ctx.arc(b.x*s, b.y*s, b.r*s, 0, Math.PI*2);
+          ctx.stroke();
+          // Highlight
+          ctx.fillStyle = `rgba(200,240,255,${alpha * 0.5})`;
+          ctx.beginPath();
+          ctx.arc((b.x - b.r*0.3)*s, (b.y - b.r*0.3)*s, b.r*0.3*s, 0, Math.PI*2);
+          ctx.fill();
+        });
+        break;
+      }
+
+      // 9 — Arctic Pulse: slow concentric rings expanding out
+      case 9: {
+        ctx.fillStyle = '#000d14';
+        ctx.fillRect(0, 0, w, h);
+        BG.arcticT = (t / 4000) % 1;
+        for (let i = 0; i < 5; i++) {
+          const phase = (BG.arcticT + i * 0.2) % 1;
+          const radius = phase * Math.max(w, h) * 0.8;
+          const alpha = (1 - phase) * 0.12;
+          ctx.strokeStyle = `rgba(0,255,255,${alpha})`;
+          ctx.lineWidth = 2 * s;
+          ctx.beginPath();
+          ctx.arc(w/2, h/2, radius, 0, Math.PI*2);
+          ctx.stroke();
+        }
+        break;
+      }
+
+      // 10 — Sunset Blaze: animated gradient wash
+      case 10: {
+        BG.sunsetT = t / 5000;
+        const r1 = Math.floor(180 + 40 * Math.sin(BG.sunsetT));
+        const g1 = Math.floor(40  + 20 * Math.sin(BG.sunsetT * 0.7));
+        const grad2 = ctx.createLinearGradient(0, 0, 0, h);
+        grad2.addColorStop(0, `rgb(${r1},${g1},0)`);
+        grad2.addColorStop(0.5, `rgb(120,20,40)`);
+        grad2.addColorStop(1, `rgb(10,0,20)`);
+        ctx.fillStyle = grad2; ctx.fillRect(0, 0, w, h);
+        // Slow horizontal shimmer bands
+        for (let i = 0; i < 3; i++) {
+          const y = h * (0.3 + 0.15*i) + Math.sin(BG.sunsetT * 0.8 + i) * 20*s;
+          const a = 0.06 + 0.03 * Math.sin(BG.sunsetT + i);
+          ctx.fillStyle = `rgba(255,120,0,${a})`;
+          ctx.fillRect(0, y, w, 20*s);
+        }
+        break;
+      }
+
+      // 11 — Toxic Jungle: dripping green tendrils from top
+      case 11: {
+        ctx.fillStyle = '#020d00';
+        ctx.fillRect(0, 0, w, h);
+        if (!BG.jungleVines) {
+          BG.jungleVines = Array.from({ length: 15 }, () => ({
+            x: Math.random() * 400, len: 30 + Math.random() * 120,
+            speed: 0.1 + Math.random() * 0.2, phase: Math.random() * Math.PI * 2,
+          }));
+        }
+        BG.jungleVines.forEach(v => {
+          v.len += v.speed;
+          if (v.len > 200) { v.len = 10; v.x = Math.random() * 400; }
+          const alpha = 0.2 + 0.15 * Math.sin(t / 2000 + v.phase);
+          ctx.strokeStyle = `rgba(0,${150 + Math.floor(80*Math.sin(t/1000+v.phase))},0,${alpha})`;
+          ctx.lineWidth = 2 * s;
+          ctx.beginPath();
+          ctx.moveTo(v.x*s, 0);
+          for (let seg = 0; seg < v.len; seg += 5) {
+            ctx.lineTo((v.x + Math.sin(seg * 0.3 + v.phase) * 8)*s, seg*s);
+          }
+          ctx.stroke();
+          // Drip tip
+          ctx.fillStyle = `rgba(0,255,50,${alpha * 1.5})`;
+          ctx.beginPath();
+          ctx.ellipse(v.x*s, v.len*s, 3*s, 5*s, 0, 0, Math.PI*2);
+          ctx.fill();
+        });
+        break;
+      }
+
+      // 12 — Magenta Void: slow pulsing void geometry (low-cost)
+      case 12: {
+        ctx.fillStyle = '#0d0010';
+        ctx.fillRect(0, 0, w, h);
+        BG.voidT = t / 4000;
+        // Draw filled circles instead of full-canvas radial gradient fills
+        for (let i = 0; i < 4; i++) {
+          const angle = BG.voidT + i * Math.PI / 2;
+          const dist  = 80*s + 30*s * Math.sin(BG.voidT * 0.7 + i);
+          const x = w/2 + Math.cos(angle) * dist;
+          const y = h/2 + Math.sin(angle) * dist;
+          const alpha = 0.18 + 0.1 * Math.sin(BG.voidT * 1.3 + i);
+          ctx.fillStyle = `rgba(200,0,200,${alpha})`;
+          ctx.beginPath();
+          ctx.arc(x, y, 55*s, 0, Math.PI*2);
+          ctx.fill();
+        }
+        ctx.strokeStyle = 'rgba(255,0,200,0.06)'; ctx.lineWidth = 1*s;
+        for (let i = 0; i < 6; i++) {
+          const a = BG.voidT * 0.3 + i * Math.PI / 3;
+          ctx.beginPath();
+          ctx.moveTo(w/2, h/2);
+          ctx.lineTo(w/2 + Math.cos(a)*w, h/2 + Math.sin(a)*h);
+          ctx.stroke();
+        }
+        break;
+      }
+
+      // 13 — Ocean Abyss: deep bioluminescent drift
+      case 13: {
+        const ag = ctx.createLinearGradient(0, 0, 0, h);
+        ag.addColorStop(0, '#000814'); ag.addColorStop(1, '#00050f');
+        ctx.fillStyle = ag; ctx.fillRect(0, 0, w, h);
+        BG.abyssT = t / 5000;
+        // Slow light rays from top — simple alpha rects, no gradient objects
+        for (let i = 0; i < 4; i++) {
+          const rx = w * (0.15 + i * 0.22);
+          const alpha = 0.06 + 0.04 * Math.sin(BG.abyssT + i * 1.3);
+          ctx.fillStyle = `rgba(0,100,200,${alpha})`;
+          ctx.fillRect(rx - 5*s, 0, 30*s, h);
+        }
+        // Bioluminescent dots
+        for (let i = 0; i < 20; i++) {
+          const bx = ((i * 73 + Math.sin(BG.abyssT + i) * 30) % 400 + 400) % 400;
+          const by = ((i * 97 + Math.cos(BG.abyssT * 0.5 + i) * 40) % 450 + 450) % 450;
+          const ba = 0.2 + 0.2 * Math.sin(BG.abyssT * 2 + i);
+          ctx.fillStyle = `rgba(0,200,180,${ba})`;
+          ctx.beginPath(); ctx.arc(bx*s, by*s, 1.5*s, 0, Math.PI*2); ctx.fill();
+        }
+        break;
+      }
+
+      // 14 — Rainbow Prism: slow full-spectrum wave
+      default: {
+        BG.rainbowT = t / 6000;
+        for (let y = 0; y < h; y += 4*s) {
+          const hue = (y / h * 360 + BG.rainbowT * 60) % 360;
+          const wave = Math.sin(y / (20*s) + BG.rainbowT) * 0.08;
+          ctx.fillStyle = `hsla(${hue},80%,8%,${0.94 + wave})`;
+          ctx.fillRect(0, y, w, 2*s);
+        }
+        // Slow shimmer — simple diagonal stripe, no gradient objects
+        for (let i = 0; i < 3; i++) {
+          const bx = (BG.rainbowT * 100 + i * 150) % (w + 100);
+          const hue2 = (BG.rainbowT * 60 + i * 120) % 360;
+          ctx.fillStyle = `hsla(${hue2},100%,70%,0.05)`;
+          ctx.fillRect(bx - 20, 0, 40, h);
+        }
+        break;
+      }
+    }
+  }
+
+  function drawLadder(ctx, canvas) {
+    const s = S.gameScale;
+    const col = LADDER_COLORS[S.currentLadderColorIndex];
+
+    if (col.isRainbow) {
+      const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      g.addColorStop(0,   '#ff0066');
+      g.addColorStop(0.2, '#ff9900');
+      g.addColorStop(0.4, '#ffcc00');
+      g.addColorStop(0.6, '#00ff66');
+      g.addColorStop(0.8, '#00ccff');
+      g.addColorStop(1,   '#b200ff');
+      ctx.strokeStyle = g;
+    } else {
+      ctx.strokeStyle = col.color;
+    }
+
+    ctx.lineWidth = 6 * s;
+    ctx.beginPath();
+    ctx.moveTo(150*s, 0);           ctx.lineTo(150*s, canvas.height);
+    ctx.moveTo(250*s, 0);           ctx.lineTo(250*s, canvas.height);
+    ctx.stroke();
+
+    for (let i = 0; i < canvas.height; i += 40*s) {
+      ctx.beginPath();
+      ctx.moveTo(150*s, i); ctx.lineTo(250*s, i);
       ctx.stroke();
-      
-      for (let i = 0; i < canvas.height; i += 40) {
-        ctx.beginPath();
-        ctx.moveTo(150, i);
-        ctx.lineTo(250, i);
-        ctx.stroke();
-      }
     }
+  }
 
-    function drawCharacter(ctx) {
-      ctx.fillStyle = "#ffcc00";
-      ctx.fillRect(character.x, character.y, character.width, character.height);
+  function drawCharacter(ctx) {
+    if (S.showDefaultCharacter || !ANGLO_POLISH_EDITION) {
+      ctx.fillStyle = '#ffcc00';
+      ctx.fillRect(S.character.x, S.character.y, S.character.width, S.character.height);
+      return;
     }
+    if (S.selectedCharacter) {
+      drawSprite(ctx, S.selectedCharacter, S.character.x, S.character.y, S.character.width);
+    }
+  }
 
-    function drawScore(ctx) {
-      ctx.fillStyle = "#ffcc00";
-      ctx.font = "14px 'Press Start 2P', cursive";
-      ctx.textAlign = "left";
-      ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
-      ctx.shadowBlur = 10;
+  function drawBenchedCube(ctx, canvas) {
+    if (!ANGLO_POLISH_EDITION || S.showDefaultCharacter || !S.selectedCharacter) return;
+    const s = S.gameScale;
+    const cubeSize = 25 * s;
+    const cubeX = canvas.width - 80*s;
+    const cubeY = canvas.height - cubeSize + 2*s;
+    // Cube
+    ctx.fillStyle = '#ffcc00';
+    ctx.fillRect(cubeX, cubeY, cubeSize, cubeSize);
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(cubeX + 2*s, cubeY + cubeSize, cubeSize - 4*s, 3*s);
+    // Label
+    ctx.fillStyle = '#ff0066';
+    ctx.font = `${8*s}px 'Press Start 2P', cursive`;
+    ctx.textAlign = 'center';
+    ctx.shadowColor = 'rgba(255,0,102,0.8)';
+    ctx.shadowBlur = 5*s;
+    ctx.fillText('BENCHED', cubeX + cubeSize/2, cubeY - 8*s);
+    ctx.shadowBlur = 0;
+    ctx.textAlign = 'left';
+  }
 
-      const scoreStr = "Pts: " + score;
-      let startX = 10, startY = 25, lineHeight = 18;
-      for (let i = 0; i < scoreStr.length; i++) {
-        ctx.fillText(scoreStr[i], startX, startY + i * lineHeight);
-      }
+  function drawScore(ctx) {
+    const s = S.gameScale;
+    const name = S.selectedCharacter ? S.selectedCharacter.name : 'Player';
+    let y = 10*s;
+    const lineH = 14*s;
+
+    ctx.fillStyle = '#ffcc00';
+    ctx.font = `${12*s}px 'Press Start 2P', cursive`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.shadowColor = 'rgba(255,204,0,0.8)';
+    ctx.shadowBlur = 8*s;
+
+    for (let i = 0; i < name.length; i++) ctx.fillText(name[i], 10*s, y + i*lineH);
+    y += name.length * lineH + 10*s;
+
+    const scoreStr = 'Pts:' + S.score;
+    for (let i = 0; i < scoreStr.length; i++) ctx.fillText(scoreStr[i], 10*s, y + i*lineH);
+
+    ctx.shadowBlur = 0;
+  }
+
+  function drawGalleryCharacter(ctx, canvas, charData) {
+    const s = S.gameScale;
+    const charSize = 100*s;
+    const spriteX = (400 - 100) / 2 * s;
+    const spriteY = 50*s;
+    drawSprite(ctx, charData, spriteX, spriteY, charSize);
+
+    if (ANGLO_POLISH_EDITION && charData.image) {
+      const imgSize = 200*s;
+      const imgX = (400 - 200) / 2 * s;
+      const imgY = 200*s;
+      ctx.strokeStyle = '#00ffcc';
+      ctx.lineWidth = 3*s;
+      ctx.strokeRect(imgX, imgY, imgSize, imgSize);
+      ctx.drawImage(charData.image, imgX, imgY, imgSize, imgSize);
+      ctx.shadowColor = 'rgba(0,255,204,0.5)';
+      ctx.shadowBlur = 20*s;
+      ctx.strokeRect(imgX, imgY, imgSize, imgSize);
       ctx.shadowBlur = 0;
     }
 
-    /* ===== Game logic ===== */
-    function showMessage(text) {
-      messageBox.innerText = text;
-      messageBox.style.display = "block";
-      freezeFrame = true;
-      setTimeout(() => {
-        messageBox.style.display = "none";
-        freezeFrame = false;
-      }, 2500);
-    }
+    // Name — vertical text top-left, going downward
+    ctx.save();
+    ctx.font = `bold ${13*s}px 'Press Start 2P', cursive`;
+    ctx.fillStyle = '#ffcc00';
+    ctx.shadowColor = 'rgba(255,204,0,0.6)';
+    ctx.shadowBlur = 8*s;
+    ctx.translate(16*s, 20*s);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillText(charData.name.toUpperCase(), 0, 0);
+    const nameWidth = ctx.measureText(charData.name.toUpperCase()).width;
+    ctx.restore();
 
-    function checkColorUnlock(s) {
-      for (let i = 0; i < ladderColors.length; i++) {
-        if (s >= ladderColors[i].unlockScore && !unlockedColors.includes(i)) {
-          unlockedColors.push(i);
-          currentLadderColorIndex = i;
-          showMessage(`🎨 Color Unlocked!\n${ladderColors[i].name}`);
-          return true;
-        }
+    // Role — vertical text left side, just after the name
+    ctx.save();
+    ctx.font = `bold ${10*s}px 'Press Start 2P', cursive`;
+    ctx.fillStyle = '#00ffcc';
+    ctx.shadowColor = 'rgba(0,255,204,0.6)';
+    ctx.shadowBlur = 8*s;
+    ctx.translate(16*s, 20*s + nameWidth + 16*s);
+    ctx.rotate(Math.PI / 2);
+    ctx.fillText(charData.role.toUpperCase(), 0, 0);
+    ctx.restore();
+  }
+
+
+  /* ============================================================
+     6. GAME LOOP
+  ============================================================ */
+
+  const messageBox = document.querySelector('.game-message');
+  const audioEl    = document.querySelector('audio');
+
+  function showMessage(text, duration = 2500) {
+    messageBox.innerText = text;
+    messageBox.style.display = 'block';
+    S.freezeFrame = true;
+    setTimeout(() => { messageBox.style.display = 'none'; S.freezeFrame = false; }, duration);
+  }
+
+  // Expose for edition toggle IIFE
+  window.showMessage = showMessage;
+  window.showCharacterSelect = showCharacterSelect; // forward-declared below
+
+  function getFunnyMessage() {
+    if (!isAngloActive()) return pickRandom(MESSAGES.funny.classic);
+    const id = S.selectedCharacter.id;
+    return pickRandom(MESSAGES.funny[id] || MESSAGES.funny.swarvek);
+  }
+
+  function getResetMessage() {
+    if (!isAngloActive()) return pickRandom(MESSAGES.reset.classic);
+    const id = S.selectedCharacter.id;
+    return pickRandom(MESSAGES.reset[id] || MESSAGES.reset.swarvek);
+  }
+
+  function checkColorUnlock(sc) {
+    for (let i = 0; i < LADDER_COLORS.length; i++) {
+      if (sc >= LADDER_COLORS[i].unlockScore && !S.unlockedColors.includes(i)) {
+        S.unlockedColors.push(i);
+        S.currentLadderColorIndex = i;
+        showMessage(`🎨 Unlocked!\n${LADDER_COLORS[i].name} ladder\n✨ ${BACKGROUNDS[i].name} background`);
+        return true;
       }
-      return false;
+    }
+    return false;
+  }
+
+  // Offscreen canvas: background renders here once, blitted to all visible canvases.
+  // _bgFrame throttles expensive backgrounds to every 3rd frame (~20fps) — plenty
+  // for slow atmospheric animations, but saves ~66% of background draw cost.
+  let _bgCanvas = null;
+  let _bgFrame  = 0;
+
+  function redrawAll() {
+    // Don't redraw during a screen shatter — keeps the old frame frozen under the smash
+    if (window._shatterFreeze) return;
+    // Cull canvases that have been removed from the DOM
+    S.canvases = S.canvases.filter(c => document.contains(c));
+    // Only draw canvases visible in the viewport
+    const visible = S.canvases.filter(c => {
+      const r = c.getBoundingClientRect();
+      return r.bottom >= 0 && r.top <= window.innerHeight;
+    });
+    const targets = visible.length > 0 ? visible : S.canvases.slice(0, 1);
+    if (targets.length === 0) return;
+
+    // Ensure offscreen canvas matches target size
+    const ref = targets[0];
+    if (!_bgCanvas || _bgCanvas.width !== ref.width || _bgCanvas.height !== ref.height) {
+      _bgCanvas = document.createElement('canvas');
+      _bgCanvas.width  = ref.width;
+      _bgCanvas.height = ref.height;
     }
 
-    function showFunnyMessage() {
-      const msg = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-      showMessage(msg);
+    // Draw background onto offscreen canvas — throttled to every 3rd frame.
+    // Atmospheric animations at ~20fps are indistinguishable from 60fps.
+    _bgFrame++;
+    if (_bgFrame % 3 === 0) {
+      const bgCtx = _bgCanvas.getContext('2d');
+      drawBackground(bgCtx, _bgCanvas);
     }
 
-    function update() {
-      canvases.forEach(canvas => {
-        const ctx = canvas.getContext("2d");
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawLadder(ctx, canvas);
-        drawCharacter(ctx);
-        drawScore(ctx);
+    targets.forEach(canvas => {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(_bgCanvas, 0, 0);
+      drawLadder(ctx, canvas);
+      drawCharacter(ctx);
+      drawBenchedCube(ctx, canvas);
+      drawScore(ctx);
+    });
+  }
+
+  // Colour palette for each background theme — used to tint the site background
+  // On unlock, the grid base colour shifts to match the theme —
+  // tinting the phosphor glow without replacing the grid
+  const BG_TINTS = [
+    '#08001a', // Deep Space      — default purple-black
+    '#001428', // Electric Grid   — deep teal
+    '#1a0005', // Lava Lamp       — dark blood red
+    '#001400', // Matrix Rain     — deep green
+    '#001a0d', // Northern Lights — dark emerald
+    '#120d00', // Gold Dust       — dark amber
+    '#180000', // Crimson Storm   — deep crimson
+    '#08051e', // Cyber City      — deep indigo
+    '#00101e', // Deep Ocean      — abyss blue
+    '#001820', // Arctic Pulse    — ice blue-black
+    '#160500', // Sunset Blaze    — dark ember
+    '#031000', // Toxic Jungle    — dark green-black
+    '#0f0020', // Magenta Void    — deep violet
+    '#000a18', // Ocean Abyss     — midnight blue
+    '#0a0018', // Rainbow Prism   — deep purple
+  ];
+
+  window._lastBgTintIdx = -1;
+  function syncSiteBackground() {
+    const idx = S.currentLadderColorIndex;
+    if (idx === window._lastBgTintIdx) return;
+    window._lastBgTintIdx = idx;
+    const tint = BG_TINTS[idx] || '#08001a';
+    document.body.style.backgroundColor = tint;
+    // Also update the wrapper padding area and canvas background to match
+    document.querySelectorAll('.canvas-wrapper').forEach(el => {
+      el.style.background = `radial-gradient(ellipse at center, ${tint}cc 0%, ${tint} 100%)`;
+    });
+    document.querySelectorAll('canvas').forEach(el => {
+      el.style.background = `linear-gradient(135deg, ${tint}aa, ${tint})`;
+    });
+  }
+
+  function update() {
+    syncSiteBackground();
+    redrawAll();
+    if (!S.freezeFrame) {
+      if (S.climbing) {
+        S.character.y -= S.speed;
+        if (S.character.y <= 0) {
+          S.climbing = false;
+          S.score++;
+          const unlocked = checkColorUnlock(S.score);
+          if (!unlocked && S.score % 5 === 0) showMessage(getFunnyMessage());
+        }
+      } else {
+        S.character.y += S.speed;
+        if (S.character.y >= S.groundLevel) S.character.y = S.groundLevel;
+      }
+    }
+    requestAnimationFrame(update);
+  }
+
+  function climb() {
+    if (!S.climbing && S.character.y >= S.groundLevel && !S.freezeFrame) {
+      S.climbing = true;
+      if (S.audioEnabled) { audioEl.currentTime = 0; audioEl.play().catch(() => {}); }
+    }
+  }
+
+  /* ============================================================
+     7. GALLERY
+  ============================================================ */
+
+  function openGallery() {
+    const overlay = document.getElementById('galleryOverlay');
+    overlay.classList.add('active');
+    overlay.innerHTML = '';
+
+    S.galleryCharacters = ANGLO_POLISH_EDITION ? [...CHARACTERS] : [
+      { name: 'Classic Block', color: '#ffcc00', role: 'Default' },
+      { name: 'Red Square',    color: '#ff0066', role: 'Unlock: 5 pts' },
+      { name: 'Blue Cube',     color: '#00ccff', role: 'Unlock: 10 pts' },
+      { name: 'Green Cube',    color: '#00ff66', role: 'Unlock: 15 pts' },
+      { name: 'Purple Block',  color: '#b200ff', role: 'Unlock: 20 pts' },
+    ];
+
+    // Preload photos
+    if (ANGLO_POLISH_EDITION) {
+      S.galleryCharacters.forEach(char => {
+        if (char.id && !char.image) {
+          const img = new Image();
+          img.src = 'images/' + char.id + '.jpg';
+          img.onload = () => { char.image = img; };
+        }
       });
-
-      if (!freezeFrame) {
-        if (climbing) {
-          character.y -= speed;
-          if (character.y <= 0) {
-            climbing = false;
-            score++;
-            const unlocked = checkColorUnlock(score);
-            if (!unlocked && score % 5 === 0) showFunnyMessage();
-          }
-        } else {
-          character.y += speed;
-          if (character.y >= 420) character.y = 420;
-        }
-      }
-      requestAnimationFrame(update);
     }
 
-    function climb() {
-      if (!climbing && character.y >= 420 && !freezeFrame) {
-        climbing = true;
-        if (audioEnabled) {
-          audioEl.currentTime = 0;
-          audioEl.play().catch(() => {});
-        }
-      }
-    }
+    // Default to current character's slide
+    S.currentGalleryIndex = ANGLO_POLISH_EDITION && S.selectedCharacter
+      ? S.galleryCharacters.findIndex(c => c.id === S.selectedCharacter.id)
+      : 0;
+    if (S.currentGalleryIndex < 0) S.currentGalleryIndex = 0;
 
-    /* ===== Controls ===== */
-    document.addEventListener("keydown", (e) => {
-      if (e.code === "Space" || e.key === " ") {
-        climb();
-        e.preventDefault();
+    const content = document.createElement('div');
+    content.className = 'gallery-content';
+    overlay.appendChild(content);
+
+    S.galleryCharacters.forEach((char, index) => {
+      const isCurrentChar = ANGLO_POLISH_EDITION && S.selectedCharacter && char.id === S.selectedCharacter.id;
+      const selectBtnText = isCurrentChar ? '✓ Current Character' : '⚡ Select & Reset';
+
+      const slide = document.createElement('div');
+      slide.className = 'gallery-slide' + (index === S.currentGalleryIndex ? ' active' : '');
+      slide.innerHTML = `
+        <section style="min-height:100vh;display:flex;align-items:center;justify-content:center;">
+          <div class="container">
+            <h2 class="section-title">CHARACTER GALLERY</h2>
+            <div class="game-container">
+              <div class="canvas-wrapper gallery-canvas">
+                <canvas width="400" height="450"></canvas>
+                <button class="game-btn gallery-close-btn">✕</button>
+                <button class="game-btn prev-char-btn gallery-prev-btn">◀</button>
+                <button class="game-btn next-char-btn gallery-next-btn">▶</button>
+              </div>
+              <div class="character-info">
+                ${ANGLO_POLISH_EDITION ? `
+                  <button class="game-btn select-char-btn${isCurrentChar ? ' active' : ''}"
+                          ${isCurrentChar ? 'disabled' : ''}>
+                    ${selectBtnText}
+                  </button>` : ''}
+              </div>
+            </div>
+          </div>
+        </section>`;
+      content.appendChild(slide);
+
+      // Wire canvas
+      const canvas = slide.querySelector('canvas');
+      const sc = S.gameScale;
+      canvas.width  = 400 * sc;
+      canvas.height = 450 * sc;
+      canvas._charData = char;
+
+      // Nav buttons
+      slide.querySelector('.prev-char-btn').onclick = () => navigateGallery(-1);
+      slide.querySelector('.next-char-btn').onclick = () => navigateGallery(1);
+      slide.querySelector('.gallery-close-btn').onclick = closeGallery;
+
+      // Select button
+      if (ANGLO_POLISH_EDITION && !isCurrentChar) {
+        const selectBtn = slide.querySelector('.select-char-btn');
+        if (selectBtn) selectBtn.onclick = () => switchCharacter(char);
       }
     });
 
-    function setupControls(muteBtn, resetBtn) {
-      muteBtns.push(muteBtn);
-      resetBtns.push(resetBtn);
+    startGalleryAnimation();
+  }
 
-      muteBtn.addEventListener("click", () => {
-        audioEnabled = !audioEnabled;
-        muteBtns.forEach(btn => {
-          if (audioEnabled) {
-            btn.innerHTML = "🔊 Sound";
-            btn.classList.add("active");
-          } else {
-            btn.innerHTML = "🔇 Muted";
-            btn.classList.remove("active");
-          }
-        });
-        if (!audioEnabled) audioEl.pause();
+  function navigateGallery(direction) {
+    const slides = document.querySelectorAll('.gallery-slide');
+    slides[S.currentGalleryIndex].classList.remove('active');
+    S.currentGalleryIndex = (S.currentGalleryIndex + direction + S.galleryCharacters.length) % S.galleryCharacters.length;
+    slides[S.currentGalleryIndex].classList.add('active');
+  }
+
+  function startGalleryAnimation() {
+    if (S.galleryAnimationId) cancelAnimationFrame(S.galleryAnimationId);
+    function animate() {
+      document.querySelectorAll('.gallery-overlay canvas').forEach(canvas => {
+        if (!canvas._charData) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGalleryCharacter(ctx, canvas, canvas._charData);
+      });
+      S.galleryAnimationId = requestAnimationFrame(animate);
+    }
+    animate();
+  }
+
+  function closeGallery() {
+    document.getElementById('galleryOverlay').classList.remove('active');
+    if (S.galleryAnimationId) { cancelAnimationFrame(S.galleryAnimationId); S.galleryAnimationId = null; }
+  }
+
+  /* ============================================================
+     YMCA DANCE OVERLAY
+     Full disco stage with all 6 builders dancing.
+     Auto-plays ymca.mp4 on open. No UI chrome — just the dance.
+  ============================================================ */
+  function showYMCADance() {
+    const s = document.createElement('style');
+    s.textContent = `
+      @keyframes ymca-fadein     { from{opacity:0} to{opacity:1} }
+      @keyframes ymca-fadeout    { from{opacity:1} to{opacity:0} }
+      @keyframes ymca-disco-pulse{ 0%,100%{opacity:0.3} 50%{opacity:0.6} }
+      @keyframes ymca-spotlight  { 0%{left:-100px} 100%{left:calc(100% - 100px)} }
+      @keyframes ymca-ball-spin  { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    `;
+    document.head.appendChild(s);
+
+    // Audio via hidden video element so .mp4 works
+    const audio = document.createElement('video');
+    audio.src = 'ymca.mp4';
+    audio.style.display = 'none';
+    audio.playsInline = true;
+    audio.loop = true;
+    audio.volume = 0.8;
+    document.body.appendChild(audio);
+
+    // Stage overlay
+    const overlay = document.createElement('div');
+    overlay.style.cssText = `position:fixed;inset:0;z-index:30000;overflow:hidden;
+      background:radial-gradient(ellipse at center,#2a2a2a 0%,#0a0a0a 100%);
+      animation:ymca-fadein 0.4s ease forwards;`;
+
+    // Disco floor
+    const floor = document.createElement('div');
+    floor.style.cssText = `position:absolute;bottom:0;left:0;right:0;height:150px;
+      background:repeating-linear-gradient(90deg,
+        #ff0066 0px,#ff0066 50px,#00ffcc 50px,#00ffcc 100px,
+        #ffcc00 100px,#ffcc00 150px,#00ff66 150px,#00ff66 200px);
+      opacity:0.3;animation:ymca-disco-pulse 2s ease-in-out infinite;`;
+
+    // Spotlight
+    const spotlight = document.createElement('div');
+    spotlight.style.cssText = `position:absolute;top:-50px;left:-100px;
+      width:200px;height:700px;pointer-events:none;
+      background:radial-gradient(ellipse at top,rgba(255,255,255,0.3) 0%,transparent 60%);
+      animation:ymca-spotlight 8s linear infinite;`;
+
+    // Disco ball
+    const ball = document.createElement('div');
+    ball.style.cssText = `position:absolute;top:20px;right:50px;
+      width:60px;height:60px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%,#fff,#ccc,#999);
+      box-shadow:inset -10px -10px 20px rgba(0,0,0,0.3),0 0 30px rgba(255,255,255,0.5);
+      animation:ymca-ball-spin 4s linear infinite;`;
+    const ballShine = document.createElement('div');
+    ballShine.style.cssText = `position:absolute;top:5px;left:10px;width:15px;height:15px;
+      background:rgba(255,255,255,0.8);border-radius:50%;filter:blur(2px);`;
+    ball.appendChild(ballShine);
+
+    // Close button
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕';
+    closeBtn.style.cssText = `position:absolute;top:14px;right:14px;z-index:10;
+      background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.3);
+      color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;
+      font-family:sans-serif;font-size:16px;display:flex;align-items:center;justify-content:center;
+      transition:background 0.2s;`;
+    closeBtn.addEventListener('mouseenter', () => closeBtn.style.background = 'rgba(255,0,102,0.7)');
+    closeBtn.addEventListener('mouseleave', () => closeBtn.style.background = 'rgba(0,0,0,0.6)');
+
+    // Canvas
+    const cv = document.createElement('canvas');
+    cv.style.cssText = `position:absolute;inset:0;width:100%;height:100%;`;
+
+    overlay.appendChild(floor);
+    overlay.appendChild(spotlight);
+    overlay.appendChild(ball);
+    overlay.appendChild(closeBtn);
+    overlay.appendChild(cv);
+    document.body.appendChild(overlay);
+
+    function resizeCv() {
+      cv.width  = overlay.offsetWidth;
+      cv.height = overlay.offsetHeight;
+    }
+    resizeCv();
+    window.addEventListener('resize', resizeCv);
+
+    // Dance poses
+    const POSES = { neutral:0, Y:1, M:2, C:3, A:4, clap:5 };
+    const SEQUENCE = [
+      POSES.neutral, POSES.Y, POSES.neutral, POSES.M, POSES.clap,
+      POSES.C, POSES.neutral, POSES.A, POSES.clap, POSES.Y
+    ];
+    const OFFSETS  = [0, 2, 4, 1, 3, 5]; // stagger per character
+    const COLORS   = {
+      swarvek:'#c9453b', derek:'#aa96da', michel:'#4ecdc4',
+      greg:'#95e1d3', mario:'#f38181', tobin:'#e53935'
+    };
+    const CHAR_IDS   = ['swarvek','derek','michel','greg','mario','tobin'];
+    const CHAR_NAMES = ['Swarvek','Derek','Michel','Greg','Mario','James'];
+    const DRAW_FNS   = {
+      swarvek: drawSwarvekSprite, derek: drawDerekSprite, michel: drawMichelSprite,
+      greg: drawGregSprite, mario: drawMarioSprite, tobin: drawJamesSprite
+    };
+
+    function drawDanceArms(ctx, x, y, w, h, color, pose) {
+      ctx.fillStyle = color;
+      switch(pose) {
+        case POSES.Y:
+          ctx.fillRect(x - w*0.3,  y + h*0.3,  w*0.4,  h*0.15);
+          ctx.fillRect(x + w*0.9,  y + h*0.3,  w*0.4,  h*0.15);
+          break;
+        case POSES.M:
+          ctx.fillRect(x - w*0.1,  y + h*0.2,  w*0.15, h*0.4);
+          ctx.fillRect(x + w*0.95, y + h*0.2,  w*0.15, h*0.4);
+          break;
+        case POSES.C:
+          ctx.fillRect(x - w*0.2,  y + h*0.35, w*0.3,  h*0.15);
+          ctx.fillRect(x + w*0.7,  y + h*0.5,  w*0.4,  h*0.15);
+          break;
+        case POSES.A:
+          ctx.fillRect(x - w*0.2,  y + h*0.25, w*0.35, h*0.15);
+          ctx.fillRect(x + w*0.85, y + h*0.25, w*0.35, h*0.15);
+          break;
+        case POSES.clap:
+          ctx.fillRect(x + w*0.3,  y + h*0.45, w*0.2,  h*0.15);
+          ctx.fillRect(x + w*0.5,  y + h*0.45, w*0.2,  h*0.15);
+          break;
+        default:
+          ctx.fillRect(x - w*0.1,  y + h*0.5,  w*0.4,  h*0.15);
+          ctx.fillRect(x + w*0.7,  y + h*0.5,  w*0.4,  h*0.15);
+      }
+    }
+
+    let animId;
+    const startTime = Date.now();
+
+    function drawFrame() {
+      const ctx2 = cv.getContext('2d');
+      ctx2.clearRect(0, 0, cv.width, cv.height);
+
+      const elapsed  = (Date.now() - startTime) / 1000;
+      const beatIdx  = Math.floor(elapsed * 2.5) % SEQUENCE.length;
+      const n        = CHAR_IDS.length;
+      const size     = Math.min(cv.width / (n + 1), cv.height * 0.38);
+      const spacing  = cv.width / (n + 1);
+      const groundY  = cv.height * 0.62 - size;
+
+      CHAR_IDS.forEach((id, i) => {
+        const x      = spacing * (i + 1) - size * 0.5;
+        const bounce = Math.sin(elapsed * 5 + i) * size * 0.04;
+        const pose   = SEQUENCE[(beatIdx + OFFSETS[i]) % SEQUENCE.length];
+
+        ctx2.save();
+        ctx2.translate(0, bounce);
+        DRAW_FNS[id](ctx2, x, groundY, size);
+        drawDanceArms(ctx2, x, groundY, size, size, COLORS[id], pose);
+        ctx2.restore();
+
+        // Name label
+        ctx2.save();
+        ctx2.fillStyle = '#fff';
+        ctx2.font = `${Math.max(7, Math.floor(size * 0.13))}px "Press Start 2P", cursive`;
+        ctx2.textAlign = 'center';
+        ctx2.shadowColor = 'rgba(0,0,0,0.9)';
+        ctx2.shadowBlur = 6;
+        ctx2.fillText(CHAR_NAMES[i], x + size * 0.5, groundY + size + size * 0.22);
+        ctx2.restore();
       });
 
-  // Add this flag at the top with your other shared game state
-let isResetting = false;
+      animId = requestAnimationFrame(drawFrame);
+    }
+    drawFrame();
 
+    // Auto-play music
+    audio.play().catch(() => {});
 
-      resetBtn.addEventListener("click", () => {
-  // Get the current ground level (scaled or not)
-  const groundLevel = window.groundLevel || 420;
-  
-   // Prevent clicking during reset or if nothing to reset
-  if (isResetting) return;
-  
-  // Only do ANYTHING if they actually have a score or have moved
-  if (score > 0 || character.y < groundLevel) {
-   isResetting = true; // Lock the button
-   
-    const resetMessages = [
-      "Giving up already? Classic.",
-      "Reset button pressed. Dreams crushed.",
-      "Starting over won't change anything.",
-      "You think THIS time will be different?",
-      "Ah yes, the definition of insanity.",
-      "The reset button: For quitters only.",
-      "Back to square one. Where you belong.",
-      "Did you try turning it off and on again?",
-      "Fresh start? More like fresh failure.",
-      "The ladder remembers your shame.",
-      "Reset: The ultimate admission of defeat.",
-      "Zero points. Zero dignity.",
-      "Everyone gets a participation trophy except you.",
-      "Maybe take a break? Forever?",
-      "The ladder has seen you hit this button 47 times.",
-      "Your high score is now a distant memory.",
-      "This is what rock bottom looks like.",
-      "Maybe ladders just aren't your thing.",
-      "Resetting won't erase the embarrassment.",
-      "The ladder whispers: 'They always come back.'"
-    ];
-    
-    const msg = resetMessages[Math.floor(Math.random() * resetMessages.length)];
-    showMessage(msg);
-    
-     setTimeout(() => {
-      score = 0;
-      character.y = groundLevel;
-      climbing = false;
-      currentLadderColorIndex = 0;
-      unlockedColors = [0];
-      freezeFrame = false;
-      audioEl.pause();
-      audioEl.currentTime = 0;
-      isResetting = false; // Unlock the button after reset completes
-    }, 2500);
+    // Close
+    function closeYMCA() {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resizeCv);
+      audio.pause();
+      audio.remove();
+      s.remove();
+      overlay.style.animation = 'ymca-fadeout 0.35s ease forwards';
+      setTimeout(() => overlay.remove(), 400);
+    }
+    closeBtn.addEventListener('click', e => { e.stopPropagation(); closeYMCA(); });
   }
-  // If they haven't played, button does NOTHING (no else block)
-});
+  window.showYMCADance = showYMCADance;
+
+  /* ============================================================
+     VAN INTRO
+  ============================================================ */
+  function showVanIntro(onComplete) {
+    const s = document.createElement('style');
+    s.textContent = `
+      @keyframes van-drive-in   { from { transform:translateX(110vw) } to { transform:translateX(max(10px, calc(50vw - 240px))) } }
+      @keyframes van-drive-out  { from { transform:translateX(max(10px, calc(50vw - 240px))) } to { transform:translateX(-110vw) } }
+    `;
+    document.head.appendChild(s);
+
+    const van = document.createElement('div');
+    van.style.cssText = `
+      position:fixed; bottom:18%; left:0;
+      width:480px; height:130px;
+      z-index:10002; pointer-events:none;
+      transform:translateX(110vw);
+    `;
+
+    van.innerHTML = `<svg width="480" height="130" viewBox="-220 0 480 130" xmlns="http://www.w3.org/2000/svg">
+      <!-- Body -->
+      <rect x="10" y="30" width="240" height="85" rx="10" fill="#f0f0f0"/>
+      <!-- Cab -->
+      <rect x="10" y="16" width="88" height="72" rx="10" fill="#fafafa"/>
+      <!-- Windscreen -->
+      <rect x="15" y="22" width="68" height="52" rx="5" fill="rgba(100,180,255,0.55)"/>
+      <!-- Roof rack on top of cab only -->
+      <rect x="12" y="10" width="84" height="7" rx="2" fill="#444"/>
+      <!-- Big bright beams projecting far forward from each spotlight -->
+      <polygon points="26,7 -210,-35 -210,50 26,10" fill="url(#beam1)"/>
+      <polygon points="52,7 -184,-30 -184,45 52,10" fill="url(#beam2)"/>
+      <!-- Spot housing 1 -->
+      <rect x="18" y="2" width="16" height="12" rx="3" fill="#222"/>
+      <rect x="19" y="3" width="14" height="8" rx="2" fill="#fffde0" filter="url(#glow)"/>
+      <!-- Spot housing 2 -->
+      <rect x="44" y="2" width="16" height="12" rx="3" fill="#222"/>
+      <rect x="45" y="3" width="14" height="8" rx="2" fill="#fffde0" filter="url(#glow)"/>
+      <!-- Side text -->
+      <text x="158" y="68" font-family="'Press Start 2P',cursive" font-size="12" fill="#ff0066" text-anchor="middle" filter="url(#pglow)">ANGLO</text>
+      <text x="158" y="86" font-family="'Press Start 2P',cursive" font-size="12" fill="#ff0066" text-anchor="middle" filter="url(#pglow)">POLISH</text>
+      <text x="158" y="102" font-family="'Press Start 2P',cursive" font-size="8" fill="#ff0066" text-anchor="middle" filter="url(#pglow)">BUILDERS</text>
+      <!-- Rear door lines -->
+      <line x1="222" y1="34" x2="222" y2="112" stroke="#ccc" stroke-width="1.5"/>
+      <line x1="236" y1="34" x2="236" y2="112" stroke="#ccc" stroke-width="1.5"/>
+      <!-- Wheel 1 -->
+      <circle cx="60" cy="118" r="16" fill="#111"/>
+      <circle cx="60" cy="118" r="7" fill="#888"/>
+      <circle cx="60" cy="118" r="3" fill="#555"/>
+      <!-- Wheel 2 -->
+      <circle cx="200" cy="118" r="16" fill="#111"/>
+      <circle cx="200" cy="118" r="7" fill="#888"/>
+      <circle cx="200" cy="118" r="3" fill="#555"/>
+      <!-- Defs -->
+      <defs>
+        <radialGradient id="beam1" cx="0%" cy="50%" r="100%">
+          <stop offset="0%" stop-color="rgba(255,255,180,0.7)"/>
+          <stop offset="100%" stop-color="rgba(255,255,100,0)"/>
+        </radialGradient>
+        <radialGradient id="beam2" cx="0%" cy="50%" r="100%">
+          <stop offset="0%" stop-color="rgba(255,255,180,0.65)"/>
+          <stop offset="100%" stop-color="rgba(255,255,100,0)"/>
+        </radialGradient>
+        <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="pglow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+    </svg>`;
+
+    document.body.appendChild(van);
+
+    // Drive in
+    van.style.animation = 'van-drive-in 1s cubic-bezier(0.2,0,0.4,1) forwards';
+
+    van.addEventListener('animationend', () => {
+      // Beep
+      try {
+        const ac = new AudioContext(), o = ac.createOscillator(), g = ac.createGain();
+        o.connect(g); g.connect(ac.destination);
+        o.frequency.setValueAtTime(480, ac.currentTime);
+        o.frequency.setValueAtTime(360, ac.currentTime+0.15);
+        g.gain.setValueAtTime(0.2, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime+0.4);
+        o.start(); o.stop(ac.currentTime+0.4);
+      } catch(e){}
+
+      // Pause — long enough to read the logo — then drive out
+      setTimeout(() => {
+        van.style.animation = 'van-drive-out 0.5s cubic-bezier(0.6,0,1,1) forwards';
+        van.addEventListener('animationend', () => {
+          van.remove(); s.remove();
+          onComplete();
+        }, { once: true });
+      }, 2000);
+    }, { once: true });
+  }
+  window.showVanIntro = showVanIntro;
+
+  function showCubeIntro(onComplete) {
+    const s = document.createElement('style');
+    s.textContent = `
+      @keyframes cube-bounce-in {
+        0%   { transform: translateX(-50%) translateY(-120vh) rotate(0deg); }
+        55%  { transform: translateX(-50%) translateY(0px) rotate(360deg); }
+        70%  { transform: translateX(-50%) translateY(-60px) rotate(400deg) scaleY(1); }
+        82%  { transform: translateX(-50%) translateY(0px) rotate(450deg) scaleX(1.3) scaleY(0.7); }
+        90%  { transform: translateX(-50%) translateY(-25px) rotate(470deg); }
+        100% { transform: translateX(-50%) translateY(0px) rotate(480deg) scaleX(1) scaleY(1); }
+      }
+      @keyframes cube-bounce-out {
+        0%   { transform: translateX(-50%) translateY(0px) rotate(480deg); }
+        30%  { transform: translateX(-50%) translateY(-80px) rotate(520deg); }
+        100% { transform: translateX(150vw) translateY(0px) rotate(720deg); }
+      }
+      @keyframes cube-glow-pulse {
+        0%,100% { box-shadow: 0 0 20px #ffcc00, 0 0 40px rgba(255,204,0,0.5); }
+        50%     { box-shadow: 0 0 40px #ffcc00, 0 0 80px rgba(255,204,0,0.8); }
+      }
+    `;
+    document.head.appendChild(s);
+
+    const cube = document.createElement('div');
+    cube.style.cssText = `
+      position:fixed; bottom:18%; left:50%;
+      width:80px; height:80px;
+      background:#ffcc00;
+      border:3px solid #ffaa00;
+      border-radius:8px;
+      z-index:10002; pointer-events:none;
+      transform: translateX(-50%) translateY(-120vh);
+      animation: cube-bounce-in 1.1s cubic-bezier(0.2,0,0.4,1) forwards,
+                 cube-glow-pulse 0.6s ease-in-out 1.1s infinite;
+    `;
+
+    document.body.appendChild(cube);
+
+    // Thud sound on landing
+    cube.addEventListener('animationend', (e) => {
+      if (e.animationName !== 'cube-bounce-in') return;
+      try {
+        const ac = new AudioContext();
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.connect(g); g.connect(ac.destination);
+        o.type = 'square';
+        o.frequency.setValueAtTime(120, ac.currentTime);
+        o.frequency.exponentialRampToValueAtTime(40, ac.currentTime + 0.15);
+        g.gain.setValueAtTime(0.3, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.25);
+        o.start(); o.stop(ac.currentTime + 0.25);
+      } catch(e) {}
+
+      // Pause then bounce off
+      setTimeout(() => {
+        cube.style.animation = 'cube-bounce-out 0.6s cubic-bezier(0.5,0,1,1) forwards';
+        cube.addEventListener('animationend', () => {
+          cube.remove(); s.remove();
+          onComplete();
+        }, { once: true });
+      }, 800);
+    }, { once: true });
+  }
+  window.showCubeIntro = showCubeIntro;
+
+
+
+
+
+
+
+  /* ============================================================
+     8. CHARACTER SELECT
+  ============================================================ */
+
+  function showCharacterSelect() {
+    const overlay = document.getElementById('characterSelect');
+    const grid    = document.getElementById('characterGrid');
+
+    // Reset override styles
+    overlay.style.cssText = '';
+    grid.style.cssText = '';
+    grid.innerHTML = '';
+
+    CHARACTERS.forEach(char => {
+      const card = document.createElement('div');
+      card.className = 'character-card';
+      card.innerHTML = `
+        <div class="character-preview"
+             style="background:${char.color}; overflow:hidden; position:relative;">
+          <img src="images/${char.id}.jpg" alt="${char.name}"
+               style="width:100%;height:100%;object-fit:cover;display:block;"
+               onerror="this.style.display='none';">
+        </div>
+        <div class="character-card-name">${char.name}</div>
+        <div class="character-card-role">${char.role}</div>`;
+
+      card.addEventListener('click', () => {
+        S.selectedCharacter    = char;
+        S.showDefaultCharacter = false;
+        overlay.classList.remove('active');
+        stopPolishAudioLoop();
+        // Restore canvas wrappers and controls hidden during intro
+        document.querySelectorAll('.canvas-wrapper').forEach(w => w.style.visibility = '');
+        document.querySelectorAll('.game-controls').forEach(el => el.style.visibility = '');
+        if (window.syncPageTitle) window.syncPageTitle();
+        showMessage(`Now playing as ${char.name}!`);
+        redrawAll();
+        if (window.updateButtonVisibility) window.updateButtonVisibility();
+      });
+
+      grid.appendChild(card);
+    });
+
+    // Team photo card — spans across grid below characters
+    const teamCard = document.createElement('div');
+    teamCard.className = 'team-photo-card';
+    teamCard.style.cursor = 'pointer';
+    teamCard.innerHTML = `
+      <img src="images/team.jpg" alt="Anglo Polish Builders Team" onerror="this.parentElement.style.display='none'">
+      <div class="team-label">▶ PLAY VIDEO ✦ THE TEAM ✦</div>
+    `;
+    teamCard.addEventListener('click', () => {
+      const lightbox = document.createElement('div');
+      lightbox.style.cssText = `position:fixed;inset:0;z-index:30000;
+        background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;
+        cursor:pointer;animation:credits-fadein 0.3s ease forwards;`;
+
+      const box = document.createElement('div');
+      box.style.cssText = `position:relative;width:min(90vw,860px);max-height:90vh;
+        border:2px solid #00ffcc;border-radius:10px;overflow:hidden;
+        box-shadow:0 0 40px rgba(0,255,204,0.4);`;
+      box.addEventListener('click', e => e.stopPropagation());
+
+      const video = document.createElement('video');
+      video.src = 'team.mp4';
+      video.style.cssText = `width:100%;max-height:80vh;display:block;background:#000;`;
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = '✕';
+      closeBtn.style.cssText = `position:absolute;top:10px;right:10px;z-index:1;
+        background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.3);
+        color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;
+        font-size:14px;display:flex;align-items:center;justify-content:center;
+        transition:background 0.2s;`;
+      closeBtn.addEventListener('mouseenter', () => closeBtn.style.background = 'rgba(255,0,102,0.7)');
+      closeBtn.addEventListener('mouseleave', () => closeBtn.style.background = 'rgba(0,0,0,0.6)');
+
+      const close = () => {
+        video.pause();
+        lightbox.style.animation = 'credits-fadeout 0.25s ease forwards';
+        setTimeout(() => lightbox.remove(), 280);
+      };
+      closeBtn.addEventListener('click', close);
+      lightbox.addEventListener('click', close);
+
+      box.appendChild(video);
+      box.appendChild(closeBtn);
+      lightbox.appendChild(box);
+      document.body.appendChild(lightbox);
+    });
+    grid.appendChild(teamCard);
+
+    overlay.classList.add('active');
+    startPolishAudioLoop();
+  }
+
+  function switchCharacter(char) {
+    S.selectedCharacter    = char;
+    S.showDefaultCharacter = false;
+    S.score                = 0;
+    S.character.y          = S.groundLevel;
+    S.climbing             = false;
+    S.currentLadderColorIndex = 0;
+    S.unlockedColors       = [0];
+    S.freezeFrame          = false;
+    audioEl.pause();
+    audioEl.currentTime = 0;
+    closeGallery();
+    showMessage(`Now playing as ${char.name}!\nScore reset to 0`);
+    if (window.updateButtonVisibility) window.updateButtonVisibility();
+  }
+
+
+  /* ============================================================
+     10. POLISH AUDIO
+  ============================================================ */
+
+  function initPolishAudio() {
+    if (!S.polishAudio) {
+      S.polishAudio = new Audio('polish.mp3');
+      S.polishAudio.volume = 0.7;
+    }
+  }
+
+  function playPolishAudio() {
+    const pa = S.polishAudio;
+    if (!pa || S.climbing || S.freezeFrame) return;
+    const go = () => {
+      const maxStart = Math.max(0, pa.duration - 30);
+      pa.currentTime = Math.random() * maxStart;
+      pa.play().catch(() => {});
+      setTimeout(() => { if (pa) pa.pause(); }, 30000);
+    };
+    if (pa.readyState >= 1) go();
+    else { pa.addEventListener('loadedmetadata', go, { once: true }); pa.load(); }
+  }
+
+  function startPolishAudioLoop() {
+    stopPolishAudioLoop();
+    initPolishAudio();
+    playPolishAudio();
+    S.polishAudioInterval = setInterval(playPolishAudio, 180000);
+  }
+
+  function stopPolishAudioLoop() {
+    if (S.polishAudioInterval) { clearInterval(S.polishAudioInterval); S.polishAudioInterval = null; }
+    if (S.polishAudio) { S.polishAudio.pause(); S.polishAudio.currentTime = 0; }
+  }
+
+
+  /* ============================================================
+     12. CONTROLS  — buttons, section wiring, scroll cloning
+  ============================================================ */
+
+  const muteBtns   = [];
+  const resetBtns  = [];
+  const galleryBtns = [];
+
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' || e.key === ' ') { climb(); e.preventDefault(); }
+  });
+
+  function setupControls(muteBtn, resetBtn, galleryBtn) {
+    muteBtns.push(muteBtn);
+    resetBtns.push(resetBtn);
+    if (galleryBtn) galleryBtns.push(galleryBtn);
+
+    // Mute / unmute
+    muteBtn.addEventListener('click', () => {
+      S.audioEnabled = !S.audioEnabled;
+      muteBtns.forEach(btn => {
+        btn.innerHTML = S.audioEnabled ? '🔊' : '🔇 Muted';
+        btn.classList.toggle('active', S.audioEnabled);
+      });
+      if (!S.audioEnabled) audioEl.pause();
+    });
+
+    // Reset
+    resetBtn.addEventListener('click', () => {
+      if (S.isResetting) return;
+      if (S.score > 0 || S.character.y < S.groundLevel) {
+        S.isResetting = true;
+        showMessage(getResetMessage());
+        setTimeout(() => {
+          S.score                   = 0;
+          S.character.y             = S.groundLevel;
+          S.climbing                = false;
+          S.currentLadderColorIndex = 0;
+          S.unlockedColors          = [0];
+          S.freezeFrame             = false;
+          S.isResetting             = false;
+          audioEl.pause();
+          audioEl.currentTime = 0;
+          // Reset animated background state so it restarts cleanly
+          Object.keys(BG).forEach(k => { BG[k] = (typeof BG[k] === 'number') ? 0 : null; });
+        }, 2500);
+      }
+    });
+
+    if (galleryBtn) galleryBtn.addEventListener('click', openGallery);
+  }
+
+  /* ============================================================
+     VIRTUAL SCROLL / MEMORY MANAGEMENT
+     Sections are cloned infinitely in both directions as the user
+     scrolls, but we only keep ~5 alive at any time.
+
+     wireSection()  — registers a new section's canvas + buttons
+     unwireSection() — deregisters and removes a section, freeing
+                       its canvas from the redrawAll() loop and
+                       unplugging its buttons from the global arrays
+     pruneOffscreenSections() — called on every scroll event;
+                       removes any section more than 2 viewport
+                       heights away from the visible area.
+
+     Without this, every cloned section would keep its canvas
+     running a full rAF draw loop forever — after a few minutes
+     of scrolling you'd have dozens of canvases eating memory
+     and tanking performance.
+  ============================================================ */
+  function unwireSection(section) {
+    const canvas = section.querySelector('canvas');
+    if (canvas) {
+      // Remove from S.canvases so redrawAll stops drawing it
+      S.canvases = S.canvases.filter(c => c !== canvas);
+      // Remove from button arrays
+      const muteBtn   = section.querySelector('.mute-btn');
+      const resetBtn  = section.querySelector('.reset-btn');
+      const galleryBtn = section.querySelector('.gallery-btn');
+      if (muteBtn)   { const i = muteBtns.indexOf(muteBtn);     if (i > -1) muteBtns.splice(i, 1); }
+      if (resetBtn)  { const i = resetBtns.indexOf(resetBtn);   if (i > -1) resetBtns.splice(i, 1); }
+      if (galleryBtn){ const i = galleryBtns.indexOf(galleryBtn); if (i > -1) galleryBtns.splice(i, 1); }
+    }
+    section.remove();
+  }
+
+  function pruneOffscreenSections() {
+    const sections = Array.from(document.querySelectorAll('.game-section'));
+    const vh = window.innerHeight;
+    const buffer = vh * 2; // keep sections within 2 screens of viewport
+
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      if (rect.bottom < -buffer || rect.top > vh + buffer) {
+        unwireSection(section);
+      }
+    });
+  }
+
+  function wireSection(section) {
+    const canvas    = section.querySelector('canvas');
+    const muteBtn   = section.querySelector('.mute-btn');
+    const resetBtn  = section.querySelector('.reset-btn');
+    const galleryBtn = section.querySelector('.gallery-btn');
+    if (!canvas || !muteBtn || !resetBtn) return;
+
+    // Always make sure this section is visible
+    const wrapper = section.querySelector('.canvas-wrapper');
+    if (wrapper) wrapper.style.visibility = '';
+    const controls = section.querySelector('.game-controls');
+    if (controls) controls.style.visibility = '';
+
+    // Scale canvas immediately
+    canvas.width  = 400 * S.gameScale;
+    canvas.height = 450 * S.gameScale;
+
+    S.canvases.push(canvas);
+    canvas.addEventListener('click', climb);
+    canvas.addEventListener('touchstart', climb, { passive: true });
+    setupControls(muteBtn, resetBtn, galleryBtn);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const template = document.querySelector('.game-section');
+    if (!template) return;
+
+    wireSection(template);
+
+    // Pre-clone 2 sections so the page is scrollable immediately
+    for (let i = 0; i < 2; i++) {
+      const clone = template.cloneNode(true);
+      document.body.appendChild(clone);
+      wireSection(clone);
     }
 
-    /* ===== Section setup ===== */
-    function wireSection(section) {
-      const canvas = section.querySelector("canvas");
-      const muteBtn = section.querySelector(".mute-btn");
-      const resetBtn = section.querySelector(".reset-btn");
-      
-      if (!canvas || !muteBtn || !resetBtn) return;
-
-      canvases.push(canvas);
-      canvas.addEventListener("click", climb);
-      setupControls(muteBtn, resetBtn);
-    }
-
-    /* ===== Infinite scroll ===== */
-    window.addEventListener("DOMContentLoaded", () => {
-      const template = document.querySelector(".game-section");
-      if (!template) return;
-
-      wireSection(template);
-
-      // Add initial sections
-      for (let i = 0; i < 2; i++) {
+    // Infinite scroll — clone more sections in both directions
+    window.addEventListener('scroll', () => {
+      // Scrolling down — append at bottom
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
         const clone = template.cloneNode(true);
         document.body.appendChild(clone);
         wireSection(clone);
       }
-
-      // Infinite scroll
-      window.addEventListener("scroll", () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
-          const clone = template.cloneNode(true);
-          document.body.appendChild(clone);
-          wireSection(clone);
-        }
-      });
-
-      update();
+      // Scrolling up — prepend at top, adjust scroll position so page doesn't jump
+      if (window.scrollY < 300) {
+        const clone = template.cloneNode(true);
+        const firstSection = document.querySelector('.game-section');
+        document.body.insertBefore(clone, firstSection);
+        wireSection(clone);
+        window.scrollBy(0, clone.offsetHeight);
+      }
+      // Remove sections that are far off screen to free memory
+      pruneOffscreenSections();
     });
+
+    update();
+  });
+
+  </script>
+
+  <!-- ============================================================
+       SCALE MODULE
+       Runs once on load; adjusts canvas dimensions and speed
+       for HiDPI / ultra-wide screens.
+       Does NOT redefine update/climb/drawLadder — those live
+       above in the main script.
+  ============================================================ -->
+  <script>
+  (function initScale() {
+    const w = window.screen.width;
+    let sc = 1;
+    if      (w >= 5120) sc = 4.5;
+    else if (w >= 3840) sc = 3.5;
+    else if (w >= 2560) sc = 2.5;
+    else if (w >= 1920) sc = 1.75;
+
+    S.gameScale   = sc;
+    S.groundLevel = 420 * sc;
+    S.speed       = 4 * sc;
+
+    window.addEventListener('load', () => {
+      // Scale character position and size
+      S.character.x      = 187 * sc;
+      S.character.y      = 420 * sc;
+      S.character.width  = 30  * sc;
+      S.character.height = 30  * sc;
+
+      // Scale any canvases already in the DOM
+      document.querySelectorAll('canvas').forEach(canvas => {
+        canvas.width  = 400 * sc;
+        canvas.height = 450 * sc;
+      });
+    });
+  })();
+  </script>
+
+  <!-- ============================================================
+       INTRO MODULE
+       Glass-break splash screen.  Fires immediately as an IIFE
+       so it covers the page before any content renders.
+  ============================================================ -->
+  <script>
+  (function initIntro() {
+    function playGlassBreak() {
+      try {
+        const a = new Audio('glass-break-explosion.mp3');
+        a.volume = 0.7;
+        a.play().catch(() => {});
+      } catch(e) {}
+    }
+    window.playGlassBreak = playGlassBreak;
+
+    function shatterScreen(overlay) {
+      const mobile = window.innerWidth <= 768;
+      const cols = mobile ? 4 : 8;
+      const rows = mobile ? 3 : 6;
+      const pw = window.innerWidth  / cols;
+      const ph = window.innerHeight / rows;
+      const dur = mobile ? 0.6 : 1.0;
+      overlay.style.opacity = '0';
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const piece = document.createElement('div');
+          piece.className = 'glass-piece';
+          const px = c * pw, py = r * ph;
+          const cx2 = window.innerWidth / 2, cy2 = window.innerHeight / 2;
+          const angle = Math.atan2(py+ph/2-cy2, px+pw/2-cx2);
+          const dist  = mobile ? 300 : 500 + Math.random()*300;
+          const fx = Math.cos(angle)*dist;
+          const fy = Math.sin(angle)*dist + (mobile ? 100 : Math.random()*200+200);
+          const rot = (Math.random()-0.5)*360;
+          piece.style.cssText = `left:${px}px;top:${py}px;width:${pw}px;height:${ph}px;
+            --piece-x:${-px}px;--piece-y:${-py}px;
+            --fall-x:${fx}px;--fall-y:${fy}px;--fall-rot:${rot}deg;
+            background:rgba(10,10,10,0.95);
+            ${mobile ? '' : 'backdrop-filter:blur(10px);'}
+            border:1px solid rgba(255,255,255,0.2);
+            animation-delay:${Math.random()*0.1}s;
+            animation-duration:${dur}s;`;
+          if (!mobile) {
+            const clone = overlay.cloneNode(true);
+            Object.assign(clone.style, { position:'absolute', left:`${-px}px`, top:`${-py}px`, width:'100vw', height:'100vh', opacity:'1' });
+            piece.appendChild(clone);
+          } else {
+            piece.style.background = `rgba(${Math.random()*50+10|0},${Math.random()*50+10|0},${Math.random()*50+10|0},0.9)`;
+          }
+          document.body.appendChild(piece);
+        }
+      }
+    }
+    window.shatterScreen = shatterScreen;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'intro-overlay';
+    overlay.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;
+      background:#05000f;z-index:10000;overflow:hidden;
+      display:flex;flex-direction:column;justify-content:center;align-items:center;`;
+
+    // Inject intro-specific styles
+    const introStyle = document.createElement('style');
+    introStyle.textContent = `
+      @keyframes intro-flicker {
+        0%,19%,21%,23%,25%,54%,56%,100% { opacity:1; }
+        20%,24%,55% { opacity:0.4; }
+      }
+      @keyframes intro-scanline {
+        0% { transform:translateY(-100%); }
+        100% { transform:translateY(100vh); }
+      }
+      @keyframes intro-char-float {
+        0%,100% { transform:translateY(0px); }
+        50% { transform:translateY(-8px); }
+      }
+      @keyframes intro-ladder-scroll {
+        0%   { transform: translateY(-40px); }
+        100% { transform: translateY(0px); }
+      }
+        0% { opacity:0; transform:scale(1.4) translateY(-20px); letter-spacing:0.5em; }
+        100% { opacity:1; transform:scale(1) translateY(0); letter-spacing:0.08em; }
+      }
+      @keyframes intro-sub-in {
+        0% { opacity:0; transform:translateY(15px); }
+        100% { opacity:1; transform:translateY(0); }
+      }
+      @keyframes intro-btn-pulse {
+        0%,100% { box-shadow:0 0 15px rgba(255,0,102,0.5), 0 0 30px rgba(255,0,102,0.2); }
+        50% { box-shadow:0 0 35px rgba(255,0,102,0.9), 0 0 70px rgba(255,0,102,0.4), 0 0 100px rgba(255,0,102,0.2); }
+      }
+
+        0% { transform:translateY(0); }
+        100% { transform:translateY(40px); }
+      }
+      @keyframes intro-rung-glow {
+        0%,100% { stroke:rgba(0,255,204,0.6); }
+        50% { stroke:rgba(0,255,204,1); filter:drop-shadow(0 0 6px #00ffcc); }
+      }
+      @keyframes intro-grid-drift {
+        0% { background-position:0 0; }
+        100% { background-position:0 40px; }
+      }
+      .intro-char-sprite { animation: intro-char-float 2s ease-in-out infinite; }
+      .intro-char-sprite:nth-child(2) { animation-delay:0.3s; }
+      .intro-char-sprite:nth-child(3) { animation-delay:0.6s; }
+      .intro-char-sprite:nth-child(4) { animation-delay:0.9s; }
+      .intro-char-sprite:nth-child(5) { animation-delay:1.2s; }
+      .intro-char-sprite:nth-child(6) { animation-delay:1.5s; }
+
+      /* Landscape mobile: show compact side-by-side layout */
+      @media (max-height: 500px) and (orientation: landscape) {
+        #intro-portrait { display: none !important; }
+        #intro-landscape { display: flex !important; }
+      }
+      /* Portrait / desktop: show normal layout */
+      @media not ((max-height: 500px) and (orientation: landscape)) {
+        #intro-portrait { display: flex; }
+        #intro-landscape { display: none !important; }
+      }
+    `;
+    document.head.appendChild(introStyle);
+
+    overlay.innerHTML = `
+      <!-- Grid background -->
+      <div style="position:absolute;inset:0;z-index:0;pointer-events:none;
+        background-image:
+          repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(180,0,255,0.12) 39px,rgba(180,0,255,0.12) 40px),
+          repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(180,0,255,0.12) 39px,rgba(180,0,255,0.12) 40px);
+        animation:intro-grid-drift 2s linear infinite;will-change:background-position;"></div>
+
+      <!-- Scanline sweep -->
+      <div style="position:absolute;left:0;width:100%;height:80px;z-index:1;pointer-events:none;
+        background:linear-gradient(180deg,transparent,rgba(0,255,204,0.04),transparent);
+        animation:intro-scanline 4s linear infinite;"></div>
+
+      <!-- Horizon glow -->
+      <div style="position:absolute;bottom:0;left:0;width:100%;height:35%;z-index:0;pointer-events:none;
+        background:radial-gradient(ellipse 100% 60% at 50% 100%,rgba(255,0,102,0.18) 0%,transparent 70%);"></div>
+
+      <!-- Left ladder decoration -->
+      <div style="position:absolute;left:clamp(10px,4vw,60px);top:0;bottom:0;z-index:1;pointer-events:none;opacity:0.35;">
+        <svg width="60" height="100%" viewBox="0 0 60 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation:intro-ladder-scroll 1s linear infinite">
+            <line x1="15" y1="0" x2="15" y2="900" stroke="#00ffcc" stroke-width="4"/>
+            <line x1="45" y1="0" x2="45" y2="900" stroke="#00ffcc" stroke-width="4"/>
+            ${Array.from({length:25},(_,i)=>`<line x1="15" y1="${i*40}" x2="45" y2="${i*40}" stroke="#00ffcc" stroke-width="3" style="animation:intro-rung-glow 2s ease-in-out ${(i*0.08).toFixed(2)}s infinite"/>`).join('')}
+          </g>
+        </svg>
+      </div>
+
+      <!-- Right ladder decoration -->
+      <div style="position:absolute;right:clamp(10px,4vw,60px);top:0;bottom:0;z-index:1;pointer-events:none;opacity:0.35;">
+        <svg width="60" height="100%" viewBox="0 0 60 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <g style="animation:intro-ladder-scroll 1s linear infinite;animation-delay:0.5s">
+            <line x1="15" y1="0" x2="15" y2="900" stroke="#ff0066" stroke-width="4"/>
+            <line x1="45" y1="0" x2="45" y2="900" stroke="#ff0066" stroke-width="4"/>
+            ${Array.from({length:25},(_,i)=>`<line x1="15" y1="${i*40}" x2="45" y2="${i*40}" stroke="#ff0066" stroke-width="3"/>`).join('')}
+          </g>
+        </svg>
+      </div>
+
+
+      <!-- PORTRAIT layout -->
+      <div id="intro-portrait" style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:0;max-width:700px;width:100%;padding:1rem 2rem;">
+
+        <!-- LADDER LOOP logo -->
+        <div style="font-family:'Press Start 2P',cursive;
+          font-size:clamp(2rem,7vw,5rem);
+          color:#00ffcc;
+          text-shadow:0 0 20px #00ffcc,0 0 50px rgba(0,255,204,0.5),0 0 100px rgba(0,255,204,0.2);
+          animation:intro-logo-in 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both, intro-flicker 8s ease-in-out 3s infinite;
+          line-height:1.1;text-align:center;letter-spacing:0.08em;">
+          LADDER<br>LOOP
+        </div>
+
+        <!-- Divider line -->
+        <div style="width:80%;height:2px;margin:1.4rem 0;
+          background:linear-gradient(90deg,transparent,#ff0066,#00ffcc,#ff0066,transparent);
+          animation:intro-sub-in 0.5s ease-out 0.7s both;"></div>
+
+        <!-- Full game preview -->
+        <div style="animation:intro-sub-in 0.6s ease-out 0.9s both;display:flex;align-items:center;justify-content:center;margin-bottom:1.4rem;">
+          <div style="border:3px solid #ff0066;border-radius:10px;box-shadow:0 0 20px rgba(255,0,102,0.4);padding:10px;background:radial-gradient(ellipse at center,#1a1a1a 0%,#000 100%);">
+            <canvas id="introCubeCanvas" width="400" height="450" style="display:block;width:200px;height:225px;border:2px solid #00ffcc;border-radius:5px;"></canvas>
+          </div>
+        </div>
+
+        <!-- Tagline -->
+        <div style="font-family:'Press Start 2P',cursive;color:#ffcc00;
+          font-size:clamp(0.55rem,1.5vw,0.85rem);text-align:center;line-height:2.2;
+          animation:intro-sub-in 0.6s ease-out 1.1s both;">
+          <span style="color:#ff0066;">Climb.</span>&nbsp;
+          <span style="color:#00ffcc;">Fall.</span>&nbsp;
+          <span style="color:#ffcc00;">Repeat.</span>
+        </div>
+
+        <!-- Start button -->
+        <button id="introStartBtn" style="font-family:'Press Start 2P',cursive;
+          margin-top:2rem;
+          padding:clamp(0.8rem,2vw,1.2rem) clamp(1.5rem,4vw,3rem);
+          font-size:clamp(0.65rem,1.5vw,0.95rem);
+          background:rgba(255,0,102,0.2);color:#00ffcc;
+          border:2px solid #ff0066;border-radius:6px;cursor:pointer;
+          animation:intro-sub-in 0.6s ease-out 1.4s both, intro-btn-pulse 2s ease-in-out 2s infinite;
+          transition:background 0.2s, transform 0.15s;letter-spacing:0.05em;">
+          ▶ &nbsp;TAP TO START
+        </button>
+
+        <!-- Bottom hint -->
+        <div style="font-family:'Press Start 2P',cursive;font-size:clamp(0.35rem,1vw,0.5rem);
+          color:rgba(0,255,204,0.4);margin-top:1rem;letter-spacing:0.1em;
+          animation:intro-sub-in 0.5s ease-out 1.8s both;">
+          OR PRESS SPACE
+        </div>
+      </div>
+
+      <!-- LANDSCAPE mobile layout -->
+      <div id="intro-landscape" style="position:absolute;z-index:2;display:none;
+        left:clamp(80px,10vw,120px);right:clamp(80px,10vw,120px);top:0;bottom:0;
+        flex-direction:column;align-items:center;justify-content:center;gap:2vh;">
+
+        <!-- Logo -->
+        <div style="font-family:'Press Start 2P',cursive;
+          font-size:clamp(1.4rem,4vh,2.8rem);color:#00ffcc;
+          text-shadow:0 0 20px #00ffcc,0 0 50px rgba(0,255,204,0.5);
+          animation:intro-logo-in 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both;
+          line-height:1.3;text-align:center;">
+          LADDER<br>LOOP
+        </div>
+
+        <!-- Divider -->
+        <div style="width:60%;max-width:300px;height:2px;
+          background:linear-gradient(90deg,transparent,#ff0066,#00ffcc,#ff0066,transparent);
+          animation:intro-sub-in 0.5s ease-out 0.4s both;"></div>
+
+        <!-- Tagline -->
+        <div style="font-family:'Press Start 2P',cursive;
+          font-size:clamp(0.45rem,1.6vh,0.75rem);text-align:center;line-height:2.2;
+          animation:intro-sub-in 0.5s ease-out 0.6s both;">
+          <span style="color:#ff0066;">Climb.</span>&nbsp;
+          <span style="color:#00ffcc;">Fall.</span>&nbsp;
+          <span style="color:#ffcc00;">Repeat.</span>
+        </div>
+
+        <!-- Button -->
+        <button id="introStartBtnLandscape" style="font-family:'Press Start 2P',cursive;
+          padding:0.65rem 1.4rem;font-size:clamp(0.45rem,1.6vh,0.7rem);
+          background:rgba(255,0,102,0.2);color:#00ffcc;
+          border:2px solid #ff0066;border-radius:6px;cursor:pointer;
+          animation:intro-sub-in 0.5s ease-out 0.8s both, intro-btn-pulse 2s ease-in-out 2s infinite;
+          transition:background 0.2s,transform 0.15s;letter-spacing:0.05em;">
+          ▶ &nbsp;TAP TO START
+        </button>
+      </div>`;
+
+    document.body.appendChild(overlay);
+
+    // Intro preview — uses the real draw functions, identical to the live game
+    let introAnimId = null;
+    let introCubeY = S.groundLevel;
+    let introClimbing = false;
+    function animateIntroCube() {
+      const c = document.getElementById('introCubeCanvas');
+      if (!c) return;
+      const ctx2 = c.getContext('2d');
+
+      // Dark background
+      ctx2.fillStyle = '#1a1a1a';
+      ctx2.fillRect(0, 0, c.width, c.height);
+
+      // Draw real ladder
+      drawLadder(ctx2, c);
+
+      // Draw real cube at animated position
+      ctx2.fillStyle = '#ffcc00';
+      ctx2.fillRect(S.character.x, introCubeY, S.character.width, S.character.height);
+
+      // Draw real score
+      drawScore(ctx2);
+
+      // Animate — cube climbs up and falls back on its own
+      if (introClimbing) {
+        introCubeY -= S.speed;
+        if (introCubeY <= 0) introClimbing = false;
+      } else {
+        introCubeY += S.speed;
+        if (introCubeY >= S.groundLevel) {
+          introCubeY = S.groundLevel;
+          introClimbing = true;
+        }
+      }
+
+      introAnimId = requestAnimationFrame(animateIntroCube);
+    }
+    animateIntroCube();
+
+    // Hover effect on button
+    const startBtn = overlay.querySelector('#introStartBtn');
+    startBtn.addEventListener('mouseover', () => {
+      startBtn.style.background = 'rgba(255,0,102,0.4)';
+      startBtn.style.transform = 'scale(1.05)';
+    });
+    startBtn.addEventListener('mouseout', () => {
+      startBtn.style.background = 'rgba(255,0,102,0.2)';
+      startBtn.style.transform = 'scale(1)';
+    });
+    document.body.appendChild(overlay);
+
+    let dismissed = false;
+    function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      window._shatterFreeze = true;
+      // Blank and hide all game canvases and controls immediately
+      S.canvases.forEach(c => {
+        c.getContext('2d').clearRect(0, 0, c.width, c.height);
+        const wrapper = c.closest('.canvas-wrapper');
+        if (wrapper) wrapper.style.visibility = 'hidden';
+      });
+      document.querySelectorAll('.game-controls').forEach(el => el.style.visibility = 'hidden');
+      if (introAnimId) { cancelAnimationFrame(introAnimId); introAnimId = null; }
+      // Van drives in FIRST, then smash, then character select
+      showVanIntro(() => {
+        playGlassBreak();
+        shatterScreen(overlay);
+        const delay = window.innerWidth <= 768 ? 700 : 1200;
+        setTimeout(() => {
+          overlay.remove();
+          document.querySelectorAll('.glass-piece').forEach(p => p.remove());
+          window._shatterFreeze = false;
+          if (window.showSiteHeader) window.showSiteHeader();
+          showCharacterSelect();
+        }, delay);
+      });
+    }
+
+    // Wire both buttons to dismiss
+    overlay.querySelector('#introStartBtn').addEventListener('click', dismiss);
+    const landscapeBtn = overlay.querySelector('#introStartBtnLandscape');
+    if (landscapeBtn) landscapeBtn.addEventListener('click', dismiss);
+
+    // Switch between portrait and landscape layouts
+    function updateLayout() {
+      const isLandscape = window.innerHeight < 500 && window.innerWidth > window.innerHeight;
+      const portrait  = overlay.querySelector('#intro-portrait');
+      const landscape = overlay.querySelector('#intro-landscape');
+      if (portrait)  portrait.style.display  = isLandscape ? 'none' : 'flex';
+      if (landscape) landscape.style.display = isLandscape ? 'flex' : 'none';
+    }
+    updateLayout();
+    window.addEventListener('orientationchange', () => setTimeout(updateLayout, 100));
+    window.addEventListener('resize', updateLayout);
+    document.addEventListener('keydown',   dismiss, { once: true });
+    document.addEventListener('click',     () => { if (!dismissed) dismiss(); });
+    document.addEventListener('touchstart', () => { if (!dismissed) dismiss(); }, { passive: true });
+  })();
   </script>
 
 
-<script>
-// ADD-ON: Instructions overlay (WITH ANIMATIONS - FIXED)
-(function() {
-  // Add keyframe animations to document head
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes glow-pulse {
-      0%, 100% {
-        text-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc, 0 0 60px #00ffcc;
-      }
-      50% {
-        text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ffcc, 0 0 90px #00ffcc, 0 0 120px #00ffcc;
-      }
-    }
-    
-    @keyframes underline-slide {
-      0% { width: 0; }
-      100% { width: 100%; }
-    }
-    
-    .ladder-title-glow {
-      animation: glow-pulse 2s ease-in-out infinite;
-    }
-    
-    .action-word {
-      position: relative;
-      display: inline-block;
-    }
-    
-    .action-word::after {
-      content: '';
-      position: absolute;
-      bottom: -5px;
-      left: 0;
-      height: 3px;
-      width: 100%;
-      background: linear-gradient(90deg, #ff0066, #00ffcc);
-      animation: underline-slide 1.5s ease-out infinite;
-    }
-  `;
-  document.head.appendChild(style);
-  
-  // Create instruction overlay
-  const overlay = document.createElement('div');
-  overlay.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(10, 10, 10, 0.95);
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    padding: 2rem;
-    backdrop-filter: blur(10px);
-  `;
-  
-  overlay.innerHTML = `
-    <div class="ladder-title-glow" style="
-      font-family: 'Press Start 2P', cursive;
-      color: #00ffcc;
-      font-size: clamp(1.5rem, 4vw, 3rem);
-      text-align: center;
-      margin-bottom: 2rem;
-    ">LADDER LOOP</div>
-    
-    <div style="
-      font-family: 'Press Start 2P', cursive;
-      color: #ffcc00;
-      font-size: clamp(0.8rem, 2vw, 1.2rem);
-      text-align: center;
-      line-height: 2;
-      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
-    ">
-      <!--<div style="margin-bottom: 1rem;">🎮 PRESS <span style="color: #ff0066;">SPACE</span></div>
-      <div style="margin-bottom: 1rem;">OR</div>
-      <div style="margin-bottom: 2rem;">👆 TAP CANVAS</div>-->
-      <div style="font-size: clamp(0.6rem, 1.5vw, 0.9rem); color: #00ffcc;">
-        <span class="action-word">Climb</span> the ladder.<br>
-       
-        <span class="action-word">Fall</span> back down.<br>
-        <span class="action-word">Repeat</span> forever.
-      </div>
-    </div>
-    
-    <button style="
-      font-family: 'Press Start 2P', cursive;
-      padding: 1rem 2rem;
-      font-size: clamp(0.7rem, 1.5vw, 1rem);
-      background: rgba(255, 0, 102, 0.2);
-      color: #00ffcc;
-      border: 2px solid #ff0066;
-      border-radius: 5px;
-      cursor: pointer;
-      box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
-      transition: all 0.3s;
-      margin-top: 2rem;
-    " onmouseover="this.style.background='rgba(255, 0, 102, 0.4)'; this.style.transform='scale(1.05)';" 
-       onmouseout="this.style.background='rgba(255, 0, 102, 0.2)'; this.style.transform='scale(1)';"
-    >Tap or press Space</button>
-  `;
-  
-  document.body.appendChild(overlay);
-  
-  // Remove overlay on button click or any key press
-  const startBtn = overlay.querySelector('button');
-  let overlayRemoved = false;
-  
-  function removeOverlay() {
-    if (overlayRemoved) return;
-    overlayRemoved = true;
-    
-    overlay.style.opacity = '1';
-    overlay.style.transition = 'opacity 0.5s';
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-      overlay.remove();
-      style.remove(); // Also remove the style tag
-    }, 500);
-  }
-  
-  startBtn.addEventListener('click', removeOverlay);
-  
-  // Remove on ANY keydown or click anywhere
-  document.addEventListener('keydown', function(e) {
-    if (!overlayRemoved) removeOverlay();
-  });
-  
-  document.addEventListener('click', function(e) {
-    if (!overlayRemoved) removeOverlay();
-  });
-})();
-</script>
 
 
-<script>
-// ADD-ON: Instant loop (teleports back to create seamless loop)
-(function() {
-  const SECTIONS_BEFORE_LOOP = 3;
-  let isLooping = false;
-  
-  window.addEventListener('scroll', () => {
-    if (isLooping) return;
-    
-    const sections = document.querySelectorAll('.game-section');
-    const windowBottom = window.scrollY + window.innerHeight;
-    
-    // Check if we're near the bottom of the last section
-    if (sections.length >= SECTIONS_BEFORE_LOOP) {
-      const lastSection = sections[sections.length - 1];
-      const lastSectionBottom = lastSection.offsetTop + lastSection.offsetHeight;
-      
-      if (windowBottom >= lastSectionBottom - 100) {
-        isLooping = true;
-        
-        // Instantly jump back to top
-        window.scrollTo(0, 0);
-        
-        setTimeout(() => {
-          isLooping = false;
-        }, 100);
-      }
-    }
-  }, { passive: true });
-  
-  console.log('Instant loop enabled: Loops after ' + SECTIONS_BEFORE_LOOP + ' sections');
-})();
-</script>
-  
-  
-<!--
-<script>
-// ADD-ON: Instant loop - PERFORMANCE OPTIMIZED (loops with minimal sections)
-(function() {
-  const MAX_SECTIONS = 3;
-  let isLooping = false;
+  <!-- ============================================================
+       COMING SOON MODULE
+       Teaser overlay with animated preview vans.
+  ============================================================ -->
+  <script>
+  (function initComingSoon() {
+    // Inject "🏁 SOON" button into every .game-controls after DOM ready
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.game-controls').forEach(ctrl => {
+        const btn = document.createElement('button');
+        btn.className = 'game-btn coming-soon-btn';
+        btn.style.cssText = 'position:relative;background:rgba(255,204,0,0.15);border-color:#ffcc00;opacity:0.8;';
+        btn.innerHTML = `🏁 SOON<span style="position:absolute;top:-8px;right:-8px;
+          background:#ff0066;color:#fff;font-size:0.5rem;padding:0.2rem 0.4rem;
+          border-radius:3px;animation:pulse-badge 2s infinite;">NEW</span>`;
+        const galleryBtn = ctrl.querySelector('.gallery-btn');
+        if (galleryBtn) galleryBtn.after(btn);
+        else ctrl.appendChild(btn);
+        btn.onclick = openComingSoon;
+      });
 
-  window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      setInterval(() => {
-        const sections = document.querySelectorAll('.game-section');
-        if (sections.length > MAX_SECTIONS) {
-          for (let i = MAX_SECTIONS; i < sections.length; i++) {
-            sections[i].remove();
-          }
-        }
-      }, 1000);
-    }, 100);
-  });
-
-  window.addEventListener('scroll', () => {
-    if (isLooping) return;
-
-    const sections = document.querySelectorAll('.game-section');
-    const windowBottom = window.scrollY + window.innerHeight;
-
-    if (sections.length >= MAX_SECTIONS) {
-      const lastSection = sections[sections.length - 1];
-      const lastSectionBottom =
-        lastSection.offsetTop + lastSection.offsetHeight;
-
-      if (windowBottom >= lastSectionBottom - 200) {
-        isLooping = true;
-        window.scrollTo(0, 0);
-        setTimeout(() => { isLooping = false; }, 100);
-      }
-    }
-  }, { passive: true });
-
-  console.log('Performance loop: Max ' + MAX_SECTIONS + ' sections');
-})();
-</script>
--->
-
-
-<script>
-// ============================================================
-// SCREEN SIZE SCALING FIX
-// ============================================================
-// Problem: The game canvas has a fixed size (400x450px) which
-// looks tiny on 4K, 5K, and larger monitors when the browser
-// window is maximized.
-// 
-// Why JavaScript instead of CSS:
-// 1. Canvas elements need their width/height ATTRIBUTES changed,
-//    not just CSS styling (CSS scaling blurs the canvas)
-// 2. All game coordinates (ladder position, character position,
-//    speed, etc.) are hardcoded to the 400x450 size and need
-//    to be scaled proportionally
-// 3. We need to override the drawing functions to use scaled
-//    coordinates so everything lines up correctly
-// 4. CSS alone can't handle the mathematical scaling of all
-//    these game variables
-//
-// This script:
-// - Detects screen resolution
-// - Scales canvas dimensions appropriately
-// - Scales all game elements (character, ladder, text) proportionally
-// - Overrides draw functions to use scaled coordinates
-// ============================================================
-
-
-(function() {
-  const screenWidth = window.screen.width;
-  let scale = 1; // default
-  
-  if (screenWidth >= 5120) scale = 4.5;      // 5K
-  else if (screenWidth >= 3840) scale = 3.5; // 4K
-  else if (screenWidth >= 2560) scale = 2.5; // 2.5K
-  else if (screenWidth >= 1920) scale = 1.75; // 1080p
-  
-  // Store scale globally
-  window.gameScale = scale;
-  window.groundLevel = 420 * scale; // Store scaled ground level
-  
-  window.addEventListener('load', () => {
-    // Resize all canvases
-    document.querySelectorAll('canvas').forEach(canvas => {
-      canvas.width = 400 * scale;
-      canvas.height = 450 * scale;
-    });
-    
-    // Scale character position and size
-    character.x = 187 * scale;
-    character.y = 420 * scale; // Bottom of ladder
-    character.width = 30 * scale;
-    character.height = 30 * scale;
-    
-    // Scale speed
-    speed = 4 * scale;
-  });
-  
-  // Override the update function to use scaled ground level
-  const originalCode = window.update.toString();
-  window.update = function() {
-    const groundLevel = window.groundLevel || 420;
-    
-    canvases.forEach(canvas => {
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawLadder(ctx, canvas);
-      drawCharacter(ctx);
-      drawScore(ctx);
+      document.getElementById('comingSoonCloseBtn').onclick = closeComingSoon;
     });
 
-    if (!freezeFrame) {
-      if (climbing) {
-        character.y -= speed;
-        if (character.y <= 0) {
-          climbing = false;
-          score++;
-          const unlocked = checkColorUnlock(score);
-          if (!unlocked && score % 5 === 0) showFunnyMessage();
-        }
+    // Coming Soon preview cars
+    S.comingSoonCars = [
+      { x:120, y:50,  color:'#ff9900', emoji:'🚐', speed:2.5, name:'Swarvek' },
+      { x:200, y:150, color:'#00ccff', emoji:'🚚', speed:2.8, name:'Derek'   },
+      { x:90,  y:250, color:'#ffcc00', emoji:'⚡', speed:2.2, name:'Michel'  },
+      { x:250, y:350, color:'#00ff66', emoji:'🚙', speed:2.6, name:'Greg'    },
+      { x:150, y:450, color:'#ff0066', emoji:'🎨', speed:3.0, name:'Mario'   },
+    ];
+
+    function openComingSoon() {
+      document.getElementById('comingSoonOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+      // Play music if available
+      if (S.audioEnabled) {
+        const m = new Audio('race-menu.mp3');
+        m.volume = 0.5;
+        m.play().catch(()=>{});
+        setTimeout(()=>{m.pause();m.currentTime=0;},30000);
+        window._comingSoonMusic = m;
+      }
+      startComingSoonAnim();
+    }
+
+    function closeComingSoon() {
+      document.getElementById('comingSoonOverlay').classList.remove('active');
+      document.body.style.overflow = '';
+      if (window._comingSoonMusic) { window._comingSoonMusic.pause(); window._comingSoonMusic=null; }
+      if (S.comingSoonAnimationId) { cancelAnimationFrame(S.comingSoonAnimationId); S.comingSoonAnimationId=null; }
+    }
+
+    function startComingSoonAnim() {
+      const canvas = document.getElementById('comingSoonCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      function animate() {
+        if (!document.getElementById('comingSoonOverlay').classList.contains('active')) return;
+        ctx.fillStyle='#2d5016'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle='#3a3a3a'; ctx.fillRect(80,0,240,canvas.height);
+
+        // Road edges
+        const off=(Date.now()/15)%25;
+        ctx.strokeStyle='#ffcc00'; ctx.lineWidth=2; ctx.setLineDash([15,10]); ctx.lineDashOffset=-off;
+        ctx.beginPath(); ctx.moveTo(200,0); ctx.lineTo(200,canvas.height); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.setLineDash([20,20]);
+        ctx.beginPath(); ctx.moveTo(80,0); ctx.lineTo(80,canvas.height); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(320,0); ctx.lineTo(320,canvas.height); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Vans
+        S.comingSoonCars.forEach(car => {
+          car.y += car.speed;
+          if (car.y > canvas.height+60) { car.y=-60; car.x=100+Math.random()*200; }
+          const cw=52, ch=78;
+          ctx.fillStyle='rgba(0,0,0,0.3)'; ctx.fillRect(car.x+4,car.y+ch+3,cw-8,5);
+          ctx.fillStyle=car.color;
+          ctx.fillRect(car.x+6,car.y,cw-12,ch*0.75);
+          ctx.fillRect(car.x+12,car.y+ch*0.75,cw-24,ch*0.25);
+          ctx.fillStyle='rgba(135,206,235,0.7)'; ctx.fillRect(car.x+14,car.y+ch*0.78,cw-28,ch*0.15);
+          ctx.fillStyle='rgba(100,149,237,0.5)';
+          ctx.fillRect(car.x+9,car.y+ch*0.15,5,ch*0.25);
+          ctx.fillRect(car.x+cw-14,car.y+ch*0.15,5,ch*0.25);
+          ctx.fillStyle='#ffff00';
+          ctx.fillRect(car.x+10,car.y+ch*0.05,8,5); ctx.fillRect(car.x+cw-18,car.y+ch*0.05,8,5);
+          ctx.fillStyle='#333'; ctx.fillRect(car.x+14,car.y+ch*0.12,cw-28,4);
+          ctx.fillStyle='#1a1a1a';
+          [[car.x+2,car.y+ch*0.15],[car.x+cw-12,car.y+ch*0.15],[car.x+2,car.y+ch*0.68],[car.x+cw-12,car.y+ch*0.68]]
+            .forEach(([wx,wy])=>ctx.fillRect(wx,wy,10,16));
+          ctx.font='bold 10px "Press Start 2P",cursive'; ctx.textAlign='center'; ctx.fillStyle='#fff';
+          ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=3;
+          ctx.fillText(car.name.toUpperCase(), car.x+cw/2, car.y+ch*0.45);
+          ctx.shadowBlur=0;
+          ctx.font='20px Arial';
+          ctx.fillText(car.emoji, car.x+cw/2, car.y+ch*0.30);
+        });
+
+        // Banner
+        const bY=canvas.height/2-30, bH=60;
+        ctx.fillStyle='rgba(10,10,10,0.85)'; ctx.fillRect(0,bY,canvas.width,bH);
+        ctx.fillStyle='#00ffcc'; ctx.font='bold 24px "Press Start 2P",cursive';
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.shadowColor='rgba(0,255,204,0.8)'; ctx.shadowBlur=10;
+        ctx.fillText('COMING SOON', canvas.width/2, bY+bH/2);
+        ctx.shadowBlur=0; ctx.textBaseline='alphabetic';
+
+        S.comingSoonAnimationId = requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  })();
+  </script>
+
+  <!-- ============================================================
+       EDITION TOGGLE MODULE
+       Floating button to switch Classic ↔ Anglo Polish.
+       Also provides a message sanitiser so Classic mode never
+       accidentally shows Anglo Polish character messages.
+  ============================================================ -->
+  <script>
+  (function initEditionToggle() {
+
+    let toggleBtn = null;
+
+    // Wait until intro overlay is gone before showing the toggle
+    const waitForStart = setInterval(() => {
+      if (!document.getElementById('intro-overlay')) {
+        clearInterval(waitForStart);
+        createToggle();
+        updateToggleLabel();
+        updateButtonVisibility();
+      }
+    }, 300);
+
+    function createToggle() {
+      toggleBtn = document.createElement('button');
+      const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      if (isMobile) {
+        toggleBtn.className = 'edition-toggle-btn';
+        toggleBtn.style.cssText = `position:fixed;bottom:20px;right:20px;z-index:20001;
+          width:26px;height:26px;border-radius:50%;padding:0;font-size:11px;
+          background:rgba(255,0,102,0.08);border:1px solid rgba(255,102,153,0.3);
+          color:rgba(255,255,255,0.3);cursor:pointer;
+          display:flex;align-items:center;justify-content:center;
+          transition:all 0.2s ease;box-shadow:none;font-family:sans-serif;line-height:1;`;
+        toggleBtn.textContent = '⚡';
+        toggleBtn.addEventListener('touchstart', function() {
+          this.style.background = 'rgba(255,0,102,0.4)';
+          this.style.borderColor = '#ff0066';
+          this.style.color = '#fff';
+        }, { passive: true });
+        toggleBtn.addEventListener('touchend', function(e) {
+          e.preventDefault(); // prevent the subsequent click event firing
+          setTimeout(() => {
+            this.style.background = 'rgba(255,0,102,0.08)';
+            this.style.borderColor = 'rgba(255,102,153,0.3)';
+            this.style.color = 'rgba(255,255,255,0.3)';
+          }, 300);
+          switchEdition();
+        }, { passive: false });
       } else {
-        character.y += speed;
-        if (character.y >= groundLevel) character.y = groundLevel; // Use scaled ground
+        toggleBtn.className = 'game-btn edition-toggle-btn';
+        toggleBtn.style.cssText = `position:fixed;bottom:20px;right:20px;z-index:20001;
+          padding:0.75rem 1.5rem;font-size:0.85rem;color:#fff;
+          background:rgba(255,0,102,0.85);border:2px solid #ff0066;border-radius:6px;
+          box-shadow:0 0 20px rgba(255,0,102,0.5);cursor:pointer;
+          transition:all 0.2s ease;`;
       }
+      toggleBtn.onclick = switchEdition;
+      document.body.appendChild(toggleBtn);
     }
-    requestAnimationFrame(update);
-  };
-  
-  // Override climb function to use scaled ground level
-  window.climb = function() {
-    const groundLevel = window.groundLevel || 420;
-    if (!climbing && character.y >= groundLevel && !freezeFrame) {
-      climbing = true;
-      if (audioEnabled) {
-        audioEl.currentTime = 0;
-        audioEl.play().catch(() => {});
-      }
-    }
-  };
-  
-  // Override drawLadder to use scale
-  window.drawLadder = function(ctx, canvas) {
-    const s = window.gameScale || 1;
-    const currentColor = ladderColors[currentLadderColorIndex];
-    
-    if (currentColor.isRainbow) {
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-      gradient.addColorStop(0, "#ff0066");
-      gradient.addColorStop(0.2, "#ff9900");
-      gradient.addColorStop(0.4, "#ffcc00");
-      gradient.addColorStop(0.6, "#00ff66");
-      gradient.addColorStop(0.8, "#00ccff");
-      gradient.addColorStop(1, "#b200ff");
-      ctx.strokeStyle = gradient;
-    } else {
-      ctx.strokeStyle = currentColor.color;
-    }
-    
-    ctx.lineWidth = 6 * s;
-    ctx.beginPath();
-    ctx.moveTo(150 * s, 0);
-    ctx.lineTo(150 * s, canvas.height);
-    ctx.moveTo(250 * s, 0);
-    ctx.lineTo(250 * s, canvas.height);
-    ctx.stroke();
-    
-    for (let i = 0; i < canvas.height; i += (40 * s)) {
-      ctx.beginPath();
-      ctx.moveTo(150 * s, i);
-      ctx.lineTo(250 * s, i);
-      ctx.stroke();
-    }
-  };
-  
-  // Override drawScore to use scale
-  window.drawScore = function(ctx) {
-    const s = window.gameScale || 1;
-    ctx.fillStyle = "#ffcc00";
-    ctx.font = (14 * s) + "px 'Press Start 2P', cursive";
-    ctx.textAlign = "left";
-    ctx.shadowColor = "rgba(255, 204, 0, 0.8)";
-    ctx.shadowBlur = 10 * s;
 
-    const scoreStr = "Pts: " + score;
-    let startX = 10 * s, startY = 25 * s, lineHeight = 18 * s;
-    for (let i = 0; i < scoreStr.length; i++) {
-      ctx.fillText(scoreStr[i], startX, startY + i * lineHeight);
+    function updateToggleLabel() {
+      if (!toggleBtn) return;
+      if (window.innerWidth <= 768) { toggleBtn.textContent = '⚡'; return; }
+      toggleBtn.textContent = window.ANGLO_POLISH_EDITION ? '🎮 Classic Mode' : '🔨 Anglo Polish';
     }
-    ctx.shadowBlur = 0;
-  };
-  
-  // Handle new canvases from infinite scroll
-  const observer = new MutationObserver(() => {
-    document.querySelectorAll('canvas').forEach(canvas => {
-      if (canvas.width === 400) {
-        canvas.width = 400 * scale;
-        canvas.height = 450 * scale;
+
+    function updateButtonVisibility() {
+      document.querySelectorAll('.gallery-btn, .coming-soon-btn').forEach(b => {
+        b.style.display = isAngloActive() ? 'inline-block' : 'none';
+      });
+    }
+
+    window.updateButtonVisibility = updateButtonVisibility;
+    window.getToggleButton = () => toggleBtn;
+
+    function switchEdition() {
+      if (window._switching) return;
+      window._switching = true;
+
+      // Close gallery if open, but NOT the character select — it must stay visible
+      // as the backdrop while the cube drops and the screen shatters over it
+      closeGallery();
+
+      if (window.ANGLO_POLISH_EDITION) {
+        // Currently Anglo Polish → switching TO Classic
+        // Character select (or game canvas) stays visible while cube drops
+        showCubeIntro(() => {
+          // Cube has landed — now smash whatever is on screen
+          window._shatterFreeze = true;
+          playGlassBreak();
+          const flashOverlay = document.createElement('div');
+          flashOverlay.style.cssText = `position:fixed;inset:0;z-index:9990;background:rgba(255,255,255,0.08);pointer-events:none;`;
+          document.body.appendChild(flashOverlay);
+          shatterScreen(flashOverlay);
+          const delay = window.innerWidth <= 768 ? 700 : 1200;
+          setTimeout(() => {
+            // Close character select NOW — after the smash covers the screen
+            const charSelectOverlay = document.getElementById('characterSelect');
+            if (charSelectOverlay) {
+              charSelectOverlay.classList.remove('active');
+              charSelectOverlay.style.display = 'none';
+              stopPolishAudioLoop();
+            }
+            // Switch to Classic state
+            window.ANGLO_POLISH_EDITION = false;
+            S.score    = 0;
+            S.climbing = false;
+            S.currentLadderColorIndex = 0;
+            S.unlockedColors = [0];
+            Object.keys(BG).forEach(k => { BG[k] = (typeof BG[k] === 'number') ? 0 : null; });
+            S.selectedCharacter    = null;
+            S.showDefaultCharacter = true;
+            document.body.style.backgroundColor = '#08001a';
+            updateToggleLabel();
+            updateButtonVisibility();
+            flashOverlay.remove();
+            document.querySelectorAll('.glass-piece').forEach(p => p.remove());
+            document.querySelectorAll('.canvas-wrapper').forEach(w => w.style.visibility = '');
+            document.querySelectorAll('.game-controls').forEach(el => el.style.visibility = '');
+            window._shatterFreeze = false;
+            window._switching = false;
+            if (window.syncPageTitle) window.syncPageTitle();
+            showMessage('🎮 CLASSIC MODE\nPress Space or Tap');
+          }, delay);
+        });
+      } else {
+        // Currently Classic → switching TO Anglo Polish
+        window.ANGLO_POLISH_EDITION = true;
+        S.score    = 0;
+        S.climbing = false;
+        S.currentLadderColorIndex = 0;
+        S.unlockedColors = [0];
+        Object.keys(BG).forEach(k => { BG[k] = (typeof BG[k] === 'number') ? 0 : null; });
+        window._lastBgTintIdx = -1;
+        updateToggleLabel();
+        updateButtonVisibility();
+        showVanIntro(() => {
+          playGlassBreak();
+          const flashOverlay = document.createElement('div');
+          flashOverlay.style.cssText = `position:fixed;inset:0;z-index:9990;background:rgba(255,255,255,0.08);pointer-events:none;`;
+          document.body.appendChild(flashOverlay);
+          shatterScreen(flashOverlay);
+          const delay = window.innerWidth <= 768 ? 700 : 1200;
+          setTimeout(() => {
+            flashOverlay.remove();
+            document.querySelectorAll('.glass-piece').forEach(p => p.remove());
+            window._shatterFreeze = false;
+            window._switching = false;
+            if (window.syncPageTitle) window.syncPageTitle();
+            showMessage('🔨 ANGLO POLISH EDITION\nSelect your character');
+            showCharacterSelect();
+          }, delay);
+        });
       }
+    }
+
+    // Keep label current — always visible
+    setInterval(() => {
+      if (!toggleBtn) return;
+      if (window.innerWidth > 768) toggleBtn.textContent = window.ANGLO_POLISH_EDITION ? '🎮 Classic Mode' : '🔨 Anglo Polish';
+    }, 200);
+
+    // Message sanitiser: prevent Anglo character messages leaking into Classic mode
+    const _showMsg = window.showMessage;
+    const ANGLO_KEYWORDS = /swarvek|derek|michel|greg|mario|boss|poland|measured|clipboard|plumber|electrician/i;
+    window.showMessage = function(text, ...rest) {
+      if (!isAngloActive() && typeof text==='string' && ANGLO_KEYWORDS.test(text)) {
+        const fallback = /reset|again|start|over|bottom|fell/i.test(text)
+          ? pickRandom(MESSAGES.reset.classic)
+          : pickRandom(MESSAGES.funny.classic);
+        return _showMsg.call(this, fallback, ...rest);
+      }
+      return _showMsg.call(this, text, ...rest);
+    };
+
+  })();
+  </script>
+  <!-- Easter egg credits button -->
+  <div id="egg-btn" title="?" style="position:fixed;bottom:20px;left:20px;z-index:9999;
+    width:22px;height:22px;border-radius:50%;
+    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-family:'Press Start 2P',cursive;font-size:8px;color:rgba(255,255,255,0.25);
+    transition:all 0.2s;">©</div>
+
+  <script>
+  (function() {
+    document.getElementById('egg-btn').addEventListener('mouseenter', function() {
+      this.style.color = 'rgba(255,255,255,0.6)';
+      this.style.borderColor = 'rgba(255,0,102,0.5)';
     });
-  });
-  observer.observe(document.body, { childList: true, subtree: true });
-})();
-</script>
+    document.getElementById('egg-btn').addEventListener('mouseleave', function() {
+      this.style.color = 'rgba(255,255,255,0.25)';
+      this.style.borderColor = 'rgba(255,255,255,0.15)';
+    });
 
+    document.getElementById('egg-btn').addEventListener('click', function() {
+      showCredits();
+    });
 
+    window.showCredits = showCredits;
+    function showCredits() {
+      // Hide the edition toggle button while credits are showing
+      const toggleBtn = window.getToggleButton ? window.getToggleButton() : null;
+      if (toggleBtn) toggleBtn.style.display = 'none';
+      const s = document.createElement('style');
+      s.textContent = `
+        @keyframes credits-fadein  { from{opacity:0} to{opacity:1} }
+        @keyframes credits-fadeout { from{opacity:1} to{opacity:0} }
+        @keyframes james-walk-in   { from{left:-200px} to{left:0px} }
+        @keyframes james-walk-out  { from{left:0px} to{left:110%} }
+        @keyframes cursor-blink    { 0%,100%{opacity:1} 50%{opacity:0} }
+        @keyframes balloon-float   { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-6px) rotate(2deg)} }
+        @keyframes balloon-sway    { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+      `;
+      document.head.appendChild(s);
 
+      const isLandscape = window.innerWidth > window.innerHeight;
+
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `position:fixed;inset:0;z-index:19999;
+        background:rgba(0,0,0,0.92);
+        display:flex;flex-direction:${isLandscape ? 'row' : 'column'};
+        align-items:center;justify-content:center;
+        gap:${isLandscape ? '3vw' : '4vw'};
+        padding:${isLandscape ? '1vh 4vw' : '4vw'};
+        box-sizing:border-box;overflow:hidden;
+        animation:credits-fadein 0.4s ease forwards;cursor:pointer;`;
+
+      overlay.innerHTML = `
+        <!-- Left/top: title + monitor -->
+        <div style="display:flex;flex-direction:column;align-items:center;gap:${isLandscape ? '1.5vh' : '3vw'};flex-shrink:0;">
+
+          <!-- Title -->
+          <div style="font-family:'Press Start 2P',cursive;color:#ff0066;
+            font-size:clamp(0.5rem,${isLandscape ? '1.8vh' : '3vw'},1rem);
+            text-shadow:0 0 20px #ff0066;letter-spacing:0.1em;">LADDER LOOP</div>
+
+          <!-- Monitor -->
+          <div style="position:relative;
+            width:${isLandscape ? 'min(38vw,320px)' : 'min(85vw,340px)'};
+            height:${isLandscape ? 'min(28vh,180px)' : 'min(40vw,220px)'};
+            background:#0a0010;border:3px solid #00ffcc;border-radius:8px;
+            box-shadow:0 0 30px rgba(0,255,204,0.4);overflow:hidden;padding:clamp(10px,2vw,20px);box-sizing:border-box;">
+            <div style="position:absolute;inset:0;background:repeating-linear-gradient(
+              0deg,transparent,transparent 3px,rgba(0,0,0,0.15) 3px,rgba(0,0,0,0.15) 4px);
+              pointer-events:none;z-index:1;"></div>
+            <!-- Red balloon lower in monitor, right side, long string -->
+            <div style="position:absolute;top:40%;right:22px;z-index:3;
+              animation:balloon-float 3s ease-in-out infinite;pointer-events:none;">
+              <svg width="28" height="90" viewBox="0 0 36 110" style="display:block;filter:drop-shadow(0 0 5px rgba(255,40,40,0.8));">
+                <ellipse cx="18" cy="16" rx="14" ry="15" fill="#ff2020"/>
+                <ellipse cx="13" cy="10" rx="4" ry="5" fill="rgba(255,255,255,0.25)"/>
+                <polygon points="14,30 18,31 22,30 18,36" fill="#cc0000"/>
+                <path d="M18,36 Q10,50 18,64 Q26,78 18,92 Q10,104 18,110" stroke="rgba(255,255,255,0.35)" stroke-width="1.2" fill="none"/>
+              </svg>
+            </div>
+            <div id="credits-text" style="font-family:'Press Start 2P',cursive;
+              font-size:clamp(0.35rem,${isLandscape ? '1.4vh' : '2.2vw'},0.6rem);
+              color:#00ffcc;line-height:2.2;position:relative;z-index:2;"></div>
+            <span id="credits-cursor" style="font-family:'Press Start 2P',cursive;
+              font-size:clamp(0.35rem,${isLandscape ? '1.4vh' : '2.2vw'},0.6rem);
+              color:#00ffcc;animation:cursor-blink 0.7s infinite;position:relative;z-index:2;">▮</span>
+          </div>
+
+          <div style="font-family:'Press Start 2P',cursive;font-size:clamp(0.3rem,1.5vw,0.4rem);
+            color:rgba(255,255,255,0.3);letter-spacing:0.1em;">CLICK TO CLOSE</div>
+        </div>
+
+        <!-- Right/bottom: James sprite -->
+        <div style="position:relative;flex-shrink:0;
+          width:${isLandscape ? '147px' : 'min(85vw,340px)'};
+          height:${isLandscape ? '90px' : '90px'};overflow:visible;">
+
+          <div id="james-sprite" style="position:absolute;bottom:0;left:-160px;">
+            <canvas id="james-canvas" width="147" height="90" style="display:block;"></canvas>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      // Draw real James sprite on canvas
+      const jCanvas = overlay.querySelector('#james-canvas');
+      const jCtx = jCanvas.getContext('2d');
+      let jAnimId;
+
+      function drawJames() {
+        jCtx.clearRect(0, 0, 147, 90);
+        drawJamesSprite(jCtx, 43, 8, 70);
+        jAnimId = requestAnimationFrame(drawJames);
+      }
+      drawJames();
+
+      // James walks in
+      const jSprite = overlay.querySelector('#james-sprite');
+      jSprite.style.animation = 'james-walk-in 1s cubic-bezier(0.2,0,0.5,1) forwards';
+
+      // Type the credits after James arrives
+      const lines = [
+        { text: '> CODED BY: JAMES',   color: '#ffcc00' },
+        { text: '> (THE APPRENTICE)',  color: '#ff0066' },
+      ];
+
+      const textEl = overlay.querySelector('#credits-text');
+      let lineIndex = 0, charIndex = 0;
+      let typing;
+
+      function typeLine() {
+        if (lineIndex >= lines.length) return;
+        const line = lines[lineIndex];
+        if (charIndex === 0) {
+          const div = document.createElement('div');
+          div.style.color = line.color;
+          div.id = 'current-line';
+          textEl.appendChild(div);
+        }
+        const currentDiv = textEl.querySelector('#current-line');
+        currentDiv.textContent = line.text.slice(0, charIndex + 1);
+        charIndex++;
+        if (charIndex >= line.text.length) {
+          currentDiv.removeAttribute('id');
+          lineIndex++; charIndex = 0;
+          typing = setTimeout(typeLine, 300);
+        } else {
+          typing = setTimeout(typeLine, 55);
+        }
+      }
+
+      setTimeout(typeLine, 1100);
+
+      // Close on click — James runs off
+      overlay.addEventListener('click', () => {
+        clearTimeout(typing);
+        cancelAnimationFrame(jAnimId);
+        jSprite.style.animation = 'james-walk-out 0.5s cubic-bezier(0.5,0,1,1) forwards';
+        overlay.style.animation = 'credits-fadeout 0.5s ease 0.3s forwards';
+        setTimeout(() => {
+          overlay.remove();
+          s.remove();
+          if (toggleBtn) toggleBtn.style.display = '';
+        }, 900);
+      });
+    }
+  })();
+  </script>
 
 </body>
 </html>
